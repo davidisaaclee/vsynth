@@ -4,9 +4,13 @@
   "private": true,
   "dependencies": {
     "@davidisaaclee/react-routing-matrix": "/Users/david/Documents/Drawer/packages/react-video-graph",
+    "@types/react-redux": "^6.0.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-redux": "^5.0.7",
     "react-scripts-ts": "2.16.0",
+    "redux": "^4.0.0",
+    "typesafe-actions": "^2.0.4",
     "video-graph": "/Users/david/Documents/Drawer/packages/video-graph"
   },
   "scripts": {
