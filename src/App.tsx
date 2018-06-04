@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import VideoGraphView from '@davidisaaclee/react-video-graph';
 import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
-import { State } from './modules';
+import { State as RootState } from './modules';
 import { actions } from './modules/graph';
 import { SimpleVideoGraph } from './model/SimpleVideoGraph';
 import {
@@ -26,10 +26,30 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps;
 
-class App extends React.Component<Props, any> {
+interface State {
+	isAnimating: boolean;
+	animationStartTime: number | null;
+	frameIndex: number;
+}
+
+class App extends React.Component<Props, State> {
+
+	public state: State = {
+		isAnimating: false,
+		animationStartTime: null,
+		frameIndex: 0,
+	};
 
 	private gl: WebGLRenderingContext | null = null;
 	private modulesRuntime: { [moduleKey: string]: RuntimeModule } = {};
+
+
+	public componentDidMount() {
+		this.setState({
+			isAnimating: true,
+			animationStartTime: Date.now()
+		}, () => this.frame());
+	}
 
   public render() {
 		const {
@@ -47,7 +67,7 @@ class App extends React.Component<Props, any> {
 							: videoGraphFromSimpleVideoGraph(
 								graph,
 								this.modulesRuntime,
-								0,
+								this.state.frameIndex,
 								this.gl
 							)),
 						outputNodeKey,
@@ -74,9 +94,23 @@ class App extends React.Component<Props, any> {
 		}));
 		this.forceUpdate();
 	}
+
+	private frame() {
+		if (!this.state.isAnimating || this.state.animationStartTime == null) {
+			return;
+		}
+
+		const fps = 60;
+		const frameIndex = Math.floor((Date.now() - this.state.animationStartTime) / (fps / 1000));
+		if (this.state.frameIndex !== frameIndex) {
+			this.setState({ frameIndex });
+		}
+
+		window.requestAnimationFrame(() => this.frame());
+	}
 }
 
-function mapStateToProps(state: State): StateProps {
+function mapStateToProps(state: RootState): StateProps {
 	return {
 		graph: state.graph.graph,
 		outputNodeKey: state.graph.outputNodeKey,

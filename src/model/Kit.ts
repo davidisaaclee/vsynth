@@ -7,7 +7,7 @@ import { SimpleVideoGraph, VideoModuleSpecification } from './SimpleVideoGraph';
 export interface VideoModule {
 	shaderSource: string;
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
-	animationUniforms?: (frameIndex: number) => { [identifier: string]: UniformValue };
+	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => { [identifier: string]: UniformValue };
 }
 
 // key :: ModuleType
@@ -20,11 +20,11 @@ export const modules: { [key: string]: VideoModule } = {
 				data: [gl.canvas.width, gl.canvas.height]
 			}
 		}),
-		animationUniforms: (frameIndex: number) => ({
-			// TODO: need to get the active frequency...
+		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => ({
 			'phaseOffset': {
 				type: 'f',
-				data: 0,
+				// TODO: be safer
+				data: (frameIndex * 2 * Math.PI / (uniforms.frequency.data as number)) % 1,
 			}
 		}),
 	},
@@ -69,7 +69,9 @@ export function videoGraphFromSimpleVideoGraph(
 
 		const animationUniforms = moduleConfiguration.animationUniforms == null
 			? {} 
-			: moduleConfiguration.animationUniforms(frameIndex);
+			: moduleConfiguration.animationUniforms(
+				frameIndex, 
+				{ ...defaultUniforms, ...moduleSpec.uniforms });
 
 		return {
 			program: runtimeModule.program,
