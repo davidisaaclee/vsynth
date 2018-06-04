@@ -8,6 +8,8 @@ export interface VideoModule {
 	shaderSource: string;
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
 	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => { [identifier: string]: UniformValue };
+	// maps display name to uniform identifier
+	inletUniforms?: { [displayName: string]: string };
 }
 
 // key :: ModuleType
@@ -27,6 +29,9 @@ export const modules: { [key: string]: VideoModule } = {
 				data: (frameIndex * 2 * Math.PI / (uniforms.frequency.data as number)) % 1,
 			}
 		}),
+		inletUniforms: {
+			'rotation': 'rotationTheta',
+		},
 	},
 
 	'constant': {
