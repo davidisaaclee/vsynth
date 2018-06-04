@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { VideoGraph } from 'video-graph';
+import { VideoGraph } from '@davidisaaclee/video-graph';
 import VideoGraphView from '@davidisaaclee/react-video-graph';
 import { State } from './modules';
 import { actions } from './modules/graph';

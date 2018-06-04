@@ -27,6 +27,12 @@
   dependencies:
     video-graph "file:../packages/video-graph"
 
+"@davidisaaclee/video-graph@/Users/david/Documents/Drawer/packages/video-graph":
+  version "1.0.0"
+  dependencies:
+    "@davidisaaclee/graph" "file:../packages/graph-js"
+    gl-matrix "^2.6.1"
+
 "@types/jest@^23.0.0":
   version "23.0.0"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.0.0.tgz#760cac74f00bb9c3075587716d2b3b4435663bc0"

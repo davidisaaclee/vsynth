@@ -1,5 +1,5 @@
 import { ActionType } from 'typesafe-actions';
-import { VideoGraph } from 'video-graph';
+import { VideoGraph } from '@davidisaaclee/video-graph';
 import { BUILD_GRAPH } from './constants';
 import * as actions from './actions';
 import buildGraph from '../../oscillator-mod';

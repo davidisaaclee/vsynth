@@ -1,4 +1,4 @@
-import { UniformSpecification } from 'video-graph';
+import { UniformSpecification } from '@davidisaaclee/video-graph';
 import { keyBy } from 'lodash';
 
 export default function uniformDictFromArray(
