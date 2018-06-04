@@ -4,7 +4,7 @@ import oscillatorShader from '../shaders/oscillator';
 import constantShader from '../shaders/constant';
 import { SimpleVideoGraph, VideoModuleSpecification } from './SimpleVideoGraph';
 
-interface VideoModule {
+export interface VideoModule {
 	shaderSource: string;
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
 	animationUniforms?: (frameIndex: number) => { [identifier: string]: UniformValue };
@@ -41,7 +41,7 @@ export const modules: { [key: string]: VideoModule } = {
 };
 
 
-interface RuntimeModule {
+export interface RuntimeModule {
 	program: WebGLProgram;
 }
 
@@ -78,7 +78,7 @@ export function videoGraphFromSimpleVideoGraph(
 				...uniformValuesToSpec(animationUniforms),
 				...uniformValuesToSpec(moduleSpec.uniforms),
 			}
-		}
+		};
 	});
 }
 
