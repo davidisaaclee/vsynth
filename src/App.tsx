@@ -101,7 +101,7 @@ class App extends React.Component<Props, State> {
 		}
 
 		const fps = 60;
-		const frameIndex = Math.floor((Date.now() - this.state.animationStartTime) / (fps / 1000));
+		const frameIndex = Math.floor(fps * (Date.now() - this.state.animationStartTime) / 1000);
 		if (this.state.frameIndex !== frameIndex) {
 			this.setState({ frameIndex });
 		}
