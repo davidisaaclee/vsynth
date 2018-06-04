@@ -35,12 +35,20 @@ const initialState: State = {
 				uniforms: {
 					frequency: {
 						type: 'f',
-						data: 0.5,
+						data: 11,
 					}
 				},
 			},
 		},
 		edges: {
+			'constant -> oscillator.rotation': {
+				src: 'oscillator',
+				dst: 'constant',
+				metadata: {
+					uniformIdentifier: 'rotationTheta'
+				}
+			},
+			/*
 			'constant -> lfo.rotation': {
 				src: 'lfo',
 				dst: 'constant',
@@ -55,6 +63,7 @@ const initialState: State = {
 					uniformIdentifier: 'rotationTheta'
 				}
 			}
+			*/
 		}
 	},
 	outputNodeKey: 'oscillator'
