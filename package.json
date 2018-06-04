@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@davidisaaclee/react-routing-matrix": "/Users/david/Documents/Drawer/packages/react-video-graph",
+    "@davidisaaclee/react-routing-matrix": "/Users/david/Documents/Drawer/packages/react-routing-matrix",
+    "@davidisaaclee/react-video-graph": "/Users/david/Documents/Drawer/packages/react-video-graph",
+    "@types/lodash": "^4.14.109",
     "@types/react-redux": "^6.0.1",
+    "lodash": "^4.17.10",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-redux": "^5.0.7",

@@ -1,36 +1,66 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { VideoGraph } from 'video-graph';
+import VideoGraphView from '@davidisaaclee/react-video-graph';
 import { State } from './modules';
 import { actions } from './modules/graph';
+import './App.css';
+
+const e = React.createElement;
 
 interface Props {
-	counter: number;
-	increment: () => any;
+	graph: VideoGraph;
+	outputNodeKey: string | null;
+	updateGraph: (gl: WebGLRenderingContext) => any;
 }
 
 class App extends React.Component<Props, any> {
+
+	private gl: WebGLRenderingContext | null = null;
+
   public render() {
-    return (
-      <div className="App">
-				{this.props.counter}
-				<button onClick={this.props.increment}>
-					Increment
-				</button>
-      </div>
-    );
+		const {
+			graph, outputNodeKey, updateGraph,
+		} = this.props;
+
+		return e('div',
+			{},
+			[
+				e(VideoGraphView,
+					{
+						key: 'screen',
+						graph,
+						outputNodeKey,
+						runtimeUniforms: {},
+						glRef: (gl: WebGLRenderingContext) => {
+							if (this.gl == null) {
+								this.gl = gl;
+								if (gl != null) {
+									updateGraph(gl);
+								}
+							}
+						},
+						style: {
+							width: '100vw',
+							height: '100vh',
+							display: 'block'
+						}
+					}),
+			]);
   }
 }
 
 function mapStateToProps(state: State): any {
 	return {
-		counter: state.graph.counter,
+		graph: state.graph.graph,
+		outputNodeKey: state.graph.outputNodeKey,
 	};
 }
 
 function mapDispatchToProps(dispatch: Dispatch): any {
 	return {
-		increment: () => dispatch(actions.increment(1)),
+		updateGraph: (gl: WebGLRenderingContext) => dispatch(actions.buildGraph(gl)),
 	};
 }
 

@@ -1,6 +1,6 @@
 import { action } from 'typesafe-actions';
-import { INCREMENT } from './constants';
+import { BUILD_GRAPH } from './constants';
 
-export const increment =
-	(delta: number) => action(INCREMENT, delta);
+export const buildGraph =
+	(gl: WebGLRenderingContext) => action(BUILD_GRAPH, gl);
 

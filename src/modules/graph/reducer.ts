@@ -1,23 +1,31 @@
 import { ActionType } from 'typesafe-actions';
-import { INCREMENT } from './constants';
+import { VideoGraph } from 'video-graph';
+import { BUILD_GRAPH } from './constants';
 import * as actions from './actions';
+import buildGraph from '../../oscillator-mod';
 
 export interface State {
-	counter: number;
+	graph: VideoGraph;
+	outputNodeKey: string | null;
 };
 
 const initialState: State = {
-	counter: 0,
+	graph: {
+		nodes: {},
+		edges: {}
+	},
+	outputNodeKey: null
 };
 
 type RootAction = ActionType<typeof actions>;
 
 export const reducer = (state: State = initialState, action: RootAction) => {
 	switch (action.type) {
-		case INCREMENT:
+		case BUILD_GRAPH:
 			return {
 				...state,
-				counter: state.counter + 1
+				graph: buildGraph(action.payload, 20, 0.2),
+				outputNodeKey: 'oscillator',
 			};
 
 		default:
