@@ -30,18 +30,18 @@ function mapStateToProps(state: RootState): StateProps {
 
 	const indexOfInlet = (moduleKey: string, inletKey: string): number => (
 		inletsList.findIndex(elm => elm.moduleKey === moduleKey && elm.inletKey === inletKey)
+		// Offset by one to account for output row.
+		+ 1
 	);
 	const indexOfModuleOutput = (moduleKey: string): number => (
 		moduleOutputList.indexOf(moduleKey)
-		// Offset by one to account for output row.
-		+ 1
 	);
 
 	const edges: Array<[number, number, boolean]> = values(state.graph.graph.edges)
 		.map(({ src, dst, metadata }) => {
 			return [
-				indexOfModuleOutput(dst),
 				indexOfInlet(src, metadata.inlet),
+				indexOfModuleOutput(dst),
 				true,
 			] as [number, number, boolean]
 		});
@@ -56,7 +56,6 @@ function mapStateToProps(state: RootState): StateProps {
 		renderCell: edgeLookup(
 			edges,
 			(value: boolean | null, row: number, column: number) => {
-				console.log(value, row, outputRowIndex, moduleOutputList[column], state.graph.outputNodeKey);
 				if (value) {
 					return e('span',
 						{
