@@ -5,7 +5,6 @@ import { Dispatch } from 'redux';
 import VideoGraphView from '@davidisaaclee/react-video-graph';
 import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
 import { State as RootState } from '../../modules';
-import { actions } from '../../modules/graph';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
 import {
 	modules as videoModules, VideoModule,
@@ -20,7 +19,6 @@ interface StateProps {
 }
 
 interface DispatchProps {
-	updateGraph: (gl: WebGLRenderingContext) => any;
 }
 
 type Props = StateProps & DispatchProps;
@@ -87,7 +85,6 @@ class Screen extends React.Component<Props, State> {
 
 	private setup(gl: WebGLRenderingContext) {
 		this.gl = gl;
-		this.props.updateGraph(gl);
 		this.modulesRuntime = mapValues(videoModules, (mod: VideoModule): RuntimeModule => ({
 			program: createProgramWithFragmentShader(gl, mod.shaderSource)
 		}));
@@ -117,9 +114,7 @@ function mapStateToProps(state: RootState): StateProps {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
-	return {
-		updateGraph: (gl: WebGLRenderingContext) => dispatch(actions.buildGraph(gl)),
-	};
+	return { };
 }
 
 export default connect(

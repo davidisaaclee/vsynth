@@ -2,9 +2,14 @@ import { flatMap, defaultTo, values } from 'lodash';
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { RoutingMatrix as RoutingMatrixView, edgeLookup } from '@davidisaaclee/react-routing-matrix';
+import {
+	RoutingMatrix as RoutingMatrixView,
+	edgeLookup,
+	Props as RoutingMatrixProps
+} from '@davidisaaclee/react-routing-matrix';
 import * as Kit from '../../../model/Kit';
 import { State as RootState } from '../../../modules';
+import * as Graph from '../../../modules/graph';
 import './RoutingMatrix.css';
 
 const e = React.createElement;
@@ -12,8 +17,16 @@ const e = React.createElement;
 interface StateProps {
 	rows: string[];
 	columns: string[];
-	renderCell?: (row: number, column: number) => React.ReactNode;
+	makeRenderCell: (setMasterOutput: (nodeKey: string) => any) => (row: number, column: number) => React.ReactNode;
 }
+
+// TODO: I think this should be Exclude<RoutingMatrixProps, DispatchProps & StateProps>, but that doesn't seem to work
+type OwnProps = Partial<RoutingMatrixProps>;
+
+interface DispatchProps {
+	setMasterOutput: (nodeKey: string) => any;
+}
+
 
 function mapStateToProps(state: RootState): StateProps {
 	const moduleOutputList = Object.keys(state.graph.graph.nodes);
@@ -53,7 +66,7 @@ function mapStateToProps(state: RootState): StateProps {
 		],
 		columns: moduleOutputList,
 
-		renderCell: edgeLookup(
+		makeRenderCell: (setMasterOutput) => edgeLookup(
 			edges,
 			(value: boolean | null, row: number, column: number) => {
 				if (value) {
@@ -67,18 +80,31 @@ function mapStateToProps(state: RootState): StateProps {
 								margin: '0 auto',
 							}
 						});
-				} else if (row === outputRowIndex && moduleOutputList[column] === state.graph.outputNodeKey) {
-					return e('span',
-						{
-							style: {
-								width: 20,
-								height: 20,
-								display: 'block',
-								margin: '0 auto',
-								borderRadius: 20,
-								border: '1px solid black',
-							}
-						});
+				} else if (row === outputRowIndex) {
+					if (moduleOutputList[column] === state.graph.outputNodeKey) {
+						return e('span',
+							{
+								style: {
+									width: 20,
+									height: 20,
+									display: 'block',
+									margin: '0 auto',
+									borderRadius: 20,
+									border: '1px solid black',
+								}
+							});
+					} else {
+						return e('span',
+							{
+								style: {
+									width: 30,
+									height: 30,
+									display: 'block',
+									margin: '0 auto',
+								},
+								onClick: () => setMasterOutput(moduleOutputList[column]),
+							});
+					}
 				} else {
 					return null;
 				}
@@ -87,17 +113,31 @@ function mapStateToProps(state: RootState): StateProps {
 	};
 }
 
-interface DispatchProps {
-}
-
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
-	return {};
+	return {
+		setMasterOutput: (nodeKey: string) => dispatch(Graph.actions.setMasterOutput(nodeKey))
+	};
 }
 
-type OwnProps = React.HTMLAttributes<HTMLTableElement>;
+function mergeProps(
+	stateProps: StateProps,
+	dispatchProps: DispatchProps,
+	ownProps: OwnProps
+): object {
+	const { makeRenderCell, ...restStateProps } = stateProps;
+	const { setMasterOutput, ...restDispatchProps } = dispatchProps;
+
+	return {
+		...ownProps,
+		...restStateProps,
+		...restDispatchProps,
+		renderCell: makeRenderCell(setMasterOutput)
+	};
+}
 
 export default connect<StateProps, DispatchProps, OwnProps>(
 	mapStateToProps,
-	mapDispatchToProps
-)(RoutingMatrixView);
+	mapDispatchToProps,
+	mergeProps
+)(RoutingMatrixView) as React.ComponentClass<OwnProps>;
 
