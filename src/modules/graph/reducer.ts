@@ -1,7 +1,9 @@
 import { ActionType } from 'typesafe-actions';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
-import { SET_MASTER_OUTPUT } from './constants';
+import { findEdge, insertEdge, removeEdge } from '@davidisaaclee/graph';
+import * as Constants from './constants';
 import * as actions from './actions';
+import * as uuid from 'uuid';
 
 export interface State {
 	graph: SimpleVideoGraph;
@@ -72,11 +74,53 @@ type RootAction = ActionType<typeof actions>;
 
 export const reducer = (state: State = initialState, action: RootAction) => {
 	switch (action.type) {
-		case SET_MASTER_OUTPUT:
+		case Constants.SET_MASTER_OUTPUT:
 			return {
 				...state,
 				outputNodeKey: action.payload,
 			};
+
+		case Constants.CONNECT_NODES:
+			return (({ toNodeKey, fromNodeKey, inletKey }) => {
+				const edge = {
+					src: toNodeKey,
+					dst: fromNodeKey,
+					metadata: {
+						inlet: inletKey
+					}
+				};
+
+				if (findEdge(state.graph, e => edge === e) != null) {
+					return state;
+				} else {
+					return {
+						...state,
+						graph: insertEdge(state.graph, edge, uuid())
+					};
+				}
+			})(action.payload);
+
+		case Constants.DISCONNECT_NODES:
+			return (({ toNodeKey, fromNodeKey, inletKey }) => {
+				const edge = {
+					src: action.payload.toNodeKey,
+					dst: action.payload.fromNodeKey,
+					metadata: {
+						inlet: action.payload.inletKey
+					}
+				};
+
+				const edgeKeyToRemove = findEdge(state.graph, e => edge === e);
+
+				if (edgeKeyToRemove == null) {
+					return state;
+				} else {
+					return {
+						...state,
+						graph: removeEdge(state.graph, edgeKeyToRemove)
+					};
+				}
+			})(action.payload);
 
 		default:
 			return state;
