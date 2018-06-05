@@ -45,7 +45,7 @@ const initialState: State = {
 				src: 'oscillator',
 				dst: 'constant',
 				metadata: {
-					uniformIdentifier: 'rotationTheta'
+					inlet: 'rotation'
 				}
 			},
 			/*

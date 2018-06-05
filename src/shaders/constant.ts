@@ -1,4 +1,4 @@
-import { glsl } from 'video-graph';
+import { glsl } from '@davidisaaclee/video-graph';
 
 export default glsl`
 	precision mediump float;

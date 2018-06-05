@@ -1,8 +1,13 @@
-import { VideoGraph, PluginNode, UniformValue, UniformSpecification } from '@davidisaaclee/video-graph';
-import { mapNodes } from '@davidisaaclee/graph';
+import {
+	VideoGraph, PluginNode, PluginConnection,
+	UniformValue, UniformSpecification
+} from '@davidisaaclee/video-graph';
+import { mapNodes, mapEdges } from '@davidisaaclee/graph';
 import oscillatorShader from '../shaders/oscillator';
 import constantShader from '../shaders/constant';
-import { SimpleVideoGraph, VideoModuleSpecification } from './SimpleVideoGraph';
+import {
+	SimpleVideoGraph, VideoModuleSpecification, InletSpecification
+} from './SimpleVideoGraph';
 
 export interface VideoModule {
 	shaderSource: string;
@@ -57,7 +62,7 @@ export function videoGraphFromSimpleVideoGraph(
 	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {
-	return mapNodes(graph, (moduleSpec: VideoModuleSpecification): PluginNode => {
+	const mappedNodes = mapNodes(graph, (moduleSpec: VideoModuleSpecification): PluginNode => {
 		const runtimeModule = runtime[moduleSpec.type];
 		const moduleConfiguration = modules[moduleSpec.type];
 
@@ -87,6 +92,23 @@ export function videoGraphFromSimpleVideoGraph(
 			}
 		};
 	});
+
+	return mapEdges(
+		mappedNodes,
+		(inletSpec: InletSpecification, src: string, dst: string): PluginConnection => {
+			const moduleConfiguration = modules[graph.nodes[src].type];
+
+			if (moduleConfiguration == null) {
+				throw new Error(`No module configuration found for module type: ${graph.nodes[src].type}`);
+			}
+			if (moduleConfiguration.inletUniforms == null) {
+				throw new Error("Edge connecting to node with no inlets");
+			}
+
+			return {
+				uniformIdentifier: moduleConfiguration.inletUniforms[inletSpec.inlet]
+			};
+		});
 }
 
 function uniformValuesToSpec(

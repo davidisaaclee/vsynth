@@ -1,0 +1,55 @@
+.routing-matrix {
+	border-collapse: collapse;
+}
+
+.row:nth-child(even) {
+	background-color: #ddd;
+}
+
+.row:nth-child(odd) {
+	background-color: white;
+}
+
+.row {
+	height: 30px;
+}
+
+.row-header-cell {
+	text-align: right;
+	border: 1px solid black;
+	border-left: none;
+	padding: 0 0.5em;
+}
+
+.column-header-cell {
+	background-color: white;
+	border: 1px solid black;
+	border-top: none;
+	padding: 0.5em 0;
+}
+
+.column-header-cell > * {
+	transform: rotate(180deg);
+	writing-mode: vertical-rl;
+	white-space: nowrap;
+	margin: 0 auto;
+}
+
+.cell {
+	border: 1px solid black;
+	width: 30px;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.header {
+	font-family: sans-serif;
+	font-weight: normal;
+}
+
+.cross-axis-cell {
+	visibility: hidden;
+}
+
+
+

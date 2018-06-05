@@ -25,9 +25,9 @@
 "@davidisaaclee/react-video-graph@file:../packages/react-video-graph":
   version "1.0.0"
   dependencies:
-    video-graph "file:../packages/video-graph"
+    "@davidisaaclee/video-graph" "file:../packages/video-graph"
 
-"@davidisaaclee/video-graph@/Users/david/Documents/Drawer/packages/video-graph":
+"@davidisaaclee/video-graph@file:../packages/video-graph":
   version "1.0.0"
   dependencies:
     "@davidisaaclee/graph" "file:../packages/graph-js"
@@ -7132,12 +7132,6 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
-
-"video-graph@file:../packages/video-graph":
-  version "1.0.0"
-  dependencies:
-    "@davidisaaclee/graph" "file:../packages/graph-js"
-    gl-matrix "^2.6.1"
 
 vm-browserify@0.0.4:
   version "0.0.4"
