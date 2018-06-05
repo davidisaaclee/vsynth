@@ -1,2 +1,2 @@
-export const BUILD_GRAPH = 'BUILD_GRAPH';
+export const SET_MASTER_OUTPUT = 'SET_MASTER_OUTPUT';
 

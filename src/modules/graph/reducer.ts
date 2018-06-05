@@ -1,8 +1,7 @@
 import { ActionType } from 'typesafe-actions';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
-// import { BUILD_GRAPH } from './constants';
+import { SET_MASTER_OUTPUT } from './constants';
 import * as actions from './actions';
-// import buildGraph from '../../oscillator-mod';
 
 export interface State {
 	graph: SimpleVideoGraph;
@@ -73,14 +72,11 @@ type RootAction = ActionType<typeof actions>;
 
 export const reducer = (state: State = initialState, action: RootAction) => {
 	switch (action.type) {
-			/*
-		case BUILD_GRAPH:
+		case SET_MASTER_OUTPUT:
 			return {
 				...state,
-				graph: buildGraph(action.payload, 20, 0.2),
-				outputNodeKey: 'oscillator',
+				outputNodeKey: action.payload,
 			};
-			*/
 
 		default:
 			return state;

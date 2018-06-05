@@ -1,6 +1,6 @@
 import { action } from 'typesafe-actions';
-import { BUILD_GRAPH } from './constants';
+import { SET_MASTER_OUTPUT } from './constants';
 
-export const buildGraph =
-	(gl: WebGLRenderingContext) => action(BUILD_GRAPH, gl);
+export const setMasterOutput =
+	(nodeKey: string) => action(SET_MASTER_OUTPUT, nodeKey);
 
