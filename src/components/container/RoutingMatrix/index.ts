@@ -26,11 +26,15 @@ function mapStateToProps(state: RootState): StateProps {
 					{}))
 			.map(inletKey => ({ moduleKey, inletKey }))));
 
+	const outputRowIndex = 0;
+
 	const indexOfInlet = (moduleKey: string, inletKey: string): number => (
 		inletsList.findIndex(elm => elm.moduleKey === moduleKey && elm.inletKey === inletKey)
 	);
 	const indexOfModuleOutput = (moduleKey: string): number => (
 		moduleOutputList.indexOf(moduleKey)
+		// Offset by one to account for output row.
+		+ 1
 	);
 
 	const edges: Array<[number, number, boolean]> = values(state.graph.graph.edges)
@@ -43,24 +47,43 @@ function mapStateToProps(state: RootState): StateProps {
 		});
 
 	return {
-		rows: inletsList.map(({ inletKey, moduleKey }) => `${moduleKey} • ${inletKey}`),
+		rows: [
+			'output',
+			...inletsList.map(({ inletKey, moduleKey }) => `${moduleKey} • ${inletKey}`),
+		],
 		columns: moduleOutputList,
 
 		renderCell: edgeLookup(
 			edges,
-			(value: boolean | null) => (
-				e('span',
-					{
-						style: (value
-							? {
+			(value: boolean | null, row: number, column: number) => {
+				console.log(value, row, outputRowIndex, moduleOutputList[column], state.graph.outputNodeKey);
+				if (value) {
+					return e('span',
+						{
+							style: {
 								backgroundColor: 'black',
 								width: 20,
 								height: 20,
 								display: 'block',
 								margin: '0 auto',
 							}
-							: {})
-					})))
+						});
+				} else if (row === outputRowIndex && moduleOutputList[column] === state.graph.outputNodeKey) {
+					return e('span',
+						{
+							style: {
+								width: 20,
+								height: 20,
+								display: 'block',
+								margin: '0 auto',
+								borderRadius: 20,
+								border: '1px solid black',
+							}
+						});
+				} else {
+					return null;
+				}
+			})
 		
 	};
 }
