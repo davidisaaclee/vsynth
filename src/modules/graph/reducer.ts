@@ -1,4 +1,5 @@
 import { ActionType } from 'typesafe-actions';
+import { isEqual } from 'lodash';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
 import { findEdge, insertEdge, removeEdge } from '@davidisaaclee/graph';
 import * as Constants from './constants';
@@ -110,7 +111,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				const edgeKeyToRemove = findEdge(state.graph, e => edge === e);
+				const edgeKeyToRemove = findEdge(state.graph, e => isEqual(edge, e));
 
 				if (edgeKeyToRemove == null) {
 					return state;

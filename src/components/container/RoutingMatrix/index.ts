@@ -14,10 +14,22 @@ import './RoutingMatrix.css';
 
 const e = React.createElement;
 
+interface Connection {
+	fromNodeKey: string;
+	toNodeKey: string;
+	inletKey: string;
+}
+
+interface RenderCellConfig {
+	setMasterOutput: (nodeKey: string) => any;
+	connectNodes: (connection: Connection) => any;
+	disconnectNodes: (connection: Connection) => any;
+};
+
 interface StateProps {
 	rows: string[];
 	columns: string[];
-	makeRenderCell: (setMasterOutput: (nodeKey: string) => any) => (row: number, column: number) => React.ReactNode;
+	makeRenderCell: (config: RenderCellConfig) => (row: number, column: number) => React.ReactNode;
 }
 
 // TODO: I think this should be Exclude<RoutingMatrixProps, DispatchProps & StateProps>, but that doesn't seem to work
@@ -25,6 +37,8 @@ type OwnProps = Partial<RoutingMatrixProps>;
 
 interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;
+	connectNodes: (connection: Connection) => any;
+	disconnectNodes: (connection: Connection) => any;
 }
 
 
@@ -66,9 +80,15 @@ function mapStateToProps(state: RootState): StateProps {
 		],
 		columns: moduleOutputList,
 
-		makeRenderCell: (setMasterOutput) => edgeLookup(
+		makeRenderCell: ({ setMasterOutput, connectNodes, disconnectNodes }) => edgeLookup(
 			edges,
 			(value: boolean | null, row: number, column: number) => {
+				const connection = () => ({
+					fromNodeKey: moduleOutputList[column],
+					toNodeKey: inletsList[row - 1].moduleKey,
+					inletKey: inletsList[row - 1].inletKey,
+				});
+
 				if (value) {
 					return e('span',
 						{
@@ -78,7 +98,8 @@ function mapStateToProps(state: RootState): StateProps {
 								height: 20,
 								display: 'block',
 								margin: '0 auto',
-							}
+							},
+							onClick: () => disconnectNodes(connection())
 						});
 				} else if (row === outputRowIndex) {
 					if (moduleOutputList[column] === state.graph.outputNodeKey) {
@@ -106,7 +127,16 @@ function mapStateToProps(state: RootState): StateProps {
 							});
 					}
 				} else {
-					return null;
+					return e('span',
+						{
+							style: {
+								width: 30,
+								height: 30,
+								display: 'block',
+								margin: '0 auto',
+							},
+							onClick: () => connectNodes(connection())
+						});
 				}
 			})
 		
@@ -115,7 +145,9 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		setMasterOutput: (nodeKey: string) => dispatch(Graph.actions.setMasterOutput(nodeKey))
+		setMasterOutput: (nodeKey: string) => dispatch(Graph.actions.setMasterOutput(nodeKey)),
+		connectNodes: (connection) => dispatch(Graph.actions.connectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
+		disconnectNodes: (connection) => dispatch(Graph.actions.disconnectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
 	};
 }
 
@@ -125,13 +157,20 @@ function mergeProps(
 	ownProps: OwnProps
 ): object {
 	const { makeRenderCell, ...restStateProps } = stateProps;
-	const { setMasterOutput, ...restDispatchProps } = dispatchProps;
+	const {
+		setMasterOutput, connectNodes, disconnectNodes,
+		...restDispatchProps
+	} = dispatchProps;
 
 	return {
 		...ownProps,
 		...restStateProps,
 		...restDispatchProps,
-		renderCell: makeRenderCell(setMasterOutput)
+		renderCell: makeRenderCell({
+			setMasterOutput,
+			connectNodes,
+			disconnectNodes,
+		})
 	};
 }
 
