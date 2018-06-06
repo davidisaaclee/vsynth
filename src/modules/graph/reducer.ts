@@ -1,7 +1,9 @@
 import { ActionType } from 'typesafe-actions';
 import { isEqual } from 'lodash';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
-import { findEdge, insertEdge, removeEdge } from '@davidisaaclee/graph';
+import {
+	findEdge, insertEdge, removeEdge, filterEdges
+} from '@davidisaaclee/graph';
 import * as Constants from './constants';
 import * as actions from './actions';
 import * as uuid from 'uuid';
@@ -83,7 +85,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 
 		case Constants.CONNECT_NODES:
 			return (({ toNodeKey, fromNodeKey, inletKey }) => {
-				const edge = {
+				const edgeToInsert = {
 					src: toNodeKey,
 					dst: fromNodeKey,
 					metadata: {
@@ -91,12 +93,22 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				if (findEdge(state.graph, e => edge === e) != null) {
+				if (findEdge(state.graph, e => edgeToInsert === e) != null) {
 					return state;
 				} else {
+					// Remove edges already connected to this inlet.
+					const edgesToRemove =
+						filterEdges(state.graph, edge =>
+							edge.src === toNodeKey && edge.metadata.inlet === inletKey);
+
+					const graphWithExistingEdgesRemoved =
+						Object.keys(edgesToRemove).reduce(
+							(graph, edgeKeyToRemove) => removeEdge(graph, edgeKeyToRemove),
+							state.graph)
+
 					return {
 						...state,
-						graph: insertEdge(state.graph, edge, uuid())
+						graph: insertEdge(graphWithExistingEdgesRemoved, edgeToInsert, uuid())
 					};
 				}
 			})(action.payload);

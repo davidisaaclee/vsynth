@@ -98,8 +98,7 @@ function mapStateToProps(state: RootState): StateProps {
 								height: 20,
 								display: 'block',
 								margin: '0 auto',
-							},
-							onClick: () => disconnectNodes(connection())
+							}
 						});
 				} else if (row === outputRowIndex) {
 					if (moduleOutputList[column] === state.graph.outputNodeKey) {
