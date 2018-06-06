@@ -1,9 +1,7 @@
 import { ActionType } from 'typesafe-actions';
 import { isEqual } from 'lodash';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
-import {
-	findEdge, insertEdge, removeEdge, filterEdges
-} from '@davidisaaclee/graph';
+import * as Graph from '@davidisaaclee/graph';
 import * as Constants from './constants';
 import * as actions from './actions';
 import * as uuid from 'uuid';
@@ -84,22 +82,22 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				if (findEdge(state.graph, e => edgeToInsert === e) != null) {
+				if (Graph.findEdge(state.graph, e => edgeToInsert === e) != null) {
 					return state;
 				} else {
 					// Remove edges already connected to this inlet.
 					const edgesToRemove =
-						filterEdges(state.graph, edge =>
+						Graph.filterEdges(state.graph, edge =>
 							edge.src === toNodeKey && edge.metadata.inlet === inletKey);
 
 					const graphWithExistingEdgesRemoved =
 						Object.keys(edgesToRemove).reduce(
-							(graph, edgeKeyToRemove) => removeEdge(graph, edgeKeyToRemove),
+							(graph, edgeKeyToRemove) => Graph.removeEdge(graph, edgeKeyToRemove),
 							state.graph)
 
 					return {
 						...state,
-						graph: insertEdge(graphWithExistingEdgesRemoved, edgeToInsert, uuid())
+						graph: Graph.insertEdge(graphWithExistingEdgesRemoved, edgeToInsert, uuid())
 					};
 				}
 			})(action.payload);
@@ -114,17 +112,26 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				const edgeKeyToRemove = findEdge(state.graph, e => isEqual(edge, e));
+				const edgeKeyToRemove = Graph.findEdge(state.graph, e => isEqual(edge, e));
 
 				if (edgeKeyToRemove == null) {
 					return state;
 				} else {
 					return {
 						...state,
-						graph: removeEdge(state.graph, edgeKeyToRemove)
+						graph: Graph.removeEdge(state.graph, edgeKeyToRemove)
 					};
 				}
 			})(action.payload);
+
+		case Constants.INSERT_NODE:
+			return {
+				...state,
+				graph: Graph.insertNode(
+					state.graph,
+					action.payload.node,
+					action.payload.id)
+			};
 
 		default:
 			return state;

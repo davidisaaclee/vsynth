@@ -21,7 +21,11 @@ interface StateProps {
 interface DispatchProps {
 }
 
-type Props = StateProps & DispatchProps;
+interface OwnProps {
+	glRef: (gl: WebGLRenderingContext | null) => any;
+}
+
+type Props = StateProps & DispatchProps & OwnProps;
 
 interface State {
 	isAnimating: boolean;
@@ -72,6 +76,8 @@ class Screen extends React.Component<Props, State> {
 						glRef: (gl: WebGLRenderingContext) => {
 							if (this.gl == null && gl != null) {
 								this.setup(gl);
+								// TODO: does it make sense to only pass gl on first instancing?
+								this.props.glRef(gl);
 							}
 						},
 						style: {

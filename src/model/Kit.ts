@@ -6,10 +6,11 @@ import { mapNodes, mapEdges } from '@davidisaaclee/graph';
 import oscillatorShader from '../shaders/oscillator';
 import constantShader from '../shaders/constant';
 import {
-	SimpleVideoGraph, VideoModuleSpecification, InletSpecification
+	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
 } from './SimpleVideoGraph';
 
 export interface VideoModule {
+	type: ModuleType;
 	shaderSource: string;
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
 	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => { [identifier: string]: UniformValue };
@@ -20,11 +21,16 @@ export interface VideoModule {
 // key :: ModuleType
 export const modules: { [key: string]: VideoModule } = {
 	'oscillator': {
+		type: 'oscillator',
 		shaderSource: oscillatorShader,
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'inputTextureDimensions': {
 				type: '2f',
 				data: [gl.canvas.width, gl.canvas.height]
+			},
+			'frequency': {
+				type: 'f',
+				data: Math.random() * 1
 			}
 		}),
 		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => ({
@@ -40,6 +46,7 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 
 	'constant': {
+		type: 'constant',
 		shaderSource: constantShader,
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'value': {

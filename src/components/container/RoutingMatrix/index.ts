@@ -10,9 +10,33 @@ import {
 import * as Kit from '../../../model/Kit';
 import { State as RootState } from '../../../modules';
 import * as Graph from '../../../modules/graph';
+import * as App from '../../../modules/app';
 import './RoutingMatrix.css';
 
 const e = React.createElement;
+
+type Props = RoutingMatrixProps & { openNodePicker: () => any, };
+
+const RoutingMatrix: React.StatelessComponent<Props> = ({ openNodePicker, style, ...props }) =>
+	e('span',
+		{ style },
+		e(RoutingMatrixView,
+			{
+				style: {
+					display: 'inline',
+				},
+				...props,
+			}),
+		e('button',
+			{
+				style: {
+					margin: 20,
+				},
+				onClick: openNodePicker
+			},
+			'Add'));
+
+
 
 interface Connection {
 	fromNodeKey: string;
@@ -39,6 +63,7 @@ interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;
 	connectNodes: (connection: Connection) => any;
 	disconnectNodes: (connection: Connection) => any;
+	openNodePicker: () => any;
 }
 
 
@@ -144,9 +169,10 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		setMasterOutput: (nodeKey: string) => dispatch(Graph.actions.setMasterOutput(nodeKey)),
+		setMasterOutput: (nodeKey) => dispatch(Graph.actions.setMasterOutput(nodeKey)),
 		connectNodes: (connection) => dispatch(Graph.actions.connectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
 		disconnectNodes: (connection) => dispatch(Graph.actions.disconnectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
+		openNodePicker: () => dispatch(App.actions.setModal(App.Modals.PICK_MODULE)),
 	};
 }
 
@@ -157,7 +183,8 @@ function mergeProps(
 ): object {
 	const { makeRenderCell, ...restStateProps } = stateProps;
 	const {
-		setMasterOutput, connectNodes, disconnectNodes,
+		setMasterOutput, connectNodes,
+		disconnectNodes,
 		...restDispatchProps
 	} = dispatchProps;
 
@@ -177,5 +204,5 @@ export default connect<StateProps, DispatchProps, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps,
 	mergeProps
-)(RoutingMatrixView) as React.ComponentClass<OwnProps>;
+)(RoutingMatrix) as React.ComponentClass<OwnProps>;
 
