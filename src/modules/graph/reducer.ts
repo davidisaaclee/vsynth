@@ -52,22 +52,13 @@ const initialState: State = {
 					inlet: 'rotation'
 				}
 			},
-			/*
 			'constant -> lfo.rotation': {
 				src: 'lfo',
 				dst: 'constant',
 				metadata: {
-					uniformIdentifier: 'rotationTheta'
+					inlet: 'rotation'
 				}
 			},
-			'lfo -> osc.rotation': {
-				src: 'oscillator',
-				dst: 'lfo',
-				metadata: {
-					uniformIdentifier: 'rotationTheta'
-				}
-			}
-			*/
 		}
 	},
 	outputNodeKey: 'oscillator'
