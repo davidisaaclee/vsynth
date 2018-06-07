@@ -1,6 +1,8 @@
 import { ActionType } from 'typesafe-actions';
 import { isEqual } from 'lodash';
-import { SimpleVideoGraph, Edge as SimpleVideoGraphEdge } from '../../model/SimpleVideoGraph';
+import {
+	SimpleVideoGraph, Edge as SimpleVideoGraphEdge, VideoModuleSpecification
+} from '../../model/SimpleVideoGraph';
 import { modules, videoModuleSpecFromModule } from '../../model/Kit';
 import * as Graph from '@davidisaaclee/graph';
 import * as Constants from './constants';
@@ -108,6 +110,21 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					state.graph,
 					action.payload.node,
 					action.payload.id)
+			};
+
+		case Constants.SET_PARAMETER:
+			return {
+				...state,
+				graph: Graph.mutateNode(
+					state.graph,
+					action.payload.nodeKey,
+					(node: VideoModuleSpecification) => ({
+						...node,
+						parameters: {
+							...node.parameters,
+							[action.payload.parameterKey]: action.payload.value
+						}
+					}))
 			};
 
 		default:

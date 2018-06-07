@@ -14,3 +14,6 @@ export const disconnectNodes = (fromNodeKey: string, toNodeKey: string, inletKey
 export const insertNode = (node: VideoModuleSpecification, id: string) =>
 	action(Constants.INSERT_NODE, { node, id });
 
+export const setParameter = (nodeKey: string, parameterKey: string, value: number) =>
+	action(Constants.SET_PARAMETER, { nodeKey, parameterKey, value });
+

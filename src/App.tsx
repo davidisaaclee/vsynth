@@ -6,6 +6,7 @@ import { VideoModule, videoModuleSpecFromModule } from './model/Kit';
 import Screen from './components/container/Screen';
 import RoutingMatrix from './components/container/RoutingMatrix';
 import ModulePicker from './components/container/ModulePicker';
+import NodeControls from './components/container/ConnectedNodeControls';
 import * as AppModule from './modules/app';
 import * as Graph from './modules/graph';
 import './App.css';
@@ -29,8 +30,7 @@ class App extends React.Component<Props, object> {
 					}
 				});
 		} else if (AppModule.Modals.isNodeControls(modal)) {
-			// TODO
-			return e('div', {}, `Editing ${modal.nodeKey}...`);
+			return e(NodeControls, { nodeKey: modal.nodeKey });
 		} else {
 			throw new Error(`Invalid modal type: ${modal}`);
 		}
