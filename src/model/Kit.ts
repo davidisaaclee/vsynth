@@ -1,4 +1,4 @@
-
+import { mapValues } from 'lodash';
 import {
 	VideoGraph, PluginNode, PluginConnection,
 	UniformValue, UniformSpecification
@@ -11,11 +11,21 @@ import {
 } from './SimpleVideoGraph';
 
 /*
+ * A non-texture-based parameter to a module, which can be translated to a
+ * set of uniforms to be provided to the fragment shader.
+ */
+export interface Parameter {
+	initialValue(): number;
+	toUniforms(value: number): { [identifier: string]: UniformValue };
+}
+
+/*
  * Configurations of nodes to be instantiated in a VideoGraph.
  */
 export interface VideoModule {
 	type: ModuleType;
 	shaderSource: string;
+	parameters?: { [identifier: string]: Parameter };
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
 	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => { [identifier: string]: UniformValue };
 	// maps display name to uniform identifier
@@ -27,6 +37,17 @@ export const modules: { [key: string]: VideoModule } = {
 	'oscillator': {
 		type: 'oscillator',
 		shaderSource: oscillatorShader,
+		parameters: {
+			'frequency': {
+				initialValue: () => Math.random() * 50,
+				toUniforms: (value: number) => ({
+					'frequency': {
+						type: 'f',
+						data: value
+					}
+				}),
+			}
+		},
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'inputTextureDimensions': {
 				type: '2f',
@@ -61,6 +82,15 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 };
 
+export function videoModuleSpecFromModule(mod: VideoModule): VideoModuleSpecification {
+	return {
+		type: mod.type,
+		uniforms: {},
+		parameters: mapValues(
+			mod.parameters,
+			param => param.initialValue())
+	};
+}
 
 // Holds all the necessary information to use a specific video module
 // with a specific WebGL runtime.
@@ -90,17 +120,31 @@ export function videoGraphFromSimpleVideoGraph(
 			? {} 
 			: moduleConfiguration.defaultUniforms(gl);
 
+		const parameterUniforms = moduleConfiguration.parameters == null
+			? {}
+			: Object.keys(moduleConfiguration.parameters)
+				.map(paramKey => {
+					if (moduleSpec.parameters[paramKey] == null) {
+						throw new Error(`No value specified for parameter ${paramKey}`);
+					}
+
+					return moduleConfiguration.parameters![paramKey]
+						.toUniforms(moduleSpec.parameters[paramKey]);
+				})
+				.reduce((acc, elm) => Object.assign(acc, elm), {});
+
 		const animationUniforms = moduleConfiguration.animationUniforms == null
 			? {} 
 			: moduleConfiguration.animationUniforms(
 				frameIndex, 
-				{ ...defaultUniforms, ...moduleSpec.uniforms });
+				{ ...defaultUniforms, ...moduleSpec.uniforms, ...parameterUniforms });
 
 		return {
 			program: runtimeModule.program,
 			uniforms: {
 				...uniformValuesToSpec(defaultUniforms),
 				...uniformValuesToSpec(animationUniforms),
+				...uniformValuesToSpec(parameterUniforms),
 				...uniformValuesToSpec(moduleSpec.uniforms),
 			}
 		};

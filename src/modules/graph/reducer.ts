@@ -1,6 +1,7 @@
 import { ActionType } from 'typesafe-actions';
 import { isEqual } from 'lodash';
 import { SimpleVideoGraph, Edge as SimpleVideoGraphEdge } from '../../model/SimpleVideoGraph';
+import { modules, videoModuleSpecFromModule } from '../../model/Kit';
 import * as Graph from '@davidisaaclee/graph';
 import * as Constants from './constants';
 import * as actions from './actions';
@@ -14,33 +15,9 @@ export interface State {
 const initialState: State = {
 	graph: {
 		nodes: {
-			'constant': {
-				type: 'constant',
-				uniforms: {
-					value: {
-						type: '3f',
-						data: [0, 0, 0],
-					}
-				},
-			},
-			'oscillator': {
-				type: 'oscillator',
-				uniforms: {
-					frequency: {
-						type: 'f',
-						data: 20,
-					}
-				},
-			},
-			'lfo': {
-				type: 'oscillator',
-				uniforms: {
-					frequency: {
-						type: 'f',
-						data: 11,
-					}
-				},
-			},
+			'constant': videoModuleSpecFromModule(modules.constant),
+			'oscillator': videoModuleSpecFromModule(modules.oscillator),
+			'lfo': videoModuleSpecFromModule(modules.oscillator),
 		},
 		edges: {
 			'constant -> oscillator.rotation': {

@@ -15,6 +15,7 @@ export interface InletSpecification {
 
 export interface VideoModuleSpecification {
 	type: ModuleType;
+	parameters: { [identifier: string]: number };
 	uniforms: { [identifier: string]: UniformValue };
 }
 

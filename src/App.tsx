@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Modal from 'react-modal';
-import { VideoModule } from './model/Kit';
+import { VideoModule, videoModuleSpecFromModule } from './model/Kit';
 import Screen from './components/container/Screen';
 import RoutingMatrix from './components/container/RoutingMatrix';
 import ModulePicker from './components/container/ModulePicker';
@@ -79,10 +79,9 @@ let counter = 0;
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		closeModal: () => dispatch(AppModule.actions.setModal(null)),
-		addModule: (mod) => dispatch(Graph.actions.insertNode({
-			type: mod.type,
-			uniforms: {}
-		}, `${mod.type}-${counter++}`))
+		addModule: (mod) => dispatch(Graph.actions.insertNode(
+			videoModuleSpecFromModule(mod),
+			`${mod.type}-${counter++}`))
 	};
 }
 
