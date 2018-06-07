@@ -3,7 +3,7 @@
  * for use in a Redux store.
  */
 
-import { Graph } from '@davidisaaclee/graph';
+import { Graph, Edge } from '@davidisaaclee/graph';
 import { UniformValue } from '@davidisaaclee/video-graph';
 
 // TODO: Would be nice to make this typesafe with Kit.modules
@@ -20,4 +20,7 @@ export interface VideoModuleSpecification {
 
 export type SimpleVideoGraph =
 	Graph<VideoModuleSpecification, InletSpecification>;
+
+// TODO: It'd be nice to be able to automatically get this from a Graph<>.
+export type Edge = Edge<InletSpecification>;
 

@@ -1,6 +1,6 @@
 import { ActionType } from 'typesafe-actions';
 import { isEqual } from 'lodash';
-import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
+import { SimpleVideoGraph, Edge as SimpleVideoGraphEdge } from '../../model/SimpleVideoGraph';
 import * as Graph from '@davidisaaclee/graph';
 import * as Constants from './constants';
 import * as actions from './actions';
@@ -82,7 +82,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				if (Graph.findEdge(state.graph, e => edgeToInsert === e) != null) {
+				if (Graph.findEdge(state.graph, (e: SimpleVideoGraphEdge) => edgeToInsert === e) != null) {
 					return state;
 				} else {
 					// Remove edges already connected to this inlet.
@@ -112,7 +112,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				const edgeKeyToRemove = Graph.findEdge(state.graph, e => isEqual(edge, e));
+				const edgeKeyToRemove = Graph.findEdge(state.graph, (e: SimpleVideoGraphEdge) => isEqual(edge, e));
 
 				if (edgeKeyToRemove == null) {
 					return state;
