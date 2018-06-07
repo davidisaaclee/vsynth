@@ -52,6 +52,19 @@ class App extends React.Component<Props, object> {
 				{
 					isOpen: this.props.modal != null,
 					onRequestClose: this.props.closeModal,
+					style: {
+						content: {
+							opacity: 1,
+							backgroundColor: 'rgba(255, 255, 255, 0)',
+							borderRadius: 0,
+							border: '1px solid white',
+							outline: '1px solid black',
+						},
+						overlay: {
+							backgroundColor: 'rgba(255, 255, 255, 0)',
+							border: 'none',
+						}
+					}
 				},
 				this.props.modal == null
 				? null
