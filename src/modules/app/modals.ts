@@ -1,20 +1,20 @@
 const typeKey = 'type';
 
-export interface ModuleControls {
-	type: 'MODULE_CONTROLS';
-	moduleKey: string;
+export interface NodeControls {
+	type: 'NODE_CONTROLS';
+	nodeKey: string;
 }
 
 export type Modal =
 	'PICK_MODULE' 
-	| ModuleControls;
+	| NodeControls;
 
 export const PICK_MODULE = 'PICK_MODULE';
 
-export const MODULE_CONTROLS: (moduleKey: string) => ModuleControls =
-	(moduleKey: string) => ({ [typeKey]: 'MODULE_CONTROLS', moduleKey });
+export const NODE_CONTROLS: (nodeKey: string) => NodeControls =
+	(nodeKey: string) => ({ [typeKey]: 'NODE_CONTROLS', nodeKey });
 
-export function isModuleControls(modal: Modal): modal is ModuleControls {
-	return modal[typeKey] != null && modal[typeKey] === 'MODULE_CONTROLS';
+export function isNodeControls(modal: Modal): modal is NodeControls {
+	return modal[typeKey] != null && modal[typeKey] === 'NODE_CONTROLS';
 }
 

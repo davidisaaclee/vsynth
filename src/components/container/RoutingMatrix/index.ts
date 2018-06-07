@@ -53,7 +53,7 @@ interface RenderCellConfig {
 interface StateProps {
 	rowCount: number;
 	columnCount: number;
-	makeRenderRowHeader: (openModuleControls: (moduleKey: string) => any) => (rowIndex: number) => React.ReactNode;
+	makeRenderRowHeader: (openNodeControls: (nodeKey: string) => any) => (rowIndex: number) => React.ReactNode;
 	renderColumnHeader: (columnIndex: number) => React.ReactNode;
 	makeRenderCell: (config: RenderCellConfig) => (row: number, column: number) => React.ReactNode;
 }
@@ -74,7 +74,7 @@ type OwnProps = Pick<TableProps, 'style'>;
 
 interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;
-	openModuleControls: (moduleKey: string) => any;
+	openNodeControls: (nodeKey: string) => any;
 	connectNodes: (connection: Connection) => any;
 	disconnectNodes: (connection: Connection) => any;
 	openNodePicker: () => any;
@@ -82,52 +82,52 @@ interface DispatchProps {
 
 
 function mapStateToProps(state: RootState): StateProps {
-	const moduleOutputList = Object.keys(state.graph.graph.nodes);
+	const nodeOutputList = Object.keys(state.graph.graph.nodes);
 	const inletsList = flatMap(
-		moduleOutputList,
-		moduleKey => (
+		nodeOutputList,
+		nodeKey => (
 			Object.keys(
 				defaultTo(
-					Kit.modules[state.graph.graph.nodes[moduleKey].type].inletUniforms,
+					Kit.modules[state.graph.graph.nodes[nodeKey].type].inletUniforms,
 					{}))
-			.map(inletKey => ({ moduleKey, inletKey }))));
+			.map(inletKey => ({ nodeKey, inletKey }))));
 
 	const masterOutputColumnIndex = 0;
 
-	const indexOfInlet = (moduleKey: string, inletKey: string): number => (
-		inletsList.findIndex(elm => elm.moduleKey === moduleKey && elm.inletKey === inletKey)
+	const indexOfInlet = (nodeKey: string, inletKey: string): number => (
+		inletsList.findIndex(elm => elm.nodeKey === nodeKey && elm.inletKey === inletKey)
 		// Offset by one to account for master output.
 		+ 1
 	);
-	const indexOfModuleOutput = (moduleKey: string): number => (
-		moduleOutputList.indexOf(moduleKey)
+	const indexOfNodeOutput = (nodeKey: string): number => (
+		nodeOutputList.indexOf(nodeKey)
 	);
 
 	const edges: Array<[number, number, boolean]> = values(state.graph.graph.edges)
 		.map(({ src, dst, metadata }) => {
 			return [
-				indexOfModuleOutput(dst),
+				indexOfNodeOutput(dst),
 				indexOfInlet(src, metadata.inlet),
 				true,
 			] as [number, number, boolean]
 		});
 
 	return {
-		rowCount: moduleOutputList.length,
+		rowCount: nodeOutputList.length,
 		columnCount: inletsList.length + 1,
-		makeRenderRowHeader: (openModuleControls) => (rowIndex) => (
+		makeRenderRowHeader: (openNodeControls) => (rowIndex) => (
 			e('button',
 				{
-					onClick: () => openModuleControls(moduleOutputList[rowIndex])
+					onClick: () => openNodeControls(nodeOutputList[rowIndex])
 				},
-				moduleOutputList[rowIndex])
+				nodeOutputList[rowIndex])
 		),
 		renderColumnHeader: (columnIndex) => (
 			columnIndex === 0 
 			? 'output' 
 			: e('span',
 				{},
-				e('div', { style: { fontStyle: 'italic' } }, inletsList[columnIndex - 1].moduleKey),
+				e('div', { style: { fontStyle: 'italic' } }, inletsList[columnIndex - 1].nodeKey),
 				e('div', {}, inletsList[columnIndex - 1].inletKey))
 		),
 
@@ -135,8 +135,8 @@ function mapStateToProps(state: RootState): StateProps {
 			edges,
 			(value: boolean | null, dstIndex: number, srcIndex: number) => {
 				const connection = () => ({
-					fromNodeKey: moduleOutputList[dstIndex],
-					toNodeKey: inletsList[srcIndex - 1].moduleKey,
+					fromNodeKey: nodeOutputList[dstIndex],
+					toNodeKey: inletsList[srcIndex - 1].nodeKey,
 					inletKey: inletsList[srcIndex - 1].inletKey,
 				});
 
@@ -152,7 +152,7 @@ function mapStateToProps(state: RootState): StateProps {
 							}
 						});
 				} else if (srcIndex === masterOutputColumnIndex) {
-					if (moduleOutputList[dstIndex] === state.graph.outputNodeKey) {
+					if (nodeOutputList[dstIndex] === state.graph.outputNodeKey) {
 						return e('span',
 							{
 								style: {
@@ -173,7 +173,7 @@ function mapStateToProps(state: RootState): StateProps {
 									display: 'block',
 									margin: '0 auto',
 								},
-								onClick: () => setMasterOutput(moduleOutputList[dstIndex]),
+								onClick: () => setMasterOutput(nodeOutputList[dstIndex]),
 							});
 					}
 				} else {
@@ -196,7 +196,7 @@ function mapStateToProps(state: RootState): StateProps {
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		setMasterOutput: (nodeKey) => dispatch(Graph.actions.setMasterOutput(nodeKey)),
-		openModuleControls: (nodeKey) => dispatch(App.actions.setModal(App.Modals.MODULE_CONTROLS(nodeKey))),
+		openNodeControls: (nodeKey) => dispatch(App.actions.setModal(App.Modals.NODE_CONTROLS(nodeKey))),
 		connectNodes: (connection) => dispatch(Graph.actions.connectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
 		disconnectNodes: (connection) => dispatch(Graph.actions.disconnectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
 		openNodePicker: () => dispatch(App.actions.setModal(App.Modals.PICK_MODULE)),
@@ -213,7 +213,7 @@ function mergeProps(
 		...restStateProps
 	} = stateProps;
 	const {
-		setMasterOutput, openModuleControls,
+		setMasterOutput, openNodeControls,
 		connectNodes, disconnectNodes,
 		...restDispatchProps
 	} = dispatchProps;
@@ -227,7 +227,7 @@ function mergeProps(
 			connectNodes,
 			disconnectNodes,
 		}),
-		renderRowHeader: makeRenderRowHeader(openModuleControls)
+		renderRowHeader: makeRenderRowHeader(openNodeControls)
 	};
 }
 
