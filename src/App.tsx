@@ -51,6 +51,7 @@ class App extends React.Component<Props, object> {
 					left: 0,
 					top: 0,
 					position: 'fixed',
+					opacity: 0.5
 				}
 			}),
 			e(Modal,
