@@ -58,15 +58,19 @@ interface StateProps {
 	makeRenderCell: (config: RenderCellConfig) => (row: number, column: number) => React.ReactNode;
 }
 
-/*
-interface ConnectedProps extends Pick<TableProps, "rowCount" | "columnCount" | "renderCell" | "classNames"> {
+type ConnectedFields
+	= "rowCount" | "columnCount" | "renderRowHeader"
+	| "renderColumnHeader" | "renderCell" | "classNames";
+interface ConnectedProps 
+	extends Pick<TableProps, ConnectedFields>, React.HTMLAttributes<HTMLTableElement> {
 	openNodePicker: () => any;
 }
-*/
 
-// TODO: I think this should be Exclude<TableProps, DispatchProps & StateProps>, but that doesn't seem to work
+// TODO: I think this should be something like
+// `Exclude<TableProps, ConnectedProps>`, but that doesn't seem to work.
+// (Issue is: need to take the required fields of Table that are being provided
+// via ConnectedProps and make them optional in OwnProps.)
 type OwnProps = Partial<TableProps>;
-// type OwnProps = Exclude<TableProps>;
 
 interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;
@@ -194,7 +198,7 @@ function mergeProps(
 	stateProps: StateProps,
 	dispatchProps: DispatchProps,
 	ownProps: OwnProps
-): object {
+): ConnectedProps {
 	const { makeRenderCell, ...restStateProps } = stateProps;
 	const {
 		setMasterOutput, connectNodes,
@@ -210,7 +214,7 @@ function mergeProps(
 			setMasterOutput,
 			connectNodes,
 			disconnectNodes,
-		})
+		}),
 	};
 }
 
