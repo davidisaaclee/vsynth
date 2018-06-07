@@ -78,11 +78,11 @@ function mapStateToProps(state: RootState): StateProps {
 					{}))
 			.map(inletKey => ({ moduleKey, inletKey }))));
 
-	const outputRowIndex = 0;
+	const masterOutputColumnIndex = 0;
 
 	const indexOfInlet = (moduleKey: string, inletKey: string): number => (
 		inletsList.findIndex(elm => elm.moduleKey === moduleKey && elm.inletKey === inletKey)
-		// Offset by one to account for output row.
+		// Offset by one to account for master output.
 		+ 1
 	);
 	const indexOfModuleOutput = (moduleKey: string): number => (
@@ -92,26 +92,26 @@ function mapStateToProps(state: RootState): StateProps {
 	const edges: Array<[number, number, boolean]> = values(state.graph.graph.edges)
 		.map(({ src, dst, metadata }) => {
 			return [
-				indexOfInlet(src, metadata.inlet),
 				indexOfModuleOutput(dst),
+				indexOfInlet(src, metadata.inlet),
 				true,
 			] as [number, number, boolean]
 		});
 
 	return {
-		rows: [
+		rows: moduleOutputList,
+		columns: [
 			'output',
 			...inletsList.map(({ inletKey, moduleKey }) => `${moduleKey} • ${inletKey}`),
 		],
-		columns: moduleOutputList,
 
 		makeRenderCell: ({ setMasterOutput, connectNodes, disconnectNodes }) => edgeLookup(
 			edges,
-			(value: boolean | null, row: number, column: number) => {
+			(value: boolean | null, dstIndex: number, srcIndex: number) => {
 				const connection = () => ({
-					fromNodeKey: moduleOutputList[column],
-					toNodeKey: inletsList[row - 1].moduleKey,
-					inletKey: inletsList[row - 1].inletKey,
+					fromNodeKey: moduleOutputList[dstIndex],
+					toNodeKey: inletsList[srcIndex - 1].moduleKey,
+					inletKey: inletsList[srcIndex - 1].inletKey,
 				});
 
 				if (value) {
@@ -125,8 +125,8 @@ function mapStateToProps(state: RootState): StateProps {
 								margin: '0 auto',
 							}
 						});
-				} else if (row === outputRowIndex) {
-					if (moduleOutputList[column] === state.graph.outputNodeKey) {
+				} else if (srcIndex === masterOutputColumnIndex) {
+					if (moduleOutputList[dstIndex] === state.graph.outputNodeKey) {
 						return e('span',
 							{
 								style: {
@@ -147,7 +147,7 @@ function mapStateToProps(state: RootState): StateProps {
 									display: 'block',
 									margin: '0 auto',
 								},
-								onClick: () => setMasterOutput(moduleOutputList[column]),
+								onClick: () => setMasterOutput(moduleOutputList[dstIndex]),
 							});
 					}
 				} else {
