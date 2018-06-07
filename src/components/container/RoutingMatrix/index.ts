@@ -60,7 +60,7 @@ interface StateProps {
 
 type ConnectedFields
 	= "rowCount" | "columnCount" | "renderRowHeader"
-	| "renderColumnHeader" | "renderCell" | "classNames";
+	| "renderColumnHeader" | "renderCell";
 interface ConnectedProps 
 	extends Pick<TableProps, ConnectedFields>, React.HTMLAttributes<HTMLTableElement> {
 	openNodePicker: () => any;
@@ -70,7 +70,7 @@ interface ConnectedProps
 // `Exclude<TableProps, ConnectedProps>`, but that doesn't seem to work.
 // (Issue is: need to take the required fields of Table that are being provided
 // via ConnectedProps and make them optional in OwnProps.)
-type OwnProps = Partial<TableProps>;
+type OwnProps = Pick<TableProps, 'style'>;
 
 interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;
