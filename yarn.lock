@@ -21,7 +21,7 @@
   dependencies:
     lodash "^4.17.10"
 
-"@davidisaaclee/react-routing-matrix@file:../packages/react-routing-matrix":
+"@davidisaaclee/react-table@file:../packages/react-table":
   version "1.0.0"
 
 "@davidisaaclee/react-video-graph@file:../packages/react-video-graph":

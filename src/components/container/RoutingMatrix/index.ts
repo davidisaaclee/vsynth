@@ -3,10 +3,10 @@ import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import {
-	RoutingMatrix as RoutingMatrixView,
+	Table,
 	edgeLookup,
-	Props as RoutingMatrixProps
-} from '@davidisaaclee/react-routing-matrix';
+	Props as TableProps
+} from '@davidisaaclee/react-table';
 import * as Kit from '../../../model/Kit';
 import { State as RootState } from '../../../modules';
 import * as Graph from '../../../modules/graph';
@@ -15,12 +15,12 @@ import './RoutingMatrix.css';
 
 const e = React.createElement;
 
-type Props = RoutingMatrixProps & { openNodePicker: () => any, };
+type Props = TableProps & { openNodePicker: () => any, };
 
 const RoutingMatrix: React.StatelessComponent<Props> = ({ openNodePicker, style, ...props }) =>
 	e('span',
 		{ style },
-		e(RoutingMatrixView,
+		e(Table,
 			{
 				style: {
 					display: 'inline',
@@ -56,8 +56,8 @@ interface StateProps {
 	makeRenderCell: (config: RenderCellConfig) => (row: number, column: number) => React.ReactNode;
 }
 
-// TODO: I think this should be Exclude<RoutingMatrixProps, DispatchProps & StateProps>, but that doesn't seem to work
-type OwnProps = Partial<RoutingMatrixProps>;
+// TODO: I think this should be Exclude<TableProps, DispatchProps & StateProps>, but that doesn't seem to work
+type OwnProps = Partial<TableProps>;
 
 interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;

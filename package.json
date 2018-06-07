@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@davidisaaclee/graph": "/Users/david/Documents/Drawer/packages/graph-js",
-    "@davidisaaclee/react-routing-matrix": "/Users/david/Documents/Drawer/packages/react-routing-matrix",
+    "@davidisaaclee/react-table": "/Users/david/Documents/Drawer/packages/react-table",
     "@davidisaaclee/react-video-graph": "/Users/david/Documents/Drawer/packages/react-video-graph",
     "@davidisaaclee/video-graph": "/Users/david/Documents/Drawer/packages/video-graph",
     "@types/lodash": "^4.14.109",
