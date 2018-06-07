@@ -39,11 +39,11 @@ export const modules: { [key: string]: VideoModule } = {
 		shaderSource: oscillatorShader,
 		parameters: {
 			'frequency': {
-				initialValue: () => Math.random() * 50,
+				initialValue: () => Math.random(),
 				toUniforms: (value: number) => ({
 					'frequency': {
 						type: 'f',
-						data: value
+						data: (value * value * 100) + 0.01
 					}
 				}),
 			}
