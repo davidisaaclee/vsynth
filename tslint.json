@@ -12,7 +12,8 @@
 		"object-literal-sort-keys": false,
 		"no-unused-variable": true,
 		"no-console": false,
-		"no-bitwise": false
+		"no-bitwise": false,
+		"no-empty-interface": false
 	},
 	"defaultSeverity": "warning"
 }
