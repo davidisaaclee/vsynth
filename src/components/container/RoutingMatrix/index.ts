@@ -51,13 +51,22 @@ interface RenderCellConfig {
 };
 
 interface StateProps {
-	rows: string[];
-	columns: string[];
+	rowCount: number;
+	columnCount: number;
+	renderRowHeader: (rowIndex: number) => React.ReactNode;
+	renderColumnHeader: (columnIndex: number) => React.ReactNode;
 	makeRenderCell: (config: RenderCellConfig) => (row: number, column: number) => React.ReactNode;
 }
 
+/*
+interface ConnectedProps extends Pick<TableProps, "rowCount" | "columnCount" | "renderCell" | "classNames"> {
+	openNodePicker: () => any;
+}
+*/
+
 // TODO: I think this should be Exclude<TableProps, DispatchProps & StateProps>, but that doesn't seem to work
 type OwnProps = Partial<TableProps>;
+// type OwnProps = Exclude<TableProps>;
 
 interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;
@@ -99,11 +108,16 @@ function mapStateToProps(state: RootState): StateProps {
 		});
 
 	return {
-		rows: moduleOutputList,
-		columns: [
-			'output',
-			...inletsList.map(({ inletKey, moduleKey }) => `${moduleKey} • ${inletKey}`),
-		],
+		rowCount: moduleOutputList.length,
+		columnCount: inletsList.length + 1,
+		renderRowHeader: (rowIndex) => (
+			moduleOutputList[rowIndex]
+		),
+		renderColumnHeader: (columnIndex) => (
+			columnIndex === 0 
+			? 'output' 
+			: `${inletsList[columnIndex - 1].moduleKey} • ${inletsList[columnIndex - 1].inletKey}`
+		),
 
 		makeRenderCell: ({ setMasterOutput, connectNodes, disconnectNodes }) => edgeLookup(
 			edges,
