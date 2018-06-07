@@ -120,7 +120,10 @@ function mapStateToProps(state: RootState): StateProps {
 		renderColumnHeader: (columnIndex) => (
 			columnIndex === 0 
 			? 'output' 
-			: `${inletsList[columnIndex - 1].moduleKey} • ${inletsList[columnIndex - 1].inletKey}`
+			: e('span',
+				{},
+				e('div', { style: { fontStyle: 'italic' } }, inletsList[columnIndex - 1].moduleKey),
+				e('div', {}, inletsList[columnIndex - 1].inletKey))
 		),
 
 		makeRenderCell: ({ setMasterOutput, connectNodes, disconnectNodes }) => edgeLookup(
