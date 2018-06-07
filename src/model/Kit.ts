@@ -1,3 +1,4 @@
+
 import {
 	VideoGraph, PluginNode, PluginConnection,
 	UniformValue, UniformSpecification
@@ -9,6 +10,9 @@ import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
 } from './SimpleVideoGraph';
 
+/*
+ * Configurations of nodes to be instantiated in a VideoGraph.
+ */
 export interface VideoModule {
 	type: ModuleType;
 	shaderSource: string;
@@ -58,6 +62,8 @@ export const modules: { [key: string]: VideoModule } = {
 };
 
 
+// Holds all the necessary information to use a specific video module
+// with a specific WebGL runtime.
 export interface RuntimeModule {
 	program: WebGLProgram;
 }

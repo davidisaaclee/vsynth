@@ -1,3 +1,8 @@
+/*
+ * Defines a plain-object representation of a video graph,
+ * for use in a Redux store.
+ */
+
 import { Graph } from '@davidisaaclee/graph';
 import { UniformValue } from '@davidisaaclee/video-graph';
 
