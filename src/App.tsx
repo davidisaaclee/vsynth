@@ -28,6 +28,9 @@ class App extends React.Component<Props, object> {
 						this.props.closeModal();
 					}
 				});
+		} else if (AppModule.Modals.isModuleControls(modal)) {
+			// TODO
+			return e('div', {}, `Editing ${modal.moduleKey}...`);
 		} else {
 			throw new Error(`Invalid modal type: ${modal}`);
 		}

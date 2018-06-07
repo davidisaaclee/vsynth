@@ -53,7 +53,7 @@ interface RenderCellConfig {
 interface StateProps {
 	rowCount: number;
 	columnCount: number;
-	renderRowHeader: (rowIndex: number) => React.ReactNode;
+	makeRenderRowHeader: (openModuleControls: (moduleKey: string) => any) => (rowIndex: number) => React.ReactNode;
 	renderColumnHeader: (columnIndex: number) => React.ReactNode;
 	makeRenderCell: (config: RenderCellConfig) => (row: number, column: number) => React.ReactNode;
 }
@@ -74,6 +74,7 @@ type OwnProps = Pick<TableProps, 'style'>;
 
 interface DispatchProps {
 	setMasterOutput: (nodeKey: string) => any;
+	openModuleControls: (moduleKey: string) => any;
 	connectNodes: (connection: Connection) => any;
 	disconnectNodes: (connection: Connection) => any;
 	openNodePicker: () => any;
@@ -114,8 +115,12 @@ function mapStateToProps(state: RootState): StateProps {
 	return {
 		rowCount: moduleOutputList.length,
 		columnCount: inletsList.length + 1,
-		renderRowHeader: (rowIndex) => (
-			moduleOutputList[rowIndex]
+		makeRenderRowHeader: (openModuleControls) => (rowIndex) => (
+			e('button',
+				{
+					onClick: () => openModuleControls(moduleOutputList[rowIndex])
+				},
+				moduleOutputList[rowIndex])
 		),
 		renderColumnHeader: (columnIndex) => (
 			columnIndex === 0 
@@ -191,6 +196,7 @@ function mapStateToProps(state: RootState): StateProps {
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		setMasterOutput: (nodeKey) => dispatch(Graph.actions.setMasterOutput(nodeKey)),
+		openModuleControls: (nodeKey) => dispatch(App.actions.setModal(App.Modals.MODULE_CONTROLS(nodeKey))),
 		connectNodes: (connection) => dispatch(Graph.actions.connectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
 		disconnectNodes: (connection) => dispatch(Graph.actions.disconnectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
 		openNodePicker: () => dispatch(App.actions.setModal(App.Modals.PICK_MODULE)),
@@ -202,10 +208,13 @@ function mergeProps(
 	dispatchProps: DispatchProps,
 	ownProps: OwnProps
 ): ConnectedProps {
-	const { makeRenderCell, ...restStateProps } = stateProps;
 	const {
-		setMasterOutput, connectNodes,
-		disconnectNodes,
+		makeRenderCell, makeRenderRowHeader,
+		...restStateProps
+	} = stateProps;
+	const {
+		setMasterOutput, openModuleControls,
+		connectNodes, disconnectNodes,
 		...restDispatchProps
 	} = dispatchProps;
 
@@ -218,6 +227,7 @@ function mergeProps(
 			connectNodes,
 			disconnectNodes,
 		}),
+		renderRowHeader: makeRenderRowHeader(openModuleControls)
 	};
 }
 
