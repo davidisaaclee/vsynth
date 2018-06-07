@@ -19,17 +19,13 @@ type Props = StateProps & DispatchProps;
 
 class App extends React.Component<Props, object> {
 
-	private gl: WebGLRenderingContext | null = null;
-
 	public renderModal(modal: AppModule.Modals.Modal): React.ReactNode {
 		if (modal === AppModule.Modals.PICK_MODULE) {
 			return e(ModulePicker,
 				{
 					addModule: (mod: VideoModule) => {
-						if (this.gl != null) {
-							this.props.addModule(mod, this.gl);
-							this.props.closeModal();
-						}
+						this.props.addModule(mod);
+						this.props.closeModal();
 					}
 				});
 		} else {
@@ -40,12 +36,7 @@ class App extends React.Component<Props, object> {
 	public render() {
 		return e('div',
 			{},
-			e(Screen,
-				{
-					glRef: (gl: WebGLRenderingContext | null) => {
-						this.gl = gl;
-					}
-				}),
+			e(Screen),
 			e(RoutingMatrix, {
 				style: {
 					left: 0,
@@ -72,7 +63,7 @@ interface StateProps {
 
 interface DispatchProps {
 	closeModal: () => any;
-	addModule: (mod: VideoModule, gl: WebGLRenderingContext) => any;
+	addModule: (mod: VideoModule) => any;
 }
 
 function mapStateToProps(state: RootState): StateProps {
@@ -85,11 +76,9 @@ let counter = 0;
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		closeModal: () => dispatch(AppModule.actions.setModal(null)),
-		addModule: (mod, gl) => dispatch(Graph.actions.insertNode({
+		addModule: (mod) => dispatch(Graph.actions.insertNode({
 			type: mod.type,
-			uniforms: mod.defaultUniforms == null
-			? {}
-			: mod.defaultUniforms(gl),
+			uniforms: {}
 		}, `${mod.type}-${counter++}`))
 	};
 }

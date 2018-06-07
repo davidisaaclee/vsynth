@@ -13,5 +13,6 @@ export interface VideoModuleSpecification {
 	uniforms: { [identifier: string]: UniformValue };
 }
 
-export type SimpleVideoGraph = Graph<VideoModuleSpecification, InletSpecification>;
+export type SimpleVideoGraph =
+	Graph<VideoModuleSpecification, InletSpecification>;
 
