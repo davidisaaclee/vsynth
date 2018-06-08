@@ -43,7 +43,7 @@ export const modules: { [key: string]: VideoModule } = {
 				toUniforms: (value: number) => ({
 					'frequency': {
 						type: 'f',
-						data: (value * value * 100) + 0.01
+						data: (Math.pow(value, 3) * 100) + 0.01
 					}
 				}),
 			}
