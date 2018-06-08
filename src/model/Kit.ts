@@ -10,6 +10,18 @@ import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
 } from './SimpleVideoGraph';
 
+const k = {
+	oscillator: {
+		frequency: 'frequency',
+		red: 'red',
+		green: 'green',
+		blue: 'blue',
+	},
+	constant: {
+		value: 'value',
+	}
+};
+
 /*
  * A non-texture-based parameter to a module, which can be translated to a
  * set of uniforms to be provided to the fragment shader.
@@ -41,30 +53,30 @@ export const modules: { [key: string]: VideoModule } = {
 		shaderSource: oscillatorShader,
 		parameters: {
 			specifications: {
-				'frequency': {
+				[k.oscillator.frequency]: {
 					initialValue: () => Math.random(),
 				},
-				'red': {
+				[k.oscillator.red]: {
 					initialValue: () => 1,
 				},
-				'green': {
+				[k.oscillator.green]: {
 					initialValue: () => 0,
 				},
-				'blue': {
+				[k.oscillator.blue]: {
 					initialValue: () => 0,
 				},
 			},
 			toUniforms: values => ({
 				frequency: {
 					type: 'f',
-					data: (Math.pow(values['frequency'], 3) * 100) + 0.01
+					data: (Math.pow(values[k.oscillator.frequency], 3) * 100) + 0.01
 				},
 				color: {
 					type: '3f',
 					data: [
-						values['red'],
-						values['green'],
-						values['blue'],
+						values[k.oscillator.red],
+						values[k.oscillator.green],
+						values[k.oscillator.blue],
 					]
 				},
 			}),
@@ -97,23 +109,17 @@ export const modules: { [key: string]: VideoModule } = {
 		shaderSource: constantShader,
 		parameters: {
 			specifications: {
-				'value': {
+				[k.constant.value]: {
 					initialValue: () => Math.random(),
 				}
 			},
 			toUniforms: values => ({
 				'value': {
 					type: '3f',
-					data: [values['value'], values['value'], values['value']]
+					data: [values[k.constant.value], values[k.constant.value], values[k.constant.value]]
 				}
 			})
 		},
-		defaultUniforms: (gl: WebGLRenderingContext) => ({
-			'value': {
-				type: '3f',
-				data: [0, 0, 0]
-			}
-		}),
 	},
 };
 
