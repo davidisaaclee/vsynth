@@ -2,6 +2,7 @@ import { flatMap, defaultTo, values } from 'lodash';
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import * as Graph from '@davidisaaclee/graph';
 import {
 	Table,
 	edgeLookup,
@@ -9,7 +10,7 @@ import {
 } from '@davidisaaclee/react-table';
 import * as Kit from '../../../model/Kit';
 import { State as RootState } from '../../../modules';
-import * as Graph from '../../../modules/graph';
+import * as GraphModule from '../../../modules/graph';
 import * as App from '../../../modules/app';
 import './RoutingMatrix.css';
 
@@ -82,13 +83,13 @@ interface DispatchProps {
 
 
 function mapStateToProps(state: RootState): StateProps {
-	const nodeOutputList = Object.keys(state.graph.graph.nodes);
+	const nodeOutputList = Object.keys(Graph.allNodes(state.graph.graph));
 	const inletsList = flatMap(
 		nodeOutputList,
 		nodeKey => (
 			Object.keys(
 				defaultTo(
-					Kit.modules[state.graph.graph.nodes[nodeKey].type].inletUniforms,
+					Kit.modules[Graph.nodeForKey(state.graph.graph, nodeKey)!.type].inletUniforms,
 					{}))
 			.map(inletKey => ({ nodeKey, inletKey }))));
 
@@ -103,7 +104,7 @@ function mapStateToProps(state: RootState): StateProps {
 		nodeOutputList.indexOf(nodeKey)
 	);
 
-	const edges: Array<[number, number, boolean]> = values(state.graph.graph.edges)
+	const edges: Array<[number, number, boolean]> = values(Graph.allEdges(state.graph.graph))
 		.map(({ src, dst, metadata }) => {
 			return [
 				indexOfNodeOutput(dst),
@@ -195,10 +196,10 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		setMasterOutput: (nodeKey) => dispatch(Graph.actions.setMasterOutput(nodeKey)),
+		setMasterOutput: (nodeKey) => dispatch(GraphModule.actions.setMasterOutput(nodeKey)),
 		openNodeControls: (nodeKey) => dispatch(App.actions.setModal(App.Modals.NODE_CONTROLS(nodeKey))),
-		connectNodes: (connection) => dispatch(Graph.actions.connectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
-		disconnectNodes: (connection) => dispatch(Graph.actions.disconnectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
+		connectNodes: (connection) => dispatch(GraphModule.actions.connectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
+		disconnectNodes: (connection) => dispatch(GraphModule.actions.disconnectNodes(connection.fromNodeKey, connection.toNodeKey, connection.inletKey)),
 		openNodePicker: () => dispatch(App.actions.setModal(App.Modals.PICK_MODULE)),
 	};
 }
