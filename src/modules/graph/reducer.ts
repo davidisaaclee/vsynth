@@ -28,6 +28,13 @@ const initialState: State = {
 					inlet: 'rotation'
 				}
 			},
+			'constant -> oscillator.phaseOffset': {
+				src: 'oscillator',
+				dst: 'constant',
+				metadata: {
+					inlet: 'phase offset'
+				}
+			},
 		};
 
 		const withNodes = entries(nodes).reduce(

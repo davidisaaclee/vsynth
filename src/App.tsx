@@ -92,9 +92,22 @@ let counter = 0;
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		closeModal: () => dispatch(AppModule.actions.setModal(null)),
-		addModule: (mod) => dispatch(Graph.actions.insertNode(
-			videoModuleSpecFromModule(mod),
-			`${mod.type}-${counter++}`))
+		addModule: (mod) => {
+			const nodeKey = `${mod.type}-${counter++}`;
+			dispatch(Graph.actions.insertNode(
+				videoModuleSpecFromModule(mod),
+				nodeKey));
+
+			// HACK: Automatically connect all inlets to known node `constant`.
+			if (mod.inletUniforms != null) {
+				Object.keys(mod.inletUniforms).forEach(inletKey => {
+					dispatch(Graph.actions.connectNodes(
+						'constant',
+						nodeKey,
+						inletKey));
+				});
+			}
+		}
 	};
 }
 
