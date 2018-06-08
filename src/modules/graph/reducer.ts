@@ -19,18 +19,10 @@ const initialState: State = {
 		const nodes = {
 			'constant': videoModuleSpecFromModule(modules.constant),
 			'oscillator': videoModuleSpecFromModule(modules.oscillator),
-			'lfo': videoModuleSpecFromModule(modules.oscillator),
 		};
 		const edges = {
 			'constant -> oscillator.rotation': {
 				src: 'oscillator',
-				dst: 'constant',
-				metadata: {
-					inlet: 'rotation'
-				}
-			},
-			'constant -> lfo.rotation': {
-				src: 'lfo',
 				dst: 'constant',
 				metadata: {
 					inlet: 'rotation'
