@@ -46,7 +46,19 @@ export const modules: { [key: string]: VideoModule } = {
 						data: (Math.pow(value, 3) * 100) + 0.01
 					}
 				}),
-			}
+			},
+			'red': {
+				initialValue: () => 1,
+				toUniforms: (value: number) => ({ 'red': { type: 'f', data: value } }),
+			},
+			'green': {
+				initialValue: () => 0,
+				toUniforms: (value: number) => ({ 'green': { type: 'f', data: value } }),
+			},
+			'blue': {
+				initialValue: () => 0,
+				toUniforms: (value: number) => ({ 'blue': { type: 'f', data: value } }),
+			},
 		},
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'inputTextureDimensions': {
