@@ -73,6 +73,17 @@ export const modules: { [key: string]: VideoModule } = {
 	'constant': {
 		type: 'constant',
 		shaderSource: constantShader,
+		parameters: {
+			'value': {
+				initialValue: () => Math.random(),
+				toUniforms: (value: number) => ({
+					'value': {
+						type: '3f',
+						data: [value, value, value]
+					}
+				}),
+			}
+		},
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'value': {
 				type: '3f',
