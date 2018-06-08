@@ -16,6 +16,7 @@ export default glsl`
 	uniform vec2 inputTextureDimensions;
 
 	uniform sampler2D rotationTheta;
+	uniform sampler2D phaseOffsetTexture;
 
 	vec2 rotate(vec2 v, float a) {
 		float s = sin(a);
@@ -29,12 +30,20 @@ export default glsl`
 	}
 
 	void main() {
+		vec2 textureSamplePoint =
+			gl_FragCoord.xy / inputTextureDimensions;
+
 		vec2 position =
 			rotate(
 				gl_FragCoord.xy,
 				luminance(texture2D(
 					rotationTheta,
-					gl_FragCoord.xy / inputTextureDimensions).rgb) * TWO_PI);
+					textureSamplePoint).rgb) * TWO_PI);
+		float phaseOffsetFromTexture =
+			luminance(texture2D(
+				phaseOffsetTexture,
+				textureSamplePoint).rgb);
+
 		highp vec2 uv =
 			position / inputTextureDimensions;
 
@@ -42,7 +51,7 @@ export default glsl`
 			uv.x / N_SCANLINES + (uv.y - mod(uv.y, 1. / N_SCANLINES));
 
 		gl_FragColor = vec4(
-			(sin(mod(frequency * TWO_PI * pixelIndex + phaseOffset * TWO_PI, TWO_PI)) + 1.) / 2.,
+			(sin(mod(frequency * TWO_PI * pixelIndex + (phaseOffset + phaseOffsetFromTexture) * TWO_PI, TWO_PI)) + 1.) / 2.,
 			vec2(0.),
 			1);
 	}

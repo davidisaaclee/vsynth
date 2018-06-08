@@ -67,6 +67,7 @@ export const modules: { [key: string]: VideoModule } = {
 		}),
 		inletUniforms: {
 			'rotation': 'rotationTheta',
+			'phase offset': 'phaseOffsetTexture',
 		},
 	},
 
