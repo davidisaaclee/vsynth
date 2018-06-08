@@ -1,5 +1,5 @@
 import { ActionType } from 'typesafe-actions';
-import { isEqual } from 'lodash';
+import { isEqual, entries } from 'lodash';
 import {
 	SimpleVideoGraph, Edge as SimpleVideoGraphEdge, VideoModuleSpecification
 } from '../../model/SimpleVideoGraph';
@@ -15,13 +15,13 @@ export interface State {
 };
 
 const initialState: State = {
-	graph: {
-		nodes: {
+	graph: (() => {
+		const nodes = {
 			'constant': videoModuleSpecFromModule(modules.constant),
 			'oscillator': videoModuleSpecFromModule(modules.oscillator),
 			'lfo': videoModuleSpecFromModule(modules.oscillator),
-		},
-		edges: {
+		};
+		const edges = {
 			'constant -> oscillator.rotation': {
 				src: 'oscillator',
 				dst: 'constant',
@@ -36,8 +36,18 @@ const initialState: State = {
 					inlet: 'rotation'
 				}
 			},
-		}
-	},
+		};
+
+		const withNodes = entries(nodes).reduce(
+			(graph, [key, node]) => Graph.insertNode(graph, node, key),
+			Graph.empty);
+
+		const withNodesAndEdges = entries(edges).reduce(
+			(graph, [key, edge]) => Graph.insertEdge(graph, edge, key),
+			withNodes);
+
+		return withNodesAndEdges;
+	})(),
 	outputNodeKey: 'oscillator'
 };
 

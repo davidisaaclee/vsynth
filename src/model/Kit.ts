@@ -3,7 +3,7 @@ import {
 	VideoGraph, PluginNode, PluginConnection,
 	UniformValue, UniformSpecification
 } from '@davidisaaclee/video-graph';
-import { mapNodes, mapEdges } from '@davidisaaclee/graph';
+import { mapNodes, mapEdges, nodeForKey } from '@davidisaaclee/graph';
 import oscillatorShader from '../shaders/oscillator';
 import constantShader from '../shaders/constant';
 import {
@@ -164,10 +164,10 @@ export function videoGraphFromSimpleVideoGraph(
 	return mapEdges(
 		mappedNodes,
 		(inletSpec: InletSpecification, src: string, dst: string): PluginConnection => {
-			const moduleConfiguration = modules[graph.nodes[src].type];
+			const moduleConfiguration = modules[nodeForKey(graph, src)!.type];
 
 			if (moduleConfiguration == null) {
-				throw new Error(`No module configuration found for module type: ${graph.nodes[src].type}`);
+				throw new Error(`No module configuration found for module type: ${nodeForKey(graph, src)!.type}`);
 			}
 			if (moduleConfiguration.inletUniforms == null) {
 				throw new Error("Edge connecting to node with no inlets");

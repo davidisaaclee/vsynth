@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import VideoGraphView from '@davidisaaclee/react-video-graph';
+import { empty as emptyGraph } from '@davidisaaclee/graph';
 import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
 import { State as RootState } from '../../modules';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
@@ -63,7 +64,7 @@ class Screen extends React.Component<Props, State> {
 					{
 						key: 'screen',
 						graph: (this.gl == null
-							? { nodes: {}, edges: {} }
+							? emptyGraph
 							: videoGraphFromSimpleVideoGraph(
 								graph,
 								this.modulesRuntime,
