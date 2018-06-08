@@ -16,7 +16,6 @@ import {
  */
 export interface Parameter {
 	initialValue(): number;
-	toUniforms(value: number): { [identifier: string]: UniformValue };
 }
 
 /*
@@ -25,7 +24,10 @@ export interface Parameter {
 export interface VideoModule {
 	type: ModuleType;
 	shaderSource: string;
-	parameters?: { [identifier: string]: Parameter };
+	parameters?: {
+		specifications: { [identifier: string]: Parameter },
+		toUniforms: (values: { [identifier: string]: number }) => { [identifier: string]: UniformValue }
+	};
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
 	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => { [identifier: string]: UniformValue };
 	// maps display name to uniform identifier
@@ -38,27 +40,34 @@ export const modules: { [key: string]: VideoModule } = {
 		type: 'oscillator',
 		shaderSource: oscillatorShader,
 		parameters: {
-			'frequency': {
-				initialValue: () => Math.random(),
-				toUniforms: (value: number) => ({
-					'frequency': {
-						type: 'f',
-						data: (Math.pow(value, 3) * 100) + 0.01
-					}
-				}),
+			specifications: {
+				'frequency': {
+					initialValue: () => Math.random(),
+				},
+				'red': {
+					initialValue: () => 1,
+				},
+				'green': {
+					initialValue: () => 0,
+				},
+				'blue': {
+					initialValue: () => 0,
+				},
 			},
-			'red': {
-				initialValue: () => 1,
-				toUniforms: (value: number) => ({ 'red': { type: 'f', data: value } }),
-			},
-			'green': {
-				initialValue: () => 0,
-				toUniforms: (value: number) => ({ 'green': { type: 'f', data: value } }),
-			},
-			'blue': {
-				initialValue: () => 0,
-				toUniforms: (value: number) => ({ 'blue': { type: 'f', data: value } }),
-			},
+			toUniforms: values => ({
+				frequency: {
+					type: 'f',
+					data: (Math.pow(values['frequency'], 3) * 100) + 0.01
+				},
+				color: {
+					type: '3f',
+					data: [
+						values['red'],
+						values['green'],
+						values['blue'],
+					]
+				},
+			}),
 		},
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'inputTextureDimensions': {
@@ -87,15 +96,17 @@ export const modules: { [key: string]: VideoModule } = {
 		type: 'constant',
 		shaderSource: constantShader,
 		parameters: {
-			'value': {
-				initialValue: () => Math.random(),
-				toUniforms: (value: number) => ({
-					'value': {
-						type: '3f',
-						data: [value, value, value]
-					}
-				}),
-			}
+			specifications: {
+				'value': {
+					initialValue: () => Math.random(),
+				}
+			},
+			toUniforms: values => ({
+				'value': {
+					type: '3f',
+					data: [values['value'], values['value'], values['value']]
+				}
+			})
 		},
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'value': {
@@ -110,8 +121,10 @@ export function videoModuleSpecFromModule(mod: VideoModule): VideoModuleSpecific
 	return {
 		type: mod.type,
 		uniforms: {},
-		parameters: mapValues(
-			mod.parameters,
+		parameters: mod.parameters == null
+		? {}
+		: mapValues(
+			mod.parameters.specifications,
 			param => param.initialValue())
 	};
 }
@@ -146,16 +159,7 @@ export function videoGraphFromSimpleVideoGraph(
 
 		const parameterUniforms = moduleConfiguration.parameters == null
 			? {}
-			: Object.keys(moduleConfiguration.parameters)
-				.map(paramKey => {
-					if (moduleSpec.parameters[paramKey] == null) {
-						throw new Error(`No value specified for parameter ${paramKey}`);
-					}
-
-					return moduleConfiguration.parameters![paramKey]
-						.toUniforms(moduleSpec.parameters[paramKey]);
-				})
-				.reduce((acc, elm) => Object.assign(acc, elm), {});
+			: moduleConfiguration.parameters.toUniforms(moduleSpec.parameters);
 
 		const animationUniforms = moduleConfiguration.animationUniforms == null
 			? {} 

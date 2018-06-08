@@ -15,9 +15,7 @@ export default glsl`
 	// todo: change to ivec2
 	uniform vec2 inputTextureDimensions;
 
-	uniform float red;
-	uniform float green;
-	uniform float blue;
+	uniform vec3 color;
 
 	uniform sampler2D rotationTheta;
 	uniform sampler2D phaseOffsetTexture;
@@ -54,7 +52,6 @@ export default glsl`
 		float pixelIndex =
 			uv.x / N_SCANLINES + (uv.y - mod(uv.y, 1. / N_SCANLINES));
 
-		vec3 color = vec3(red, green, blue);
 		gl_FragColor = vec4(
 			color * vec3((sin(mod(frequency * TWO_PI * pixelIndex + (phaseOffset + phaseOffsetFromTexture) * TWO_PI, TWO_PI)) + 1.) / 2.),
 			1);
