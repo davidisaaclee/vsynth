@@ -75,7 +75,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				} else {
 					// Remove edges already connected to this inlet.
 					const edgesToRemove =
-						Graph.filterEdges(state.graph, edge =>
+						Graph.filterEdges(state.graph, (edge: SimpleVideoGraphEdge) =>
 							edge.src === toNodeKey && edge.metadata.inlet === inletKey);
 
 					const graphWithExistingEdgesRemoved =
