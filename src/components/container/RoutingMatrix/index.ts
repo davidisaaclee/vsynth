@@ -125,7 +125,7 @@ function mapStateToProps(state: RootState): StateProps {
 		),
 		renderColumnHeader: (columnIndex) => (
 			columnIndex === 0 
-			? 'output' 
+			? e('span', {}, 'output')
 			: e('span',
 				{},
 				e('div', { style: { fontStyle: 'italic' } }, inletsList[columnIndex - 1].nodeKey),
