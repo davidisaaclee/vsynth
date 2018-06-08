@@ -36,7 +36,10 @@ export default class NodeControls extends React.Component<Props, object> {
 							),
 							onChange: (evt: React.SyntheticEvent<HTMLInputElement>) => (
 								onEdit(parameterIndex, parseFloat(evt.currentTarget.value), key)
-							)
+							),
+							style: {
+								width: '100%',
+							}
 						}))
 			));
 	}
