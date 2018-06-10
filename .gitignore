@@ -9,6 +9,9 @@
 # production
 /build
 
+# gh-pages build
+/gh-pages
+
 # misc
 .DS_Store
 .env.local
