@@ -2,6 +2,7 @@
   "name": "@davidisaaclee/vsynth",
   "version": "0.1.0",
   "private": true,
+	"homepage": "http://david-lee.net/vsynth",
   "dependencies": {
     "@davidisaaclee/graph": "^0.1.0",
     "@davidisaaclee/react-table": "^0.1.0",
