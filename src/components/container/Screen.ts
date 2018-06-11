@@ -11,6 +11,7 @@ import {
 	modules as videoModules, VideoModule,
 	videoGraphFromSimpleVideoGraph, RuntimeModule
 } from '../../model/Kit';
+import * as k from '../../constants';
 
 const e = React.createElement;
 
@@ -100,8 +101,7 @@ class Screen extends React.Component<Props, State> {
 			return;
 		}
 
-		const fps = 60;
-		const frameIndex = Math.floor(fps * (Date.now() - this.state.animationStartTime) / 1000);
+		const frameIndex = Math.floor(k.fps * (Date.now() - this.state.animationStartTime) / 1000);
 		if (this.state.frameIndex !== frameIndex) {
 			this.setState({ frameIndex });
 		}
