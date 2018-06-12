@@ -6,6 +6,7 @@ import {
 import { mapNodes, mapEdges, nodeForKey } from '@davidisaaclee/graph';
 import oscillatorShader from '../shaders/oscillator';
 import constantShader from '../shaders/constant';
+import mixerShader from '../shaders/mixer';
 import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
 } from './SimpleVideoGraph';
@@ -21,7 +22,10 @@ const k = {
 	},
 	constant: {
 		value: 'value',
-	}
+	},
+	mixer: {
+		mixAmount: 'mix amount',
+	},
 };
 
 /*
@@ -130,6 +134,28 @@ export const modules: { [key: string]: VideoModule } = {
 					data: [values[k.constant.value], values[k.constant.value], values[k.constant.value]]
 				}
 			})
+		},
+	},
+
+	'mixer': {
+		type: 'mixer',
+		shaderSource: mixerShader,
+		parameters: {
+			specifications: {
+				[k.mixer.mixAmount]: {
+					initialValue: () => 0.5,
+				}
+			},
+			toUniforms: values => ({
+				'mixAmount': {
+					type: 'f',
+					data: values[k.mixer.mixAmount]
+				}
+			})
+		},
+		inletUniforms: {
+			'a': 'inputA',
+			'b': 'inputB',
 		},
 	},
 };
