@@ -4,7 +4,8 @@ import { Dispatch } from 'redux';
 import * as Modal from 'react-modal';
 import { VideoModule, videoModuleSpecFromModule } from './model/Kit';
 import Screen from './components/container/Screen';
-import RoutingMatrix from './components/container/RoutingMatrix';
+// import RoutingMatrix from './components/container/RoutingMatrix';
+import BusRouter from './components/container/BusRouter';
 import ModulePicker from './components/container/ModulePicker';
 import NodeControls from './components/container/ConnectedNodeControls';
 import * as AppModule from './modules/app';
@@ -40,12 +41,13 @@ class App extends React.Component<Props, object> {
 		return e('div',
 			{},
 			e(Screen),
-			e(RoutingMatrix, {
+			e(BusRouter, {
 				style: {
 					left: 0,
 					top: 0,
 					position: 'fixed',
-					opacity: 0.5
+					opacity: 0.5,
+					backgroundColor: 'white'
 				}
 			}),
 			e(Modal,
