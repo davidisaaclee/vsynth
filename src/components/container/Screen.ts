@@ -50,7 +50,7 @@ class Screen extends React.Component<Props, State> {
 		this.setState({
 			isAnimating: true,
 			animationStartTime: Date.now()
-		}, () => this.frame());
+		}, this.frame);
 	}
 
   public render() {
@@ -96,7 +96,7 @@ class Screen extends React.Component<Props, State> {
 		this.forceUpdate();
 	}
 
-	private frame() {
+	private frame = () => {
 		if (!this.state.isAnimating || this.state.animationStartTime == null) {
 			return;
 		}
@@ -106,7 +106,7 @@ class Screen extends React.Component<Props, State> {
 			this.setState({ frameIndex });
 		}
 
-		window.requestAnimationFrame(() => this.frame());
+		window.requestAnimationFrame(this.frame);
 	}
 }
 
