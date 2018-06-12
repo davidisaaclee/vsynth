@@ -9,10 +9,12 @@ import constantShader from '../shaders/constant';
 import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
 } from './SimpleVideoGraph';
+// import { fps } from '../constants';
 
 const k = {
 	oscillator: {
-		frequency: 'frequency',
+		baseFrequency: 'baseFrequency',
+		fineFrequency: 'fineFrequency',
 		red: 'red',
 		green: 'green',
 		blue: 'blue',
@@ -53,8 +55,11 @@ export const modules: { [key: string]: VideoModule } = {
 		shaderSource: oscillatorShader,
 		parameters: {
 			specifications: {
-				[k.oscillator.frequency]: {
+				[k.oscillator.baseFrequency]: {
 					initialValue: () => Math.random(),
+				},
+				[k.oscillator.fineFrequency]: {
+					initialValue: () => 0.5,
 				},
 				[k.oscillator.red]: {
 					initialValue: () => 1,
@@ -69,7 +74,13 @@ export const modules: { [key: string]: VideoModule } = {
 			toUniforms: values => ({
 				frequency: {
 					type: 'f',
-					data: (Math.pow(values[k.oscillator.frequency], 3) * 100) + 0.01
+					data: ((baseFreq, fineFreq) => {
+						const factor = Math.ceil((1 - baseFreq) * 5);
+						const offsettingScaleFactor = (1 + (fineFreq - 0.5));
+
+						return offsettingScaleFactor 
+						* (factor === 0 ? (Math.PI * 2) : (Math.PI / factor));
+					})(values[k.oscillator.baseFrequency], values[k.oscillator.fineFrequency])
 				},
 				color: {
 					type: '3f',
@@ -110,7 +121,7 @@ export const modules: { [key: string]: VideoModule } = {
 		parameters: {
 			specifications: {
 				[k.constant.value]: {
-					initialValue: () => Math.random(),
+					initialValue: () => 0,
 				}
 			},
 			toUniforms: values => ({
