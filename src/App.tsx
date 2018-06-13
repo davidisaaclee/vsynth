@@ -4,7 +4,6 @@ import { Dispatch } from 'redux';
 import * as Modal from 'react-modal';
 import { VideoModule, videoModuleSpecFromModule } from './model/Kit';
 import Screen from './components/container/Screen';
-// import RoutingMatrix from './components/container/RoutingMatrix';
 import BusRouter from './components/container/BusRouter';
 import ModulePicker from './components/container/ModulePicker';
 import NodeControls from './components/container/ConnectedNodeControls';
@@ -41,15 +40,26 @@ class App extends React.Component<Props, object> {
 		return e('div',
 			{},
 			e(Screen),
-			e(BusRouter, {
-				style: {
-					left: 0,
-					top: 0,
-					position: 'fixed',
-					opacity: 0.5,
-					backgroundColor: 'white'
-				}
-			}),
+			e('div',
+				{
+					style: {
+						left: 0,
+						top: 0,
+						position: 'fixed',
+						opacity: 0.5,
+						backgroundColor: 'white'
+					}
+				},
+				e(BusRouter),
+				e('button',
+					{
+						style: {
+							margin: 20,
+						},
+						onClick: this.props.openNodePicker
+					},
+					'Add')
+			),
 			e(Modal,
 				{
 					isOpen: this.props.modal != null,
@@ -82,6 +92,7 @@ interface StateProps {
 interface DispatchProps {
 	closeModal: () => any;
 	addModule: (mod: VideoModule) => any;
+	openNodePicker: () => any;
 }
 
 function mapStateToProps(state: RootState): StateProps {
@@ -109,7 +120,8 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 						inletKey));
 				});
 			}
-		}
+		},
+		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.PICK_MODULE)),
 	};
 }
 
