@@ -17,10 +17,18 @@ export interface State {
 const initialState: State = {
 	graph: (() => {
 		const nodes = {
+			'output': videoModuleSpecFromModule(modules.identity),
 			'constant': videoModuleSpecFromModule(modules.constant),
 			'oscillator': videoModuleSpecFromModule(modules.oscillator),
 		};
 		const edges = {
+			'oscillator -> output': {
+				src: 'output',
+				dst: 'oscillator',
+				metadata: {
+					inlet: 'input'
+				}
+			},
 			'constant -> oscillator.rotation': {
 				src: 'oscillator',
 				dst: 'constant',
@@ -47,7 +55,7 @@ const initialState: State = {
 
 		return withNodesAndEdges;
 	})(),
-	outputNodeKey: 'oscillator'
+	outputNodeKey: 'output'
 };
 
 type RootAction = ActionType<typeof actions>;

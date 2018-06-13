@@ -18,7 +18,14 @@ const e = React.createElement;
 
 type Props = StateProps & DispatchProps;
 
-class App extends React.Component<Props, object> {
+interface State {
+	busCount: number;
+}
+
+class App extends React.Component<Props, State> {
+	state = {
+		busCount: 2
+	}
 
 	public renderModal(modal: AppModule.Modals.Modal): React.ReactNode {
 		if (modal === AppModule.Modals.PICK_MODULE) {
@@ -50,13 +57,28 @@ class App extends React.Component<Props, object> {
 						backgroundColor: 'white'
 					}
 				},
-				e(BusRouter),
+				e(BusRouter, { busCount: this.state.busCount }),
 				e('button',
 					{
 						style: {
 							margin: 20,
 						},
 						onClick: this.props.openNodePicker
+					},
+					'Add'),
+				e('button',
+					{
+						style: {
+							margin: 0,
+							position: 'absolute',
+							right: -50,
+							top: 0
+						},
+						onClick: () => {
+							this.setState({
+								busCount: this.state.busCount + 1
+							});
+						}
 					},
 					'Add')
 			),

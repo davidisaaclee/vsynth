@@ -7,7 +7,7 @@ import { Graph, Edge } from '@davidisaaclee/graph';
 import { UniformValue } from '@davidisaaclee/video-graph';
 
 // TODO: Would be nice to make this typesafe with Kit.modules
-export type ModuleType = "oscillator" | "constant" | "mixer";
+export type ModuleType = "identity" | "oscillator" | "constant" | "mixer";
 
 export interface InletSpecification {
 	inlet: string;

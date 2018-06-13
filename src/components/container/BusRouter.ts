@@ -21,7 +21,11 @@ interface DispatchProps {
 	removeConnections: (connections: Array<{ outlet: Outlet, inlet: Inlet }>) => any;
 }
 
-type Props = Partial<TableProps> & StateProps & DispatchProps;
+interface OwnProps extends Partial<TableProps> {
+	busCount: number;
+}
+
+type Props = OwnProps & StateProps & DispatchProps;
 
 interface Connection {
 	busIndex: number;
@@ -29,7 +33,6 @@ interface Connection {
 }
 
 interface State {
-	busCount: number;
 	connections: Connection[];
 }
 
@@ -48,7 +51,6 @@ function connectionEqual(c1: Connection, c2: Connection): boolean {
 
 class BusRouter extends React.Component<Props, State> {
 	public state = {
-		busCount: 0,
 		connections: [] as Connection[],
 	}
 
@@ -57,9 +59,9 @@ class BusRouter extends React.Component<Props, State> {
 	}
 
 	public render() {
-		const { busCount, connections } = this.state;
+		const { connections } = this.state;
 		const {
-			graph,
+			graph, busCount,
 			insertConnections, removeConnections,
 			...restProps
 		} = this.props;
@@ -238,7 +240,6 @@ class BusRouter extends React.Component<Props, State> {
 		const lanes = this.lanes;
 
 		this.setState({
-			busCount: edges.length,
 			connections: flatMap(
 				edges,
 				({
@@ -284,7 +285,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	};
 }
 
-export default connect(
+export default connect<StateProps, DispatchProps, OwnProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(BusRouter);

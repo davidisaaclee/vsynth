@@ -4,6 +4,7 @@ import {
 	UniformValue, UniformSpecification
 } from '@davidisaaclee/video-graph';
 import { mapNodes, mapEdges, nodeForKey } from '@davidisaaclee/graph';
+import identityShader from '../shaders/identity';
 import oscillatorShader from '../shaders/oscillator';
 import constantShader from '../shaders/constant';
 import mixerShader from '../shaders/mixer';
@@ -54,6 +55,19 @@ export interface VideoModule {
 
 // key :: ModuleType
 export const modules: { [key: string]: VideoModule } = {
+	'identity': {
+		type: 'identity',
+		shaderSource: identityShader,
+		defaultUniforms: (gl: WebGLRenderingContext) => ({
+			'inputTextureDimensions': {
+				type: '2f',
+				data: [gl.canvas.width, gl.canvas.height]
+			},
+		}),
+		inletUniforms: {
+			'input': 'inputTexture',
+		},
+	},
 	'oscillator': {
 		type: 'oscillator',
 		shaderSource: oscillatorShader,
