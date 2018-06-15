@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Table, Props as TableProps } from '@davidisaaclee/react-table';
 import * as Graph from '@davidisaaclee/graph';
-import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
-import { modules as videoModules } from '../../model/Kit';
-import * as App from '../../modules/app';
-import { State as RootState } from '../../modules';
-import * as GraphModule from '../../modules/graph';
-import { combinations } from '../../utility/combinations';
+import { SimpleVideoGraph, VideoModuleSpecification } from '../../../model/SimpleVideoGraph';
+import { modules as videoModules } from '../../../model/Kit';
+import * as App from '../../../modules/app';
+import { State as RootState } from '../../../modules';
+import * as GraphModule from '../../../modules/graph';
+import { combinations } from '../../../utility/combinations';
+import './style.css';
 
 const e = React.createElement;
 
@@ -126,7 +127,18 @@ class BusRouter extends React.Component<Props, State> {
 							},
 							onClick: () => this.removeConnection({ laneIndex, busIndex }),
 						},
-						'x');
+						e('div',
+							{
+								style: {
+									backgroundColor: lanes[laneIndex].type === 'inlet'
+									? 'black'
+									: 'white',
+									width: 10,
+									height: 10,
+									display: 'block',
+									margin: '0 auto',
+								}
+							}));
 				}
 			}
 		});
@@ -235,7 +247,7 @@ class BusRouter extends React.Component<Props, State> {
 	private get lanes(): Lane[] {
 		return flatMap(
 			entries(Graph.allNodes(this.props.graph)),
-			([nodeKey, node]): Lane[] => [
+			([nodeKey, node]: [string, VideoModuleSpecification]): Lane[] => [
 				{
 					type: 'outlet',
 					name: nodeKey,
