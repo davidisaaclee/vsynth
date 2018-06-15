@@ -6,6 +6,7 @@ import { Table, Props as TableProps } from '@davidisaaclee/react-table';
 import * as Graph from '@davidisaaclee/graph';
 import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
 import { modules as videoModules } from '../../model/Kit';
+import * as App from '../../modules/app';
 import { State as RootState } from '../../modules';
 import * as GraphModule from '../../modules/graph';
 import { combinations } from '../../utility/combinations';
@@ -19,6 +20,7 @@ interface StateProps {
 interface DispatchProps {
 	insertConnections: (connections: Array<{ outlet: Outlet, inlet: Inlet }>) => any;
 	removeConnections: (connections: Array<{ outlet: Outlet, inlet: Inlet }>) => any;
+	openNodeControls: (nodeKey: string) => any;
 }
 
 interface OwnProps extends Partial<TableProps> {
@@ -69,6 +71,7 @@ class BusRouter extends React.Component<Props, State> {
 		const {
 			graph, busCount,
 			insertConnections, removeConnections,
+			openNodeControls,
 			...restProps
 		} = this.props;
 		const lanes = this.lanes;
@@ -83,7 +86,11 @@ class BusRouter extends React.Component<Props, State> {
 				{
 					style: this.styleForLane(index)
 				},
-				lanes[index].name),
+				e('button',
+					{
+						onClick: () => openNodeControls(lanes[index].nodeKey)
+					},
+					lanes[index].name)),
 			renderColumnHeader: (index: number) => e(
 				'div',
 				{
@@ -290,9 +297,12 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 		insertConnections: (connections) => (connections
 			.map(({ inlet, outlet }) => GraphModule.actions.connectNodes(outlet.nodeKey, inlet.nodeKey, inlet.inletKey))
 			.forEach(dispatch)),
+
 		removeConnections: (connections) => (connections
 			.map(({ inlet, outlet }) => (GraphModule.actions.disconnectNodes(outlet.nodeKey, inlet.nodeKey, inlet.inletKey)))
 			.forEach(dispatch)),
+
+		openNodeControls: (nodeKey) => dispatch(App.actions.setModal(App.Modals.NODE_CONTROLS(nodeKey))),
 	};
 }
 
