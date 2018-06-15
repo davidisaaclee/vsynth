@@ -36,8 +36,14 @@ interface State {
 	connections: Connection[];
 }
 
-type Inlet = { nodeKey: string, inletKey: string };
-type Outlet = { nodeKey: string };
+interface Inlet {
+	nodeKey: string;
+	inletKey: string;
+}
+
+interface Outlet {
+	nodeKey: string;
+}
 
 type Lane = { name: string }
 	& (
@@ -185,7 +191,7 @@ class BusRouter extends React.Component<Props, State> {
 				inletKey: lane.inletKey
 			};
 		})
-		.filter(x => x != null) as Array<Inlet>;
+		.filter(x => x != null) as Inlet[];
 		const outletsConnectedToBus = lanesConnectedToBus
 		.map(laneIndex => {
 			const lane = lanes[laneIndex];
@@ -197,7 +203,7 @@ class BusRouter extends React.Component<Props, State> {
 				nodeKey: lane.nodeKey,
 			};
 		})
-		.filter(x => x != null) as Array<Outlet>;
+		.filter(x => x != null) as Outlet[];
 
 		return combinations(outletsConnectedToBus, inletsConnectedToBus)
 		.map(([outlet, inlet]) => ({ outlet, inlet }));

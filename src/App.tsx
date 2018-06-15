@@ -23,7 +23,7 @@ interface State {
 }
 
 class App extends React.Component<Props, State> {
-	state = {
+	public state = {
 		busCount: 2
 	}
 
