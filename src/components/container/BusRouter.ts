@@ -170,6 +170,11 @@ class BusRouter extends React.Component<Props, State> {
 			const removedConnections = oldConnectionsInBus
 				.filter(c1 => newConnectionsInBus.find(c2 => isIOConnectionEqual(c1, c2)) == null);
 			this.props.removeConnections(removedConnections);
+
+			// Some of the connections in the bus might have been previously overridden by
+			// one of the removed connection.
+			// Just re-add all of them.
+			this.props.insertConnections(newConnectionsInBus);
 		});
 	}
 
