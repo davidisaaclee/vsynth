@@ -190,11 +190,62 @@ class BusRouter extends React.Component<Props, State> {
 				.filter(c1 => newConnectionsInBus.find(c2 => isIOConnectionEqual(c1, c2)) == null);
 			this.props.removeConnections(removedConnections);
 
-			// Some of the connections in the bus might have been previously overridden by
-			// one of the removed connection.
+			// Some of the connections in the bus or lane might have
+			// been previously overridden by one of the removed connection.
 			// Just re-add all of them.
 			this.props.insertConnections(newConnectionsInBus);
+			this.props.insertConnections(this.connectionsFromLane(connection.laneIndex));
 		});
+	}
+
+	private connectionsFromLane(laneIndex: number): Array<{ inlet: Inlet, outlet: Outlet }> {
+		const lanes = this.lanes;
+
+		// Get all busses that this lane connects to.
+		const bussesConnectedToLane = this.state.connections
+		.filter(c => c.laneIndex === laneIndex)
+		.map(c => c.busIndex);
+
+		// If this lane is an inlet, find all outlets connected to the connected busses.
+		const lane = lanes[laneIndex];
+		if (lane.type === 'inlet') {
+			const connectedOutletNodes = flatMap(
+				bussesConnectedToLane,
+				busIndex => (this.state.connections
+					.filter(c => c.busIndex === busIndex)
+					.filter(c => lanes[c.laneIndex].type === 'outlet')
+					.map(c => ({
+						nodeKey: lanes[c.laneIndex].nodeKey
+					}))));
+
+			return connectedOutletNodes.map(outlet => ({
+				inlet: {
+					nodeKey: lane.nodeKey,
+					inletKey: lane.inletKey
+				},
+				outlet
+			}));
+		} else {
+			const connectedInletNodes = flatMap(
+				bussesConnectedToLane,
+				busIndex => (this.state.connections
+					.filter(c => c.busIndex === busIndex)
+					.filter(c => lanes[c.laneIndex].type === 'inlet')
+					.map(c => {
+						const inlet = lanes[c.laneIndex] as Inlet;
+						return {
+							nodeKey: inlet.nodeKey,
+							inletKey: inlet.inletKey,
+						}
+					})));
+
+			return connectedInletNodes.map(inlet => ({
+				inlet,
+				outlet: {
+					nodeKey: lane.nodeKey
+				}
+			}));
+		}
 	}
 
 	private connectionsInBus(busIndex: number): Array<{ inlet: Inlet, outlet: Outlet }> {
