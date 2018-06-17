@@ -52,6 +52,9 @@ export interface VideoModule {
 	inlets?: {
 		// maps display name to uniform identifier
 		uniformMappings: { [key: string]: string },
+
+		// display order of inlets by key
+		displayOrder: string[],
 	}
 }
 
@@ -70,6 +73,7 @@ export const modules: { [key: string]: VideoModule } = {
 			uniformMappings: {
 				'input': 'inputTexture',
 			},
+			displayOrder: ['input'],
 		}
 	},
 	'oscillator': {
@@ -135,7 +139,8 @@ export const modules: { [key: string]: VideoModule } = {
 			uniformMappings: {
 				'rotation': 'rotationTheta',
 				'phase offset': 'phaseOffsetTexture',
-			}
+			},
+			displayOrder: ['rotation', 'phase offset'],
 		}
 	},
 
@@ -178,6 +183,7 @@ export const modules: { [key: string]: VideoModule } = {
 				'a': 'inputA',
 				'b': 'inputB',
 			},
+			displayOrder: ['a', 'b']
 		}
 	},
 };

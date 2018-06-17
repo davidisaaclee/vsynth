@@ -1,5 +1,5 @@
 import { entries, flatMap } from 'lodash';
-import { createSelector } from 'reselect';
+import { createSelector, Selector } from 'reselect';
 import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
@@ -21,7 +21,7 @@ export const connections = createSelector(
 		busIndex
 	})));
 
-export const lanes = createSelector(
+export const lanes: Selector<RootState, Lane[]> = createSelector(
 	[
 		(state: RootState) => state.graph.nodeOrder,
 		graph
@@ -35,7 +35,7 @@ export const lanes = createSelector(
 			const inletKeys =
 				videoMod.inlets == null
 				? []
-				: Object.keys(videoMod.inlets.uniformMappings);
+				: videoMod.inlets.displayOrder;
 
 			return [
 				{
