@@ -13,7 +13,7 @@ export interface State {
 	graph: SimpleVideoGraph;
 	outputNodeKey: string | null;
 
-	nodeOrder: Array<string>;
+	nodeOrder: string[];
 	// maps lane index (using `lanes`) to bus index
 	busConnections: { [laneIndex: number]: number };
 	busCount: number;

@@ -2,7 +2,7 @@
   "name": "@davidisaaclee/vsynth",
   "version": "0.1.0",
   "private": true,
-	"homepage": "http://david-lee.net/vsynth",
+  "homepage": "http://david-lee.net/vsynth",
   "dependencies": {
     "@davidisaaclee/graph": "^0.1.0",
     "@davidisaaclee/react-table": "^0.1.0",
@@ -17,12 +17,13 @@
     "react-redux": "^5.0.7",
     "react-scripts-ts": "2.16.0",
     "redux": "^4.0.0",
+    "reselect": "^3.0.1",
     "typesafe-actions": "^2.0.4",
     "uuid": "^3.2.1"
   },
   "scripts": {
-		"clean:gh-pages": "rimraf gh-pages/*",
-		"gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
+    "clean:gh-pages": "rimraf gh-pages/*",
+    "gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build && npm run clean:gh-pages && npm run gh-pages-populate",
     "test": "react-scripts-ts test --env=jsdom",

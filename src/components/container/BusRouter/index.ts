@@ -1,15 +1,13 @@
-import { entries, flatMap } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Table, Props as TableProps } from '@davidisaaclee/react-table';
-import * as Graph from '@davidisaaclee/graph';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
-import { modules as videoModules } from '../../../model/Kit';
 import * as App from '../../../modules/app';
 import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
-//import { combinations } from '../../../utility/combinations';
+import * as selectors from './selectors';
+import { Lane, Inlet, Outlet, Connection } from './types';
 import './style.css';
 
 const e = React.createElement;
@@ -31,27 +29,7 @@ interface OwnProps extends Partial<TableProps> {}
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-interface Connection {
-	busIndex: number;
-	laneIndex: number;
-}
-
 interface State {}
-
-interface Inlet {
-	nodeKey: string;
-	inletKey: string;
-}
-
-interface Outlet {
-	nodeKey: string;
-}
-
-type Lane = { name: string }
-	& (
-		({ type: 'inlet' } & Inlet)
-		| ({ type: 'outlet' } & Outlet)
-	);
 
 /*
 function connectionEqual(c1: Connection, c2: Connection): boolean {
@@ -211,38 +189,10 @@ class BusRouter extends React.Component<Props, State> {
 
 function mapStateToProps(state: RootState): StateProps {
 	return {
-		graph: state.graph.graph,
-		busCount: state.graph.busCount,
-		connections: entries(state.graph.busConnections)
-			.map(([laneIndex, busIndex]) => ({
-				laneIndex: parseInt(laneIndex),
-				busIndex
-			})),
-		lanes: flatMap(
-			state.graph.nodeOrder,
-			nodeKey => {
-				const videoMod =
-					videoModules[Graph.nodeForKey(state.graph.graph, nodeKey)!.type];
-
-				const inletKeys =
-					videoMod.inletUniforms == null
-					? []
-					: Object.keys(videoMod.inletUniforms);
-
-				return [
-					{
-						type: 'outlet',
-						name: nodeKey,
-						nodeKey
-					},
-					...inletKeys.map(inletKey => ({
-						type: 'inlet',
-						name: `${nodeKey} * ${inletKey}`,
-						nodeKey,
-						inletKey
-					}))
-				] as Lane[];
-			}),
+		graph: selectors.graph(state),
+		busCount: selectors.busCount(state),
+		connections: selectors.connections(state),
+		lanes: selectors.lanes(state),
 	};
 }
 
