@@ -49,8 +49,10 @@ export interface VideoModule {
 	};
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
 	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => { [identifier: string]: UniformValue };
-	// maps display name to uniform identifier
-	inletUniforms?: { [displayName: string]: string };
+	inlets?: {
+		// maps display name to uniform identifier
+		uniformMappings: { [key: string]: string },
+	}
 }
 
 // key :: ModuleType
@@ -64,9 +66,11 @@ export const modules: { [key: string]: VideoModule } = {
 				data: [gl.canvas.width, gl.canvas.height]
 			},
 		}),
-		inletUniforms: {
-			'input': 'inputTexture',
-		},
+		inlets: {
+			uniformMappings: {
+				'input': 'inputTexture',
+			},
+		}
 	},
 	'oscillator': {
 		type: 'oscillator',
@@ -127,10 +131,12 @@ export const modules: { [key: string]: VideoModule } = {
 				data: (frameIndex * 2 * Math.PI / (uniforms.frequency.data as number)) % 1,
 			}
 		}),
-		inletUniforms: {
-			'rotation': 'rotationTheta',
-			'phase offset': 'phaseOffsetTexture',
-		},
+		inlets: {
+			uniformMappings: {
+				'rotation': 'rotationTheta',
+				'phase offset': 'phaseOffsetTexture',
+			}
+		}
 	},
 
 	'constant': {
@@ -167,10 +173,12 @@ export const modules: { [key: string]: VideoModule } = {
 				}
 			})
 		},
-		inletUniforms: {
-			'a': 'inputA',
-			'b': 'inputB',
-		},
+		inlets: {
+			uniformMappings: {
+				'a': 'inputA',
+				'b': 'inputB',
+			},
+		}
 	},
 };
 
@@ -243,12 +251,12 @@ export function videoGraphFromSimpleVideoGraph(
 			if (moduleConfiguration == null) {
 				throw new Error(`No module configuration found for module type: ${nodeForKey(graph, src)!.type}`);
 			}
-			if (moduleConfiguration.inletUniforms == null) {
+			if (moduleConfiguration.inlets == null) {
 				throw new Error("Edge connecting to node with no inlets");
 			}
 
 			return {
-				uniformIdentifier: moduleConfiguration.inletUniforms[inletSpec.inlet]
+				uniformIdentifier: moduleConfiguration.inlets.uniformMappings[inletSpec.inlet]
 			};
 		});
 }

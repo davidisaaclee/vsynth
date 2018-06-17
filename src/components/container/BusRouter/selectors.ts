@@ -33,9 +33,9 @@ export const lanes = createSelector(
 				videoModules[Graph.nodeForKey(graph, nodeKey)!.type];
 
 			const inletKeys =
-				videoMod.inletUniforms == null
+				videoMod.inlets == null
 				? []
-				: Object.keys(videoMod.inletUniforms);
+				: Object.keys(videoMod.inlets.uniformMappings);
 
 			return [
 				{

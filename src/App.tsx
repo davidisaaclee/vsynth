@@ -130,8 +130,8 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 				nodeKey));
 
 			// HACK: Automatically connect all inlets to known node `constant`.
-			if (mod.inletUniforms != null) {
-				Object.keys(mod.inletUniforms).forEach(inletKey => {
+			if (mod.inlets != null) {
+				Object.keys(mod.inlets.uniformMappings).forEach(inletKey => {
 					dispatch(Graph.actions.connectNodes(
 						'constant',
 						nodeKey,
