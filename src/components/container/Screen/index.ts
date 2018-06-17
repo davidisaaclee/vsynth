@@ -5,13 +5,14 @@ import { Dispatch } from 'redux';
 import VideoGraphView from '@davidisaaclee/react-video-graph';
 import { empty as emptyGraph } from '@davidisaaclee/graph';
 import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
-import { State as RootState } from '../../modules';
-import { SimpleVideoGraph } from '../../model/SimpleVideoGraph';
+import { State as RootState } from '../../../modules';
+import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import {
 	modules as videoModules, VideoModule,
 	videoGraphFromSimpleVideoGraph, RuntimeModule
-} from '../../model/Kit';
-import * as k from '../../constants';
+} from '../../../model/Kit';
+import * as k from '../../../constants';
+import * as selectors from './selectors';
 
 const e = React.createElement;
 
@@ -112,8 +113,8 @@ class Screen extends React.Component<Props, State> {
 
 function mapStateToProps(state: RootState): StateProps {
 	return {
-		graph: state.graph.graph,
-		outputNodeKey: state.graph.outputNodeKey,
+		graph: selectors.graph(state),
+		outputNodeKey: selectors.outputNodeKey(state),
 	};
 }
 
