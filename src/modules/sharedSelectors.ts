@@ -6,20 +6,24 @@ import { SimpleVideoGraph, VideoModuleSpecification } from '../model/SimpleVideo
 const nodes =
 	(state: RootState) => state.graph.nodes;
 
-const busConnections =
+export const busCount =
+	(state: RootState) => state.graph.busCount;
+
+export const busConnections =
 	(state: RootState) => state.graph.busConnections;
 
-const nodeOrder =
+export const nodeOrder =
 	(state: RootState) => state.graph.nodeOrder;
 
-const orderedNodes = createSelector(
-	[nodes, nodeOrder],
-	(nodes: Record<string, VideoModuleSpecification>, nodeOrder: string[]) => {
-		return nodeOrder.map(key => ({
-			key,
-			node: nodes[key]
-		}));
-	});
+export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoModuleSpecification }>> =
+	createSelector(
+		[nodes, nodeOrder],
+		(nodes: Record<string, VideoModuleSpecification>, nodeOrder: string[]) => (
+			nodeOrder.map(key => ({
+				key,
+				node: nodes[key]
+			}))
+		));
 
 export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 	[

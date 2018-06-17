@@ -1,21 +1,20 @@
 import { entries, flatMap } from 'lodash';
 import { createSelector, Selector } from 'reselect';
-import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from '../../../modules';
-import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
+import { SimpleVideoGraph, VideoModuleSpecification } from '../../../model/SimpleVideoGraph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import { modules as videoModules } from '../../../model/Kit';
 import { Lane } from './types';
 
 export const busCount =
-	(state: RootState) => state.graph.busCount;
+	sharedSelectors.busCount;
 
 export const graph =
 	sharedSelectors.graph;
 
 
 export const connections = createSelector(
-	(state: RootState) => state.graph.busConnections,
+	[sharedSelectors.busConnections],
 	(connections: Record<number, number>) => entries(connections).map(([laneIndex, busIndex]) => ({
 		laneIndex: parseInt(laneIndex, 10),
 		busIndex
@@ -23,14 +22,14 @@ export const connections = createSelector(
 
 export const lanes: Selector<RootState, Lane[]> = createSelector(
 	[
-		(state: RootState) => state.graph.nodeOrder,
+		sharedSelectors.orderedNodes,
 		graph
 	],
-	(nodeOrder: string[], graph: SimpleVideoGraph) => flatMap(
+	(nodeOrder: Array<{ key: string, node: VideoModuleSpecification }>, graph: SimpleVideoGraph) => flatMap(
 		nodeOrder,
-		nodeKey => {
+		({ key: nodeKey, node }) => {
 			const videoMod =
-				videoModules[Graph.nodeForKey(graph, nodeKey)!.type];
+				videoModules[node.type];
 
 			const inletKeys =
 				videoMod.inlets == null
