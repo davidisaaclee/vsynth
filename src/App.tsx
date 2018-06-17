@@ -24,7 +24,7 @@ interface State {
 
 class App extends React.Component<Props, State> {
 	public state = {
-		busCount: 2
+		busCount: 1
 	}
 
 	public renderModal(modal: AppModule.Modals.Modal): React.ReactNode {

@@ -19,41 +19,11 @@ const initialState: State = {
 		const nodes = {
 			'output': videoModuleSpecFromModule(modules.identity),
 			'constant': videoModuleSpecFromModule(modules.constant),
-			'oscillator': videoModuleSpecFromModule(modules.oscillator),
-		};
-		const edges = {
-			'oscillator -> output': {
-				src: 'output',
-				dst: 'oscillator',
-				metadata: {
-					inlet: 'input'
-				}
-			},
-			'constant -> oscillator.rotation': {
-				src: 'oscillator',
-				dst: 'constant',
-				metadata: {
-					inlet: 'rotation'
-				}
-			},
-			'constant -> oscillator.phaseOffset': {
-				src: 'oscillator',
-				dst: 'constant',
-				metadata: {
-					inlet: 'phase offset'
-				}
-			},
 		};
 
-		const withNodes = entries(nodes).reduce(
+		return entries(nodes).reduce(
 			(graph, [key, node]) => Graph.insertNode(graph, node, key),
 			Graph.empty);
-
-		const withNodesAndEdges = entries(edges).reduce(
-			(graph, [key, edge]) => Graph.insertEdge(graph, edge, key),
-			withNodes);
-
-		return withNodesAndEdges;
 	})(),
 	outputNodeKey: 'output'
 };
