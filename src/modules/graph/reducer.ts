@@ -12,6 +12,11 @@ import * as uuid from 'uuid';
 export interface State {
 	graph: SimpleVideoGraph;
 	outputNodeKey: string | null;
+
+	nodeOrder: Array<string>;
+	// maps lane index (using `lanes`) to bus index
+	busConnections: { [laneIndex: number]: number };
+	busCount: number;
 };
 
 const initialState: State = {
@@ -25,7 +30,14 @@ const initialState: State = {
 			(graph, [key, node]) => Graph.insertNode(graph, node, key),
 			Graph.empty);
 	})(),
-	outputNodeKey: 'output'
+	outputNodeKey: 'output',
+
+	nodeOrder: [
+		'output', 'constant',
+	],
+	busConnections: {
+	},
+	busCount: 1,
 };
 
 type RootAction = ActionType<typeof actions>;
@@ -96,7 +108,8 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				graph: Graph.insertNode(
 					state.graph,
 					action.payload.node,
-					action.payload.id)
+					action.payload.id),
+				nodeOrder: [...state.nodeOrder, action.payload.id]
 			};
 
 		case Constants.SET_PARAMETER:

@@ -19,12 +19,10 @@ const e = React.createElement;
 type Props = StateProps & DispatchProps;
 
 interface State {
-	busCount: number;
 }
 
 class App extends React.Component<Props, State> {
 	public state = {
-		busCount: 1
 	}
 
 	public renderModal(modal: AppModule.Modals.Modal): React.ReactNode {
@@ -57,7 +55,7 @@ class App extends React.Component<Props, State> {
 						backgroundColor: 'white'
 					}
 				},
-				e(BusRouter, { busCount: this.state.busCount }),
+				e(BusRouter),
 				e('button',
 					{
 						style: {
@@ -75,9 +73,7 @@ class App extends React.Component<Props, State> {
 							top: 0
 						},
 						onClick: () => {
-							this.setState({
-								busCount: this.state.busCount + 1
-							});
+							// TODO
 						}
 					},
 					'Add')

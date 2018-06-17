@@ -1,21 +1,24 @@
-import { entries, values, flatMap } from 'lodash';
+import { entries, flatMap } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Table, Props as TableProps } from '@davidisaaclee/react-table';
 import * as Graph from '@davidisaaclee/graph';
-import { SimpleVideoGraph, VideoModuleSpecification } from '../../../model/SimpleVideoGraph';
+import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import { modules as videoModules } from '../../../model/Kit';
 import * as App from '../../../modules/app';
 import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
-import { combinations } from '../../../utility/combinations';
+//import { combinations } from '../../../utility/combinations';
 import './style.css';
 
 const e = React.createElement;
 
 interface StateProps {
 	graph: SimpleVideoGraph;
+	connections: Connection[];
+	busCount: number;
+	lanes: Lane[];
 }
 
 interface DispatchProps {
@@ -24,9 +27,7 @@ interface DispatchProps {
 	openNodeControls: (nodeKey: string) => any;
 }
 
-interface OwnProps extends Partial<TableProps> {
-	busCount: number;
-}
+interface OwnProps extends Partial<TableProps> {}
 
 type Props = OwnProps & StateProps & DispatchProps;
 
@@ -35,9 +36,7 @@ interface Connection {
 	laneIndex: number;
 }
 
-interface State {
-	connections: Connection[];
-}
+interface State {}
 
 interface Inlet {
 	nodeKey: string;
@@ -54,29 +53,21 @@ type Lane = { name: string }
 		| ({ type: 'outlet' } & Outlet)
 	);
 
+/*
 function connectionEqual(c1: Connection, c2: Connection): boolean {
 	return c1.busIndex === c2.busIndex && c1.laneIndex === c2.laneIndex;
 }
+*/
 
 class BusRouter extends React.Component<Props, State> {
-	public state = {
-		connections: [] as Connection[],
-	}
-
-	public componentDidMount() {
-		this.populateConnections(this.props.graph);
-	}
 
 	public render() {
-		const { connections } = this.state;
 		const {
-			graph, busCount,
+			graph, connections, busCount, lanes,
 			insertConnections, removeConnections,
 			openNodeControls,
 			...restProps
 		} = this.props;
-		const lanes = this.lanes;
-
 		return e(Table, {
 			...restProps,
 			rowCount: lanes.length,
@@ -145,21 +136,27 @@ class BusRouter extends React.Component<Props, State> {
 	}
 
 	private addConnection(connection: Connection) {
+		return;
+		/*
 		if (this.state.connections.find(c => connectionEqual(connection, c)) != null) {
 			// Connection already exists.
 			return;
 		}
 		
 		const connections =
-			[...this.state.connections, connection];
+			[...this.props.connections, connection];
 		this.setState({ connections }, () => {
 			this.props.insertConnections(this.connectionsInBus(connection.busIndex));
 		});
+	*/
 	}
 
 	private removeConnection(connection: Connection) {
+		return;
+
+		/*
 		const indexOfConnection =
-			this.state.connections.findIndex(c => connectionEqual(connection, c));
+			this.props.connections.findIndex(c => connectionEqual(connection, c));
 		if (indexOfConnection === -1) {
 			// No such connection
 			return;
@@ -169,7 +166,7 @@ class BusRouter extends React.Component<Props, State> {
 			this.connectionsInBus(connection.busIndex);
 
 		const connectionsCopy =
-			this.state.connections.slice();
+			this.props.connections.slice();
 		connectionsCopy.splice(indexOfConnection, 1);
 
 		this.setState({
@@ -196,97 +193,13 @@ class BusRouter extends React.Component<Props, State> {
 			this.props.insertConnections(newConnectionsInBus);
 			this.props.insertConnections(this.connectionsFromLane(connection.laneIndex));
 		});
+		*/
 	}
 
-	private connectionsFromLane(laneIndex: number): Array<{ inlet: Inlet, outlet: Outlet }> {
-		const lanes = this.lanes;
-
-		// Get all busses that this lane connects to.
-		const bussesConnectedToLane = this.state.connections
-		.filter(c => c.laneIndex === laneIndex)
-		.map(c => c.busIndex);
-
-		// If this lane is an inlet, find all outlets connected to the connected busses.
-		const lane = lanes[laneIndex];
-		if (lane.type === 'inlet') {
-			const connectedOutletNodes = flatMap(
-				bussesConnectedToLane,
-				busIndex => (this.state.connections
-					.filter(c => c.busIndex === busIndex)
-					.filter(c => lanes[c.laneIndex].type === 'outlet')
-					.map(c => ({
-						nodeKey: lanes[c.laneIndex].nodeKey
-					}))));
-
-			return connectedOutletNodes.map(outlet => ({
-				inlet: {
-					nodeKey: lane.nodeKey,
-					inletKey: lane.inletKey
-				},
-				outlet
-			}));
-		} else {
-			const connectedInletNodes = flatMap(
-				bussesConnectedToLane,
-				busIndex => (this.state.connections
-					.filter(c => c.busIndex === busIndex)
-					.filter(c => lanes[c.laneIndex].type === 'inlet')
-					.map(c => {
-						const inlet = lanes[c.laneIndex] as Inlet;
-						return {
-							nodeKey: inlet.nodeKey,
-							inletKey: inlet.inletKey,
-						}
-					})));
-
-			return connectedInletNodes.map(inlet => ({
-				inlet,
-				outlet: {
-					nodeKey: lane.nodeKey
-				}
-			}));
-		}
-	}
-
-	private connectionsInBus(busIndex: number): Array<{ inlet: Inlet, outlet: Outlet }> {
-		const lanesConnectedToBus = this.state.connections
-		.filter(connection => connection.busIndex === busIndex)
-		.map(({ laneIndex }) => laneIndex);
-
-		const lanes = this.lanes;
-		const inletsConnectedToBus = lanesConnectedToBus
-		.map(laneIndex => {
-			const lane = lanes[laneIndex];
-			if (lane.type !== 'inlet') {
-				return null;
-			}
-
-			return {
-				nodeKey: lane.nodeKey,
-				inletKey: lane.inletKey
-			};
-		})
-		.filter(x => x != null) as Inlet[];
-		const outletsConnectedToBus = lanesConnectedToBus
-		.map(laneIndex => {
-			const lane = lanes[laneIndex];
-			if (lane.type !== 'outlet') {
-				return null;
-			}
-
-			return {
-				nodeKey: lane.nodeKey,
-			};
-		})
-		.filter(x => x != null) as Outlet[];
-
-		return combinations(outletsConnectedToBus, inletsConnectedToBus)
-		.map(([outlet, inlet]) => ({ outlet, inlet }));
-	}
 
 	// TODO: be safer
 	private styleForLane(laneIndex: number): object {
-		const isInlet = this.lanes[laneIndex].type === 'inlet';
+		const isInlet = this.props.lanes[laneIndex].type === 'inlet';
 		return isInlet
 		? {}
 		: {
@@ -294,69 +207,47 @@ class BusRouter extends React.Component<Props, State> {
 			color: 'white',
 		};
 	}
-
-	private get lanes(): Lane[] {
-		return flatMap(
-			entries(Graph.allNodes(this.props.graph)),
-			([nodeKey, node]: [string, VideoModuleSpecification]): Lane[] => [
-				{
-					type: 'outlet',
-					name: nodeKey,
-					nodeKey,
-				},
-				...(videoModules[node.type].inletUniforms == null
-					? []
-					: entries(videoModules[node.type].inletUniforms)
-					.map(([inletKey, inlet]): Lane => ({
-						type: 'inlet',
-						name: `${nodeKey} • ${inletKey}`,
-						nodeKey,
-						inletKey
-					})))
-			]);
-	}
-
-	private populateConnections(graph: SimpleVideoGraph) {
-		const edges = values(Graph.allEdges(graph));
-		const lanes = this.lanes;
-
-		this.setState({
-			connections: flatMap(
-				edges,
-				({
-					src: inletNodeKey,
-					dst: outletNodeKey,
-					metadata: { inlet: inletKey }
-				}, index) => [
-					{
-						busIndex: index,
-						laneIndex: lanes.findIndex(l => (
-							l.type === 'inlet'
-							&& l.inletKey === inletKey
-							&& l.nodeKey === inletNodeKey
-						))
-					},
-					{
-						busIndex: index,
-						laneIndex: lanes.findIndex(l => (
-							l.type === 'outlet'
-							&& l.nodeKey === outletNodeKey
-						))
-					}
-				])
-		});
-	}
 }
 
 function mapStateToProps(state: RootState): StateProps {
 	return {
-		graph: state.graph.graph
+		graph: state.graph.graph,
+		busCount: state.graph.busCount,
+		connections: entries(state.graph.busConnections)
+			.map(([laneIndex, busIndex]) => ({
+				laneIndex: parseInt(laneIndex),
+				busIndex
+			})),
+		lanes: flatMap(
+			state.graph.nodeOrder,
+			nodeKey => {
+				const videoMod =
+					videoModules[Graph.nodeForKey(state.graph.graph, nodeKey)!.type];
+
+				const inletKeys =
+					videoMod.inletUniforms == null
+					? []
+					: Object.keys(videoMod.inletUniforms);
+
+				return [
+					{
+						type: 'outlet',
+						name: nodeKey,
+						nodeKey
+					},
+					...inletKeys.map(inletKey => ({
+						type: 'inlet',
+						name: `${nodeKey} * ${inletKey}`,
+						nodeKey,
+						inletKey
+					}))
+				] as Lane[];
+			}),
 	};
 }
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		// TODO
 		insertConnections: (connections) => (connections
 			.map(({ inlet, outlet }) => GraphModule.actions.connectNodes(outlet.nodeKey, inlet.nodeKey, inlet.inletKey))
 			.forEach(dispatch)),
