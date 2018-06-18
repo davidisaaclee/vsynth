@@ -23,7 +23,10 @@ const initialState: State = {
 
 	nodeOrder: ['output', 'default-constant'],
 	inletConnections: {},
-	outletConnections: {},
+	outletConnections: {
+		'default-constant': -1,
+		'output': -2,
+	},
 	busCount: 5,
 };
 

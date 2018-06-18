@@ -101,7 +101,7 @@ class BusRouter extends React.Component<Props, State> {
 							// TODO: Be more explicit about removing edges behavior
 							onClick: (lane.type === 'inlet'
 								? () => setInletConnection(lane.nodeKey, lane.inletKey, -1)
-								: () => setOutletConnection(lane.nodeKey, -1))
+								: () => setOutletConnection(lane.nodeKey, -2))
 						},
 						e('div',
 							{
