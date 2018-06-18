@@ -48,36 +48,53 @@ class App extends React.Component<Props, State> {
 		return e('div',
 			{},
 			e(Screen),
-			e('div',
+			e(Modal,
 				{
+					isOpen: true,
 					style: {
-						left: 0,
-						top: 0,
-						position: 'fixed',
-						opacity: 0.5,
+						content: {
+							opacity: 1,
+							backgroundColor: 'rgba(255, 255, 255, 0)',
+							borderRadius: 0,
+							border: 'none',
+							outline: 'none',
+						},
+						overlay: {
+							backgroundColor: 'rgba(255, 255, 255, 0)',
+							border: 'none',
+						}
 					}
 				},
-				e(BusRouter),
-				e('button',
+				e('div',
 					{
 						style: {
-							margin: 20,
-						},
-						onClick: openNodePicker
-					},
-					'Add'),
-				e('button',
-					{
-						style: {
-							margin: 0,
+							left: 0,
+							top: 0,
 							position: 'absolute',
-							right: -50,
-							top: 0
-						},
-						onClick: addBus
+							opacity: 0.5,
+						}
 					},
-					'Add')
-			),
+					e(BusRouter),
+					e('button',
+						{
+							style: {
+								margin: 0,
+								position: 'absolute',
+								right: -50,
+								top: 0
+							},
+							onClick: addBus
+						},
+						'Add bus'),
+					e('button',
+						{
+							style: {
+								margin: 20,
+							},
+							onClick: openNodePicker
+						},
+						'Add node'),
+				)),
 			e(Modal,
 				{
 					isOpen: modal != null,
