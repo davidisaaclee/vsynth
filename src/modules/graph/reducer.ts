@@ -9,8 +9,8 @@ export interface State {
 	outputNodeKey: string | null;
 
 	nodeOrder: string[];
-	// maps lane index (using `nodeOrder`) to bus index
-	busConnections: { [laneIndex: number]: number };
+	inletConnections: { [nodeKey: string]: { [inletKey: string]: number } };
+	outletConnections: { [nodeKey: string]: number };
 	busCount: number;
 };
 
@@ -21,11 +21,9 @@ const initialState: State = {
 	},
 	outputNodeKey: 'output',
 
-	nodeOrder: [
-		'output', 'constant',
-	],
-	busConnections: {
-	},
+	nodeOrder: ['output', 'constant'],
+	inletConnections: {},
+	outletConnections: {},
 	busCount: 1,
 };
 
@@ -39,11 +37,28 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				outputNodeKey: action.payload,
 			};
 
-		case Constants.CONNECT_NODES:
-			return state;
+		case Constants.SET_INLET_CONNECTION:
+			return (({ nodeKey, inletKey, busIndex }) => ({
+				...state,
+				inletConnections: {
+					...state.inletConnections,
+					[nodeKey]: {
+						...(state.inletConnections[nodeKey] == null
+							? {}
+							: state.inletConnections[nodeKey]),
+						[inletKey]: busIndex
+					}
+				}
+			}))(action.payload);
 
-		case Constants.DISCONNECT_NODES:
-			return state;
+		case Constants.SET_OUTLET_CONNECTION:
+			return (({ nodeKey, busIndex }) => ({
+				...state,
+				outletConnections: {
+					...state.outletConnections,
+					[nodeKey]: busIndex
+				}
+			}))(action.payload);
 
 		case Constants.INSERT_NODE:
 			return {
@@ -72,6 +87,12 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				}
 			}))(action.payload);
+
+		case Constants.ADD_BUS:
+			return {
+				...state,
+				busCount: state.busCount + 1
+			};
 
 		default:
 			return state;

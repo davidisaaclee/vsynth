@@ -7,7 +7,7 @@ import * as App from '../../../modules/app';
 import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
 import * as selectors from './selectors';
-import { Lane, Inlet, Outlet, Connection } from './types';
+import { Lane, Connection } from './types';
 import './style.css';
 
 const e = React.createElement;
@@ -20,8 +20,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-	insertConnections: (connections: Array<{ outlet: Outlet, inlet: Inlet }>) => any;
-	removeConnections: (connections: Array<{ outlet: Outlet, inlet: Inlet }>) => any;
+	setInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => any;
+	setOutletConnection: (nodeKey: string, busIndex: number) => any;
 	openNodeControls: (nodeKey: string) => any;
 }
 
@@ -42,7 +42,7 @@ class BusRouter extends React.Component<Props, State> {
 	public render() {
 		const {
 			graph, connections, busCount, lanes,
-			insertConnections, removeConnections,
+			setInletConnection, setOutletConnection,
 			openNodeControls,
 			...restProps
 		} = this.props;
@@ -77,6 +77,8 @@ class BusRouter extends React.Component<Props, State> {
 						&& laneIndex === c.laneIndex
 					));
 
+				const lane = lanes[laneIndex];
+
 				if (connection == null) {
 					return e('div',
 						{
@@ -84,7 +86,9 @@ class BusRouter extends React.Component<Props, State> {
 								...this.styleForLane(laneIndex),
 								whiteSpace: 'pre-wrap',
 							},
-							onClick: () => this.addConnection({ laneIndex, busIndex }),
+							onClick: (lane.type === 'inlet'
+								? () => setInletConnection(lane.nodeKey, lane.inletKey, busIndex)
+								: () => setOutletConnection(lane.nodeKey, busIndex))
 						},
 						' ');
 				} else {
@@ -94,7 +98,10 @@ class BusRouter extends React.Component<Props, State> {
 								...this.styleForLane(laneIndex),
 								whiteSpace: 'pre-wrap',
 							},
-							onClick: () => this.removeConnection({ laneIndex, busIndex }),
+							// TODO: Be more explicit about removing edges behavior
+							onClick: (lane.type === 'inlet'
+								? () => setInletConnection(lane.nodeKey, lane.inletKey, -1)
+								: () => setOutletConnection(lane.nodeKey, -1))
 						},
 						e('div',
 							{
@@ -112,68 +119,6 @@ class BusRouter extends React.Component<Props, State> {
 			}
 		});
 	}
-
-	private addConnection(connection: Connection) {
-		return;
-		/*
-		if (this.state.connections.find(c => connectionEqual(connection, c)) != null) {
-			// Connection already exists.
-			return;
-		}
-		
-		const connections =
-			[...this.props.connections, connection];
-		this.setState({ connections }, () => {
-			this.props.insertConnections(this.connectionsInBus(connection.busIndex));
-		});
-	*/
-	}
-
-	private removeConnection(connection: Connection) {
-		return;
-
-		/*
-		const indexOfConnection =
-			this.props.connections.findIndex(c => connectionEqual(connection, c));
-		if (indexOfConnection === -1) {
-			// No such connection
-			return;
-		}
-
-		const oldConnectionsInBus =
-			this.connectionsInBus(connection.busIndex);
-
-		const connectionsCopy =
-			this.props.connections.slice();
-		connectionsCopy.splice(indexOfConnection, 1);
-
-		this.setState({
-			connections: connectionsCopy
-		}, () => {
-			const newConnectionsInBus =
-				this.connectionsInBus(connection.busIndex);
-
-			function isIOConnectionEqual(
-				c1: { inlet: Inlet, outlet: Outlet },
-				c2: { inlet: Inlet, outlet: Outlet }
-			): boolean {
-				return c1.inlet.inletKey === c2.inlet.inletKey
-					&& c1.inlet.nodeKey === c2.inlet.nodeKey
-					&& c1.outlet.nodeKey === c2.outlet.nodeKey;
-			}
-			const removedConnections = oldConnectionsInBus
-				.filter(c1 => newConnectionsInBus.find(c2 => isIOConnectionEqual(c1, c2)) == null);
-			this.props.removeConnections(removedConnections);
-
-			// Some of the connections in the bus or lane might have
-			// been previously overridden by one of the removed connection.
-			// Just re-add all of them.
-			this.props.insertConnections(newConnectionsInBus);
-			this.props.insertConnections(this.connectionsFromLane(connection.laneIndex));
-		});
-		*/
-	}
-
 
 	// TODO: be safer
 	private styleForLane(laneIndex: number): object {
@@ -198,13 +143,13 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		insertConnections: (connections) => (connections
-			.map(({ inlet, outlet }) => GraphModule.actions.connectNodes(outlet.nodeKey, inlet.nodeKey, inlet.inletKey))
-			.forEach(dispatch)),
+		setInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => (
+			dispatch(GraphModule.actions.setInletConnection(nodeKey, inletKey, busIndex))
+		),
 
-		removeConnections: (connections) => (connections
-			.map(({ inlet, outlet }) => (GraphModule.actions.disconnectNodes(outlet.nodeKey, inlet.nodeKey, inlet.inletKey)))
-			.forEach(dispatch)),
+		setOutletConnection: (nodeKey: string, busIndex: number) => (
+			dispatch(GraphModule.actions.setOutletConnection(nodeKey, busIndex))
+		),
 
 		openNodeControls: (nodeKey) => dispatch(App.actions.setModal(App.Modals.NODE_CONTROLS(nodeKey))),
 	};

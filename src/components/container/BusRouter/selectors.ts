@@ -1,4 +1,4 @@
-import { entries, flatMap } from 'lodash';
+import { get, flatMap } from 'lodash';
 import { createSelector, Selector } from 'reselect';
 import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, VideoModuleSpecification } from '../../../model/SimpleVideoGraph';
@@ -11,14 +11,6 @@ export const busCount =
 
 export const graph =
 	sharedSelectors.graph;
-
-
-export const connections = createSelector(
-	[sharedSelectors.busConnections],
-	(connections: Record<number, number>) => entries(connections).map(([laneIndex, busIndex]) => ({
-		laneIndex: parseInt(laneIndex, 10),
-		busIndex
-	})));
 
 export const lanes: Selector<RootState, Lane[]> = createSelector(
 	[
@@ -50,4 +42,24 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 				}))
 			] as Lane[];
 		}));
+
+export const connections: Selector<RootState, Array<{ laneIndex: number, busIndex: number }>> = createSelector(
+	[lanes, sharedSelectors.inletConnections, sharedSelectors.outletConnections],
+	(
+		lanes: Lane[],
+		inletConnections: { [nodeKey: string]: { [inletKey: string]: number } },
+		outletConnections: { [nodeKey: string]: number }
+	) => (
+		lanes.map((lane, laneIndex) => (
+			lane.type === 'inlet'
+			? {
+				laneIndex,
+				busIndex: get(inletConnections, [lane.nodeKey, lane.inletKey], -1)
+			}
+			: {
+				laneIndex,
+				busIndex: get(outletConnections, [lane.nodeKey], -1)
+			}
+		))
+	));
 

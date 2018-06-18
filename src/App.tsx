@@ -22,9 +22,6 @@ interface State {
 }
 
 class App extends React.Component<Props, State> {
-	public state = {
-	}
-
 	public renderModal(modal: AppModule.Modals.Modal): React.ReactNode {
 		if (modal === AppModule.Modals.PICK_MODULE) {
 			return e(ModulePicker,
@@ -42,6 +39,12 @@ class App extends React.Component<Props, State> {
 	}
 	
 	public render() {
+		const {
+			modal,
+			openNodePicker, closeModal,
+			addBus
+		} = this.props;
+
 		return e('div',
 			{},
 			e(Screen),
@@ -61,7 +64,7 @@ class App extends React.Component<Props, State> {
 						style: {
 							margin: 20,
 						},
-						onClick: this.props.openNodePicker
+						onClick: openNodePicker
 					},
 					'Add'),
 				e('button',
@@ -72,16 +75,14 @@ class App extends React.Component<Props, State> {
 							right: -50,
 							top: 0
 						},
-						onClick: () => {
-							// TODO
-						}
+						onClick: addBus
 					},
 					'Add')
 			),
 			e(Modal,
 				{
-					isOpen: this.props.modal != null,
-					onRequestClose: this.props.closeModal,
+					isOpen: modal != null,
+					onRequestClose: closeModal,
 					style: {
 						content: {
 							opacity: 1,
@@ -96,9 +97,9 @@ class App extends React.Component<Props, State> {
 						}
 					}
 				},
-				this.props.modal == null
+				modal == null
 				? null
-				: this.renderModal(this.props.modal))
+				: this.renderModal(modal))
 		);
 	}
 }
@@ -110,6 +111,7 @@ interface StateProps {
 interface DispatchProps {
 	closeModal: () => any;
 	addModule: (mod: VideoModule) => any;
+	addBus: () => any;
 	openNodePicker: () => any;
 }
 
@@ -129,16 +131,17 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 				videoModuleSpecFromModule(mod),
 				nodeKey));
 
-			// HACK: Automatically connect all inlets to known node `constant`.
+			// HACK: Automatically connect all inlets to default bus (-1);
 			if (mod.inlets != null) {
 				Object.keys(mod.inlets.uniformMappings).forEach(inletKey => {
-					dispatch(Graph.actions.connectNodes(
-						'constant',
+					dispatch(Graph.actions.setInletConnection(
 						nodeKey,
-						inletKey));
+						inletKey,
+						-1));
 				});
 			}
 		},
+		addBus: () => dispatch(Graph.actions.addBus()),
 		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.PICK_MODULE)),
 	};
 }
