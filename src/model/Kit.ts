@@ -101,11 +101,10 @@ export const modules: { [key: string]: VideoModule } = {
 				frequency: {
 					type: 'f',
 					data: ((baseFreq, fineFreq) => {
-						const factor = Math.ceil((1 - baseFreq) * 5);
-						const offsettingScaleFactor = (1 + (fineFreq - 0.5));
+						const factor = Math.ceil(Math.pow(baseFreq, 2) * 100);
+						const offsettingScaleFactor = 2 * (fineFreq - 0.5);
 
-						return offsettingScaleFactor 
-						* (factor === 0 ? (Math.PI * 2) : (Math.PI / factor));
+						return offsettingScaleFactor + factor;
 					})(values[k.oscillator.baseFrequency], values[k.oscillator.fineFrequency])
 				},
 				color: {
@@ -128,13 +127,19 @@ export const modules: { [key: string]: VideoModule } = {
 				data: Math.random() * 1
 			}
 		}),
-		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => ({
-			'phaseOffset': {
-				type: 'f',
-				// TODO: be safer
-				data: (frameIndex * 2 * Math.PI / (uniforms.frequency.data as number)) % 1,
-			}
-		}),
+		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => {
+			// frequency is multiplied by 2pi inside shader;
+			// period = (2pi / (freq * 2pi)) = 1 / freq
+			const period = 1 / (uniforms.frequency.data as number);
+
+			return {
+				'phaseOffset': {
+					type: 'f',
+					// TODO: be safer
+					data: (frameIndex / period) % 1,
+				}
+			};
+		},
 		inlets: {
 			uniformMappings: {
 				'rotation': 'rotationTheta',

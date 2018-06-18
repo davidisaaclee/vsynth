@@ -52,8 +52,18 @@ export default glsl`
 		float pixelIndex =
 			uv.x / N_SCANLINES + (uv.y - mod(uv.y, 1. / N_SCANLINES));
 
+		float z =
+			(
+				sin(
+					mod(
+						frequency * TWO_PI * (pixelIndex
+						+ (phaseOffset + phaseOffsetFromTexture)),
+						TWO_PI))
+				+ 1.)
+			/ 2.;
+
 		gl_FragColor = vec4(
-			color * vec3((sin(mod(frequency * TWO_PI * pixelIndex + (phaseOffset + phaseOffsetFromTexture) * TWO_PI, TWO_PI)) + 1.) / 2.),
+			color * vec3(z),
 			1);
 	}
 
