@@ -24,7 +24,7 @@ interface StateProps {
 interface DispatchProps {
 }
 
-interface OwnProps {
+interface OwnProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -57,10 +57,11 @@ class Screen extends React.Component<Props, State> {
   public render() {
 		const {
 			graph, outputNodeKey,
+			...restProps
 		} = this.props;
 
 		return e('div',
-			{},
+			restProps,
 			[
 				e(VideoGraphView,
 					{

@@ -19,9 +19,14 @@ const e = React.createElement;
 type Props = StateProps & DispatchProps;
 
 interface State {
+	isShowingRouter: boolean;
 }
 
 class App extends React.Component<Props, State> {
+	public state = {
+		isShowingRouter: true,
+	}
+
 	public renderModal(modal: AppModule.Modals.Modal): React.ReactNode {
 		if (modal === AppModule.Modals.PICK_MODULE) {
 			return e(ModulePicker,
@@ -44,13 +49,23 @@ class App extends React.Component<Props, State> {
 			openNodePicker, closeModal,
 			addBus
 		} = this.props;
+		const {
+			isShowingRouter
+		} = this.state;
 
-		return e('div',
-			{},
-			e(Screen),
+		return e('div', {},
+			e(Screen,
+				{
+					onClick: () => {
+						this.setState({ isShowingRouter: true });
+					}
+				}),
 			e(Modal,
 				{
-					isOpen: true,
+					isOpen: isShowingRouter,
+					onRequestClose: () => {
+						this.setState({ isShowingRouter: false });
+					},
 					style: {
 						content: {
 							opacity: 1,
