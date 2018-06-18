@@ -17,11 +17,11 @@ export interface State {
 const initialState: State = {
 	nodes: {
 		'output': videoModuleSpecFromModule(modules.identity),
-		'constant': videoModuleSpecFromModule(modules.constant),
+		'default-constant': videoModuleSpecFromModule(modules.constant),
 	},
 	outputNodeKey: 'output',
 
-	nodeOrder: ['output', 'constant'],
+	nodeOrder: ['output', 'default-constant'],
 	inletConnections: {},
 	outletConnections: {},
 	busCount: 1,

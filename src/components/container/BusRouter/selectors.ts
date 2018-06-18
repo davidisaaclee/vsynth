@@ -41,6 +41,18 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 					inletKey
 				}))
 			] as Lane[];
+		}).filter(lane => {
+			// Hide the lanes for the default constant node.
+			if (lane.nodeKey === 'default-constant') {
+				return false;
+			}
+
+			// Hide the outlet lane for the master output.
+			if (lane.nodeKey === 'output' && lane.type === 'outlet') {
+				return false;
+			}
+
+			return true;
 		}));
 
 export const connections: Selector<RootState, Array<{ laneIndex: number, busIndex: number }>> = createSelector(
