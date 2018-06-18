@@ -26,15 +26,15 @@
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@davidisaaclee/react-table/-/react-table-0.1.1.tgz#3a24210dfd6866c0d91588248d656e7f7d827f05"
 
-"@davidisaaclee/react-video-graph@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.1.1.tgz#28d2d9edc8b762820bbe8759b2b6868b50e2fc09"
+"@davidisaaclee/react-video-graph@^0.2.0":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.2.1.tgz#87e8b5eed3489696ea7e1499dfb59c74feacfa81"
   dependencies:
-    "@davidisaaclee/video-graph" "^0.1.0"
+    "@davidisaaclee/video-graph" "^0.2.0"
 
-"@davidisaaclee/video-graph@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/video-graph/-/video-graph-0.1.1.tgz#1247cbd34969c70a6d6ad28265f649d41fc9983a"
+"@davidisaaclee/video-graph@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/video-graph/-/video-graph-0.2.0.tgz#c2500507b7d7aa02fccd96c22100a3d7661cf37f"
   dependencies:
     "@davidisaaclee/graph" "^0.1.0"
     gl-matrix "^2.6.1"

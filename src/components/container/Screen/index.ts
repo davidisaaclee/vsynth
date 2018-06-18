@@ -62,32 +62,30 @@ class Screen extends React.Component<Props, State> {
 
 		return e('div',
 			restProps,
-			[
-				e(VideoGraphView,
-					{
-						key: 'screen',
-						graph: (this.gl == null
-							? emptyGraph
-							: videoGraphFromSimpleVideoGraph(
-								graph,
-								this.modulesRuntime,
-								this.state.frameIndex,
-								this.gl
-							)),
-						outputNodeKey,
-						runtimeUniforms: {},
-						glRef: (gl: WebGLRenderingContext) => {
-							if (this.gl == null && gl != null) {
-								this.setup(gl);
-							}
-						},
-						style: {
-							width: '100vw',
-							height: '100vh',
-							display: 'block'
+			e(VideoGraphView,
+				{
+					cacheBufferSize: 2,
+					graph: (this.gl == null
+						? emptyGraph
+						: videoGraphFromSimpleVideoGraph(
+							graph,
+							this.modulesRuntime,
+							this.state.frameIndex,
+							this.gl
+						)),
+					outputNodeKey,
+					runtimeUniforms: {},
+					glRef: (gl: WebGLRenderingContext) => {
+						if (this.gl == null && gl != null) {
+							this.setup(gl);
 						}
-					}),
-			]);
+					},
+					style: {
+						width: '100vw',
+						height: '100vh',
+						display: 'block'
+					}
+				}));
   }
 
 	private setup(gl: WebGLRenderingContext) {
