@@ -55,7 +55,6 @@ class App extends React.Component<Props, State> {
 						top: 0,
 						position: 'fixed',
 						opacity: 0.5,
-						backgroundColor: 'white'
 					}
 				},
 				e(BusRouter),

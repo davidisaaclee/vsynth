@@ -1,5 +1,6 @@
 .routing-matrix {
 	border-collapse: collapse;
+	background-color: white;
 }
 
 .routing-matrix td {
