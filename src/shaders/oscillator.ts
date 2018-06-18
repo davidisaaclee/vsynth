@@ -6,18 +6,20 @@ export default glsl`
 	const float TWO_PI = 6.28318530718;
 	const float N_SCANLINES = 500.;
 
-	// in frames
+	// between 0-1, where 1 is a full period
 	uniform float phaseOffset;
 
 	// in cycles / frame
 	uniform float frequency;
 
-	// todo: change to ivec2
 	uniform vec2 inputTextureDimensions;
 
 	uniform vec3 color;
 
+	// between 0-1, scaled to 0-2pi
 	uniform sampler2D rotationTheta;
+
+	// between 0-1, where 1 is a full period
 	uniform sampler2D phaseOffsetTexture;
 
 	vec2 rotate(vec2 v, float a) {

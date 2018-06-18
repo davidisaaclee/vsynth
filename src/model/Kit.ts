@@ -11,7 +11,6 @@ import mixerShader from '../shaders/mixer';
 import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
 } from './SimpleVideoGraph';
-// import { fps } from '../constants';
 
 const k = {
 	oscillator: {
