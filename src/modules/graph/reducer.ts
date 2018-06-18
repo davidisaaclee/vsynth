@@ -24,7 +24,7 @@ const initialState: State = {
 	nodeOrder: ['output', 'default-constant'],
 	inletConnections: {},
 	outletConnections: {},
-	busCount: 1,
+	busCount: 5,
 };
 
 type RootAction = ActionType<typeof actions>;
