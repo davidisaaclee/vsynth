@@ -56,8 +56,10 @@ export default glsl`
 			(
 				sin(
 					mod(
-						frequency * TWO_PI * (pixelIndex
-						+ (phaseOffset + phaseOffsetFromTexture)),
+						TWO_PI
+						* (
+							frequency * pixelIndex
+							+ (phaseOffset + phaseOffsetFromTexture)),
 						TWO_PI))
 				+ 1.)
 			/ 2.;
