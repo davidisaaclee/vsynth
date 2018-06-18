@@ -21,6 +21,7 @@
   "exclude": [
     "node_modules",
     "build",
+		"gh-pages",
     "scripts",
     "acceptance-tests",
     "webpack",
