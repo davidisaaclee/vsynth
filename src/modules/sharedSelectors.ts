@@ -34,7 +34,10 @@ export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoM
 
 const inletOutletLinks: Selector<RootState, Array<{ inlet: Inlet, outlet: Outlet }>> = createSelector(
 	[inletConnections, outletConnections],
-	(inletConnections, outletConnections) => {
+	(
+		inletConnections: { [nodeKey: string]: { [inletKey: string]: number } },
+		outletConnections: { [nodeKey: string]: number }
+	) => {
 		const connectionsByBus: { [busIndex: number]: { inlets: Inlet[], outlets: Outlet[] } } = {};
 
 		function initializeBusIndexIfNeeded(busIndex: number) {
@@ -74,7 +77,10 @@ export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 		orderedNodes,
 		inletOutletLinks
 	],
-	(nodes, inletOutletLinks) => {
+	(
+		nodes: Array<{ key: string, node: VideoModuleSpecification}>,
+		inletOutletLinks: Array<{ inlet: Inlet, outlet: Outlet }>
+	) => {
 		let result = Graph.empty;
 		result = nodes.reduce(
 			(graph, { key, node }) => Graph.insertNode(graph, node, key),
