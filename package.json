@@ -1,6 +1,6 @@
 {
   "name": "@davidisaaclee/vsynth",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "homepage": "http://david-lee.net/vsynth",
   "dependencies": {
@@ -22,7 +22,7 @@
     "uuid": "^3.2.1"
   },
   "scripts": {
-		"deploy:patch": "sh ./scripts/deploy.sh",
+    "deploy:patch": "sh ./scripts/deploy.sh",
     "clean:gh-pages": "rimraf gh-pages/*",
     "gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
     "start": "react-scripts-ts start",
