@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { throttle } from 'lodash';
 
 const e = React.createElement;
 
@@ -31,12 +32,9 @@ export default class NodeControls extends React.Component<Props, object> {
 							max: 1,
 							step: 'any',
 							value,
-							onInput: (evt: React.SyntheticEvent<HTMLInputElement>) => (
+							onChange: throttle((evt: React.SyntheticEvent<HTMLInputElement>) => (
 								onEdit(parameterIndex, parseFloat(evt.currentTarget.value), key)
-							),
-							onChange: (evt: React.SyntheticEvent<HTMLInputElement>) => (
-								onEdit(parameterIndex, parseFloat(evt.currentTarget.value), key)
-							),
+							), 1000 / 60),
 							style: {
 								width: '100%',
 							}
