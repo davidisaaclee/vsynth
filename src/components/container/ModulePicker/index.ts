@@ -7,7 +7,11 @@ interface Props {
 	addModule: (mod: VideoModule) => any;
 }
 
-const allModuleKeys = Object.keys(modules);
+const allModuleKeys = Object.keys(modules)
+	.filter(moduleKey => [
+		'identity',
+		'pro-osc'
+	].indexOf(moduleKey) === -1);
 
 const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
 	e('ul',
