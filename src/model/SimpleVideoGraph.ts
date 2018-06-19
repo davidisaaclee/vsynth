@@ -8,7 +8,8 @@ import { UniformValue } from '@davidisaaclee/video-graph';
 
 // TODO: Would be nice to make this typesafe with Kit.modules
 export type ModuleType =
-	"identity" | "oscillator" | "constant" | "mixer" | "scanlines";
+	"identity" | "oscillator" | "constant" | "mixer"
+	| "scanlines" | "pro-osc";
 
 export interface InletSpecification {
 	inlet: string;

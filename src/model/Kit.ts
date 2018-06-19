@@ -6,6 +6,7 @@ import {
 import { mapNodes, mapEdges, nodeForKey } from '@davidisaaclee/graph';
 import identityShader from '../shaders/identity';
 import oscillatorShader from '../shaders/oscillator';
+import proOscShader from '../shaders/pro-osc';
 import constantShader from '../shaders/constant';
 import mixerShader from '../shaders/mixer';
 import scanlinesShader from '../shaders/scanlines';
@@ -22,6 +23,19 @@ const k = {
 		blue: 'blue',
 		shape: 'shape',
 		rotationAmount: 'rotation amount',
+		phaseOffsetAmount: 'phase offset amount',
+		state: {
+			phaseOffset: 'phaseOffset',
+			frameIndex: 'frameIndex',
+		}
+	},
+	proOsc: {
+		baseFrequency: 'baseFrequency',
+		fineFrequency: 'fineFrequency',
+		red: 'red',
+		green: 'green',
+		blue: 'blue',
+		shape: 'shape',
 		phaseOffsetAmount: 'phase offset amount',
 		state: {
 			phaseOffset: 'phaseOffset',
@@ -87,6 +101,7 @@ export const modules: { [key: string]: VideoModule } = {
 			displayOrder: ['input'],
 		}
 	},
+
 	'oscillator': {
 		type: 'oscillator',
 		shaderSource: oscillatorShader,
@@ -198,6 +213,113 @@ export const modules: { [key: string]: VideoModule } = {
 				'phase offset': 'phaseOffsetTexture',
 			},
 			displayOrder: ['rotation', 'phase offset'],
+		}
+	},
+	
+	'pro-osc': {
+		type: 'pro-osc',
+		shaderSource: proOscShader,
+		parameters: {
+			specifications: {
+				[k.oscillator.baseFrequency]: {
+					initialValue: () => Math.random(),
+				},
+				[k.oscillator.fineFrequency]: {
+					initialValue: () => 0.5,
+				},
+				[k.oscillator.red]: {
+					initialValue: () => 1,
+				},
+				[k.oscillator.green]: {
+					initialValue: () => 0,
+				},
+				[k.oscillator.blue]: {
+					initialValue: () => 0,
+				},
+				[k.oscillator.shape]: {
+					initialValue: () => 0,
+				},
+				[k.oscillator.phaseOffsetAmount]: {
+					initialValue: () => 0,
+				},
+			},
+			toUniforms: values => ({
+				frequency: {
+					type: 'f',
+					data: ((baseFreq, fineFreq) => {
+						const factor = Math.ceil(Math.pow(baseFreq, 2) * 100);
+						const offsettingScaleFactor = 2 * (fineFreq - 0.5);
+
+						return offsettingScaleFactor + factor;
+					})(values[k.oscillator.baseFrequency], values[k.oscillator.fineFrequency])
+				},
+				shape: {
+					type: 'f',
+					data: values[k.oscillator.shape]
+				},
+				phaseOffsetTextureAmount: {
+					type: 'f',
+					data: values[k.oscillator.phaseOffsetAmount]
+				},
+				color: {
+					type: '3f',
+					data: [
+						values[k.oscillator.red],
+						values[k.oscillator.green],
+						values[k.oscillator.blue],
+					]
+				},
+			}),
+		},
+		defaultUniforms: (gl: WebGLRenderingContext) => ({
+			'inputTextureDimensions': {
+				type: '2f',
+				data: [gl.canvas.width, gl.canvas.height]
+			},
+			'frequency': {
+				type: 'f',
+				data: Math.random() * 1
+			}
+		}),
+		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoModuleSpecification) => {
+			return {
+				'phaseOffset': {
+					type: 'f',
+					// TODO: be safer
+					data: node.state[k.oscillator.state.phaseOffset] || 0
+				}
+			};
+		},
+		update: (frameIndex: number, state: Record<string, number>, node: VideoModuleSpecification) => {
+			const previousFrameIndex = state[k.oscillator.state.frameIndex];
+			const previousPhaseOffset = state[k.oscillator.state.phaseOffset];
+			const frequencyUniform = node.uniforms.frequency;
+
+			if (previousFrameIndex == null || previousPhaseOffset == null || frequencyUniform == null) {
+				return {
+					[k.oscillator.state.frameIndex]: frameIndex,
+					[k.oscillator.state.phaseOffset]: 0
+				};
+			}
+
+			// frequency is multiplied by 2pi inside shader;
+			// period = (2pi / (freq * 2pi)) = 1 / freq
+			const period = 1 / (frequencyUniform.data as number);
+
+			const frameDelta = frameIndex - previousFrameIndex;
+			const phaseDelta = frameDelta / period;
+
+			return {
+				[k.oscillator.state.frameIndex]: frameIndex,
+				[k.oscillator.state.phaseOffset]: (previousPhaseOffset + phaseDelta) % 1
+			};
+		},
+		inlets: {
+			uniformMappings: {
+				'phase offset': 'phaseOffsetTexture',
+				'input': 'pixelVariable',
+			},
+			displayOrder: ['input', 'phase offset'],
 		}
 	},
 
