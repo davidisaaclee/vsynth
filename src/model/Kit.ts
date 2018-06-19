@@ -8,6 +8,7 @@ import identityShader from '../shaders/identity';
 import oscillatorShader from '../shaders/oscillator';
 import constantShader from '../shaders/constant';
 import mixerShader from '../shaders/mixer';
+import scanlinesShader from '../shaders/scanlines';
 import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
 } from './SimpleVideoGraph';
@@ -241,6 +242,17 @@ export const modules: { [key: string]: VideoModule } = {
 			},
 			displayOrder: ['a', 'b']
 		}
+	},
+
+	'scanlines': {
+		type: 'scanlines',
+		shaderSource: scanlinesShader,
+		defaultUniforms: (gl: WebGLRenderingContext) => ({
+			'inputTextureDimensions': {
+				type: '2f',
+				data: [gl.canvas.width, gl.canvas.height]
+			},
+		}),
 	},
 };
 
