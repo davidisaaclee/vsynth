@@ -22,6 +22,7 @@
     "uuid": "^3.2.1"
   },
   "scripts": {
+		"deploy:patch": "sh ./scripts/deploy.sh",
     "clean:gh-pages": "rimraf gh-pages/*",
     "gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
     "start": "react-scripts-ts start",
