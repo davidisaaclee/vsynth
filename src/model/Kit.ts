@@ -19,6 +19,8 @@ const k = {
 		red: 'red',
 		green: 'green',
 		blue: 'blue',
+		rotationAmount: 'rotation amount',
+		phaseOffsetAmount: 'phase offset amount',
 		state: {
 			phaseOffset: 'phaseOffset',
 			frameIndex: 'frameIndex',
@@ -103,6 +105,12 @@ export const modules: { [key: string]: VideoModule } = {
 				[k.oscillator.blue]: {
 					initialValue: () => 0,
 				},
+				[k.oscillator.rotationAmount]: {
+					initialValue: () => 0,
+				},
+				[k.oscillator.phaseOffsetAmount]: {
+					initialValue: () => 0,
+				},
 			},
 			toUniforms: values => ({
 				frequency: {
@@ -113,6 +121,14 @@ export const modules: { [key: string]: VideoModule } = {
 
 						return offsettingScaleFactor + factor;
 					})(values[k.oscillator.baseFrequency], values[k.oscillator.fineFrequency])
+				},
+				rotationAmount: {
+					type: 'f',
+					data: values[k.oscillator.rotationAmount]
+				},
+				phaseOffsetTextureAmount: {
+					type: 'f',
+					data: values[k.oscillator.phaseOffsetAmount]
 				},
 				color: {
 					type: '3f',

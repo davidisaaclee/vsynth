@@ -19,8 +19,14 @@ export default glsl`
 	// between 0-1, scaled to 0-2pi
 	uniform sampler2D rotationTheta;
 
+	// scales rotationTheta
+	uniform float rotationAmount;
+
 	// between 0-1, where 1 is a full period
 	uniform sampler2D phaseOffsetTexture;
+
+	// scales phaseOffsetFromTexture
+	uniform float phaseOffsetTextureAmount;
 
 	vec2 rotate(vec2 v, float a) {
 		float s = sin(a);
@@ -37,16 +43,21 @@ export default glsl`
 		vec2 textureSamplePoint =
 			gl_FragCoord.xy / inputTextureDimensions;
 
+		float theta = luminance(
+			texture2D(
+				rotationTheta,
+				textureSamplePoint).rgb
+		) * TWO_PI * rotationAmount;
+
 		vec2 position =
 			rotate(
 				gl_FragCoord.xy,
-				luminance(texture2D(
-					rotationTheta,
-					textureSamplePoint).rgb) * TWO_PI);
+				theta);
 		float phaseOffsetFromTexture =
 			luminance(texture2D(
 				phaseOffsetTexture,
-				textureSamplePoint).rgb);
+				textureSamplePoint).rgb)
+			* phaseOffsetTextureAmount;
 
 		highp vec2 uv =
 			position / inputTextureDimensions;
