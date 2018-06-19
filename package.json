@@ -6,8 +6,8 @@
   "dependencies": {
     "@davidisaaclee/graph": "^0.1.0",
     "@davidisaaclee/react-table": "^0.1.0",
-    "@davidisaaclee/react-video-graph": "^0.2.0",
-    "@davidisaaclee/video-graph": "^0.2.0",
+    "@davidisaaclee/react-video-graph": "^0.2.2",
+    "@davidisaaclee/video-graph": "^0.2.1",
     "@types/lodash": "^4.14.109",
     "@types/react-redux": "^6.0.1",
     "lodash": "^4.17.10",
