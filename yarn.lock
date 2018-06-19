@@ -26,15 +26,22 @@
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@davidisaaclee/react-table/-/react-table-0.1.1.tgz#3a24210dfd6866c0d91588248d656e7f7d827f05"
 
-"@davidisaaclee/react-video-graph@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.2.2.tgz#c80bd83ad5317338a9176e28c0cb2ed2ef62117a"
+"@davidisaaclee/react-video-graph@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.2.3.tgz#4a171e8082692de6e145484354cddaf37d9aa7b2"
   dependencies:
     "@davidisaaclee/video-graph" "^0.2.0"
 
-"@davidisaaclee/video-graph@^0.2.0", "@davidisaaclee/video-graph@^0.2.1":
+"@davidisaaclee/video-graph@^0.2.0":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@davidisaaclee/video-graph/-/video-graph-0.2.1.tgz#9ce4df5b3760bb5958d1131b4db06b0f66dbfeb6"
+  dependencies:
+    "@davidisaaclee/graph" "^0.1.0"
+    gl-matrix "^2.6.1"
+
+"@davidisaaclee/video-graph@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/video-graph/-/video-graph-0.2.2.tgz#904e8dc7524baee8dc0e3141e3079a3a4fdd15ca"
   dependencies:
     "@davidisaaclee/graph" "^0.1.0"
     gl-matrix "^2.6.1"
