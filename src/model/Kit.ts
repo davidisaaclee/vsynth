@@ -221,14 +221,20 @@ export const modules: { [key: string]: VideoModule } = {
 };
 
 export function videoModuleSpecFromModule(mod: VideoModule): VideoModuleSpecification {
-	return {
-		type: mod.type,
-		uniforms: {},
-		parameters: mod.parameters == null
+	const parameters = mod.parameters == null
 		? {}
 		: mapValues(
 			mod.parameters.specifications,
-			param => param.initialValue()),
+			param => param.initialValue()
+		);
+	const uniforms = mod.parameters == null
+		? {}
+		: mod.parameters.toUniforms(parameters);
+
+	return {
+		type: mod.type,
+		uniforms,
+		parameters,
 		state: {}
 	};
 }
