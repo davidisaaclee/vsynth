@@ -232,22 +232,21 @@ export function videoGraphFromSimpleVideoGraph(
 			? {} 
 			: moduleConfiguration.defaultUniforms(gl);
 
-		const parameterUniforms = moduleConfiguration.parameters == null
-			? {}
-			: moduleConfiguration.parameters.toUniforms(moduleSpec.parameters);
-
 		const animationUniforms = moduleConfiguration.animationUniforms == null
 			? {} 
 			: moduleConfiguration.animationUniforms(
 				frameIndex, 
-				{ ...defaultUniforms, ...moduleSpec.uniforms, ...parameterUniforms });
+				{
+					...defaultUniforms,
+					...moduleSpec.uniforms,
+				},
+				moduleSpec);
 
 		return {
 			program: runtimeModule.program,
 			uniforms: {
 				...uniformValuesToSpec(defaultUniforms),
 				...uniformValuesToSpec(animationUniforms),
-				...uniformValuesToSpec(parameterUniforms),
 				...uniformValuesToSpec(moduleSpec.uniforms),
 			}
 		};

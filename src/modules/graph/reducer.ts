@@ -77,19 +77,32 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 			};
 
 		case Constants.SET_PARAMETER:
-			return (({ nodeKey, parameterKey, value }) => ({
-				...state,
-				nodes: {
-					...state.nodes,
-					[nodeKey]: {
-						...state.nodes[nodeKey],
-						parameters: {
-							...state.nodes[nodeKey].parameters,
-							[parameterKey]: value
-						}
+			return (({ nodeKey, parameterKey, value }) => {
+				const node = {
+					...state.nodes[nodeKey],
+					parameters: {
+						...state.nodes[nodeKey].parameters,
+						[parameterKey]: value
 					}
+				};
+
+				// Write new uniforms from parameter change to node.
+				const videoModule = modules[node.type];
+				if (videoModule.parameters != null) {
+					node.uniforms = {
+						...node.uniforms,
+						...videoModule.parameters.toUniforms(node.parameters)
+					};
 				}
-			}))(action.payload);
+
+				return {
+					...state,
+					nodes: {
+						...state.nodes,
+						[nodeKey]: node
+					}
+				};
+			})(action.payload);
 
 		case Constants.ADD_BUS:
 			return {
