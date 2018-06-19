@@ -198,7 +198,7 @@ export const modules: { [key: string]: VideoModule } = {
 		parameters: {
 			specifications: {
 				[k.constant.value]: {
-					initialValue: () => 0,
+					initialValue: () => 1,
 				}
 			},
 			toUniforms: values => ({
