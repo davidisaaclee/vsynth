@@ -20,3 +20,6 @@ export const setParameter = (nodeKey: string, parameterKey: string, value: numbe
 export const addBus = () =>
 	action(Constants.ADD_BUS);
 
+export const updateNodes = (frameIndex: number) =>
+	action(Constants.UPDATE_NODES, { frameIndex });
+

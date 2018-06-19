@@ -17,6 +17,7 @@ export interface VideoModuleSpecification {
 	type: ModuleType;
 	parameters: { [identifier: string]: number };
 	uniforms: { [identifier: string]: UniformValue };
+	state: Record<string, number>;
 }
 
 export type SimpleVideoGraph =

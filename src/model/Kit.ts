@@ -19,6 +19,10 @@ const k = {
 		red: 'red',
 		green: 'green',
 		blue: 'blue',
+		state: {
+			phaseOffset: 'phaseOffset',
+			frameIndex: 'frameIndex',
+		}
 	},
 	constant: {
 		value: 'value',
@@ -47,7 +51,11 @@ export interface VideoModule {
 		toUniforms: (values: { [identifier: string]: number }) => { [identifier: string]: UniformValue }
 	};
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
-	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => { [identifier: string]: UniformValue };
+	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoModuleSpecification) => { [identifier: string]: UniformValue };
+
+	// Update internal state on each frame if needed.
+	update?: (frameIndex: number, state: Record<string, number>, node: VideoModuleSpecification) => Record<string, number>;
+
 	inlets?: {
 		// maps display name to uniform identifier
 		uniformMappings: { [key: string]: string },
@@ -126,17 +134,37 @@ export const modules: { [key: string]: VideoModule } = {
 				data: Math.random() * 1
 			}
 		}),
-		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }) => {
-			// frequency is multiplied by 2pi inside shader;
-			// period = (2pi / (freq * 2pi)) = 1 / freq
-			const period = 1 / (uniforms.frequency.data as number);
-
+		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoModuleSpecification) => {
 			return {
 				'phaseOffset': {
 					type: 'f',
 					// TODO: be safer
-					data: (frameIndex / period) % 1,
+					data: node.state[k.oscillator.state.phaseOffset] || 0
 				}
+			};
+		},
+		update: (frameIndex: number, state: Record<string, number>, node: VideoModuleSpecification) => {
+			const previousFrameIndex = state[k.oscillator.state.frameIndex];
+			const previousPhaseOffset = state[k.oscillator.state.phaseOffset];
+			const frequencyUniform = node.uniforms.frequency;
+
+			if (previousFrameIndex == null || previousPhaseOffset == null || frequencyUniform == null) {
+				return {
+					[k.oscillator.state.frameIndex]: frameIndex,
+					[k.oscillator.state.phaseOffset]: 0
+				};
+			}
+
+			// frequency is multiplied by 2pi inside shader;
+			// period = (2pi / (freq * 2pi)) = 1 / freq
+			const period = 1 / (frequencyUniform.data as number);
+
+			const frameDelta = frameIndex - previousFrameIndex;
+			const phaseDelta = frameDelta / period;
+
+			return {
+				[k.oscillator.state.frameIndex]: frameIndex,
+				[k.oscillator.state.phaseOffset]: (previousPhaseOffset + phaseDelta) % 1
 			};
 		},
 		inlets: {
@@ -200,7 +228,8 @@ export function videoModuleSpecFromModule(mod: VideoModule): VideoModuleSpecific
 		? {}
 		: mapValues(
 			mod.parameters.specifications,
-			param => param.initialValue())
+			param => param.initialValue()),
+		state: {}
 	};
 }
 

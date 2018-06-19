@@ -1,3 +1,4 @@
+import { mapValues } from 'lodash';
 import { ActionType } from 'typesafe-actions';
 import { VideoModuleSpecification } from '../../model/SimpleVideoGraph';
 import { modules, videoModuleSpecFromModule } from '../../model/Kit';
@@ -109,6 +110,27 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				...state,
 				busCount: state.busCount + 1
 			};
+
+		case Constants.UPDATE_NODES:
+			return ((frameIndex: number) => ({
+				...state,
+				nodes: mapValues(
+					state.nodes,
+					node => {
+						const videoModule = modules[node.type];
+						if (videoModule.update == null) {
+							return node;
+						}
+
+						return {
+							...node,
+							state: videoModule.update(
+								frameIndex,
+								node.state,
+								node)
+						};
+					})
+			}))(action.payload.frameIndex);
 
 		default:
 			return state;

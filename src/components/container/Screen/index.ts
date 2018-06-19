@@ -6,6 +6,7 @@ import VideoGraphView from '@davidisaaclee/react-video-graph';
 import { empty as emptyGraph } from '@davidisaaclee/graph';
 import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
 import { State as RootState } from '../../../modules';
+import * as Graph from '../../../modules/graph';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import {
 	modules as videoModules, VideoModule,
@@ -22,6 +23,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
+	// Update internal state of nodes.
+	updateNodes: (frameIndex: number) => any;
 }
 
 interface OwnProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -57,6 +60,7 @@ class Screen extends React.Component<Props, State> {
   public render() {
 		const {
 			graph, outputNodeKey,
+			updateNodes,
 			...restProps
 		} = this.props;
 
@@ -104,6 +108,7 @@ class Screen extends React.Component<Props, State> {
 		const frameIndex = Math.floor(k.fps * (Date.now() - this.state.animationStartTime) / 1000);
 		if (this.state.frameIndex !== frameIndex) {
 			this.setState({ frameIndex });
+			this.props.updateNodes(frameIndex);
 		}
 
 		window.requestAnimationFrame(this.frame);
@@ -118,7 +123,9 @@ function mapStateToProps(state: RootState): StateProps {
 }
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
-	return { };
+	return {
+		updateNodes: (frameIndex: number) => dispatch(Graph.actions.updateNodes(frameIndex))
+	};
 }
 
 export default connect(
