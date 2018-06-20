@@ -31,11 +31,11 @@ export default glsl`
 	// wave shape: 0 = sine, 0.5 = triangle, 1 = sawtooth
 	uniform float shape;
 
-	vec2 rotate(vec2 v, float a) {
+	vec2 rotate(vec2 v, float a, vec2 center) {
 		float s = sin(a);
 		float c = cos(a);
 		mat2 m = mat2(c, -s, s, c);
-		return m * v;
+		return center + m * (v - center);
 	}
 
 	float luminance(vec3 rgb) {
@@ -55,7 +55,9 @@ export default glsl`
 		vec2 position =
 			rotate(
 				gl_FragCoord.xy,
-				theta);
+				theta,
+				inputTextureDimensions * 0.5
+			);
 		float phaseOffsetFromTexture =
 			luminance(texture2D(
 				phaseOffsetTexture,
