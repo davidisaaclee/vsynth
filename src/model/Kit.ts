@@ -48,6 +48,11 @@ const k = {
 	mixer: {
 		mixAmount: 'mix amount',
 	},
+	scanlines: {
+		ditherAmount: 'dither amount',
+		rotationAmount: 'rotation amount',
+		phaseOffsetAmount: 'phase offset amount',
+	},
 };
 
 /*
@@ -369,12 +374,46 @@ export const modules: { [key: string]: VideoModule } = {
 	'scanlines': {
 		type: 'scanlines',
 		shaderSource: scanlinesShader,
+		parameters: {
+			specifications: {
+				[k.scanlines.rotationAmount]: {
+					initialValue: () => 0,
+				},
+				[k.scanlines.phaseOffsetAmount]: {
+					initialValue: () => 0,
+				},
+				[k.scanlines.ditherAmount]: {
+					initialValue: () => 0,
+				},
+			},
+			toUniforms: values => ({
+				rotationAmount: {
+					type: 'f',
+					data: values[k.scanlines.rotationAmount]
+				},
+				phaseOffsetTextureAmount: {
+					type: 'f',
+					data: values[k.scanlines.phaseOffsetAmount]
+				},
+				'ditherAmount': {
+					type: 'f',
+					data: values[k.scanlines.ditherAmount]
+				},
+			})
+		},
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'inputTextureDimensions': {
 				type: '2f',
 				data: [gl.canvas.width, gl.canvas.height]
 			},
 		}),
+		inlets: {
+			uniformMappings: {
+				'rotation': 'rotationTheta',
+				'phase offset': 'phaseOffsetTexture',
+			},
+			displayOrder: ['rotation', 'phase offset'],
+		}
 	},
 };
 
