@@ -10,6 +10,8 @@
     "@davidisaaclee/video-graph": "^0.2.2",
     "@types/lodash": "^4.14.109",
     "@types/react-redux": "^6.0.1",
+    "glsl-fast-gaussian-blur": "^1.0.2",
+    "glslify": "^6.1.1",
     "lodash": "^4.17.10",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
@@ -22,11 +24,14 @@
     "uuid": "^3.2.1"
   },
   "scripts": {
-    "deploy:patch": "sh ./scripts/deploy.sh",
-    "clean:gh-pages": "rimraf gh-pages/*",
+    "deploy:patch": "npm run build && npm run clean:gh-pages && npm run gh-pages-populate && sh ./scripts/deploy.sh",
     "gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
+    "clean:gh-pages": "rimraf gh-pages/*",
+    "clean:glslify": "rimraf ./src/shaders/*.generated.ts",
+    "build:glslify": "node ./scripts/build-shaders.js --inputDir ./shaders --outputDir ./src/shaders",
+		"build:cra": "react-scripts-ts build",
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build && npm run clean:gh-pages && npm run gh-pages-populate",
+    "build": "npm run build:glslify && npm run build:cra",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
@@ -38,6 +43,7 @@
     "@types/react-modal": "^3.1.2",
     "@types/uuid": "^3.4.3",
     "copyfiles": "^2.0.0",
+    "node-glob": "^1.2.0",
     "rimraf": "^2.6.2",
     "typescript": "^2.9.1"
   }
