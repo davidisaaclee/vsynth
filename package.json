@@ -28,7 +28,7 @@
     "gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
     "clean:gh-pages": "rimraf gh-pages/*",
     "clean:glslify": "rimraf ./src/shaders/*.generated.ts",
-    "build:glslify": "node ./scripts/build-shaders.js --inputDir ./shaders --outputDir ./src/shaders",
+    "build:glslify": "node ./scripts/build-shaders.js --inputDir ./src/shaders/glsl --outputDir ./src/shaders",
 		"build:cra": "react-scripts-ts build",
     "start": "react-scripts-ts start",
     "build": "npm run build:glslify && npm run build:cra",
