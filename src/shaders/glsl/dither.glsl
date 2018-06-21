@@ -3,7 +3,6 @@ precision mediump float;
 uniform sampler2D inputTexture;
 uniform vec2 inputTextureDimensions;
  
-// Use any of the following: 
 #pragma glslify: dither = require(glsl-dither) 
  
 void main() {

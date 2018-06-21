@@ -12,6 +12,7 @@ import mixerShader from '../shaders/mixer';
 import scanlinesShader from '../shaders/scanlines';
 import { crosshatch } from './modules/crosshatch';
 import { dither } from './modules/dither';
+import { rgbOffset } from './modules/rgbOffset';
 import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification
 } from './SimpleVideoGraph';
@@ -69,6 +70,7 @@ export interface Parameter {
 
 // key :: ModuleType
 export const modules: { [key: string]: VideoModule } = {
+	rgbOffset,
 	dither,
 	crosshatch,
 	'identity': {

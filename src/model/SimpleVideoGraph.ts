@@ -10,7 +10,7 @@ import { UniformValue } from '@davidisaaclee/video-graph';
 export type ModuleType =
 	"identity" | "oscillator" | "constant" | "mixer"
 	| "scanlines" | "pro-osc" | "blur" | "crosshatch"
-	| "dither";
+	| "dither" | "rgbOffset";
 
 export interface InletSpecification {
 	inlet: string;
