@@ -22,6 +22,7 @@ const css = {
 		row: 'router-row',
 		columnHeader: 'router-column-header',
 		cell: 'router-cell',
+		controlledInlet: 'router-controlled-inlet',
 	},
 	data: {
 		laneType: {
@@ -137,8 +138,11 @@ class BusRouter extends React.Component<Props, State> {
 					const associatedParameters = hasAssociatedParametersForInlet
 						? videoModule.inlets!.associatedParameters![lane.inletKey]
 						: [];
-					return [
-						lane.inletKey,
+					return e('div',
+						{
+							className: css.classNames.controlledInlet
+						},
+						e('div', {}, lane.inletKey),
 						associatedParameters.map((paramKey: string) => (
 							e('input',
 								{
@@ -152,8 +156,7 @@ class BusRouter extends React.Component<Props, State> {
 										setParameter(lane.nodeKey, paramKey, parseFloat(evt.currentTarget.value))
 									), 1000 / 60),
 								})
-						))
-					];
+						)));
 				}
 
 				return e('button',
