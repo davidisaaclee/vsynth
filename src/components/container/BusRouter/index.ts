@@ -35,12 +35,6 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 interface State {}
 
-/*
-function connectionEqual(c1: Connection, c2: Connection): boolean {
-	return c1.busIndex === c2.busIndex && c1.laneIndex === c2.laneIndex;
-}
-*/
-
 class BusRouter extends React.Component<Props, State> {
 
 	public render() {
@@ -55,7 +49,7 @@ class BusRouter extends React.Component<Props, State> {
 			rowCount: lanes.length,
 			columnCount: busCount,
 
-			renderRowHeader: (index: number) => e(
+			renderRowHeaderContent: (index: number) => e(
 				'div',
 				{
 					style: this.styleForLane(index)
@@ -98,7 +92,7 @@ class BusRouter extends React.Component<Props, State> {
 						lanes[index].name);
 				})(lanes[index]),
 			),
-			renderColumnHeader: (index: number) => e(
+			renderColumnHeaderContent: (index: number) => e(
 				'div',
 				{
 					style: {
@@ -107,7 +101,7 @@ class BusRouter extends React.Component<Props, State> {
 				},
 				index),
 
-			renderCell: (laneIndex: number, busIndex: number) => {
+			renderCellContent: (laneIndex: number, busIndex: number) => {
 				const connection =
 					connections.find(c => (
 						c.busIndex === busIndex
