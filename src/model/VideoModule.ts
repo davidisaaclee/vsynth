@@ -1,6 +1,6 @@
 import { UniformValue } from '@davidisaaclee/video-graph';
-import { ModuleType, VideoModuleSpecification } from './SimpleVideoGraph';
-import { Parameter } from './Kit';
+import { VideoModuleSpecification } from './SimpleVideoGraph';
+import { ModuleType, Parameter } from './Kit';
 
 /*
  * Configurations of nodes to be instantiated in a VideoGraph.

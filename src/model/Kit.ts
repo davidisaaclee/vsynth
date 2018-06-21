@@ -18,6 +18,12 @@ import {
 } from './SimpleVideoGraph';
 import { VideoModule } from './VideoModule';
 
+// TODO: Would be nice to make this typesafe with Kit.modules
+export type ModuleType =
+	"identity" | "oscillator" | "constant" | "mixer"
+	| "scanlines" | "pro-osc" | "blur" | "crosshatch"
+	| "dither" | "rgbOffset";
+
 const k = {
 	oscillator: {
 		baseFrequency: 'baseFrequency',
