@@ -5,7 +5,7 @@ import {
 } from '@davidisaaclee/video-graph';
 import { mapNodes, mapEdges, nodeForKey } from '@davidisaaclee/graph';
 import identityShader from '../shaders/identity';
-import oscillatorShader from '../shaders/oscillator';
+import oscillatorShader from '../shaders/oscillator.generated';
 import proOscShader from '../shaders/pro-osc';
 import constantShader from '../shaders/constant';
 import mixerShader from '../shaders/mixer';
