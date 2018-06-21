@@ -1,7 +1,7 @@
 import { get, flatMap } from 'lodash';
 import { createSelector, Selector } from 'reselect';
 import { State as RootState } from '../../../modules';
-import { SimpleVideoGraph, VideoModuleSpecification } from '../../../model/SimpleVideoGraph';
+import { SimpleVideoGraph, VideoNode } from '../../../model/SimpleVideoGraph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import { modules as videoModules } from '../../../model/Kit';
 import { Lane } from './types';
@@ -17,7 +17,7 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 		sharedSelectors.orderedNodes,
 		graph
 	],
-	(nodeOrder: Array<{ key: string, node: VideoModuleSpecification }>, graph: SimpleVideoGraph) => flatMap(
+	(nodeOrder: Array<{ key: string, node: VideoNode }>, graph: SimpleVideoGraph) => flatMap(
 		nodeOrder,
 		({ key: nodeKey, node }) => {
 			const videoMod =

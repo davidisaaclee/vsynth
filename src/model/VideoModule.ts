@@ -1,5 +1,5 @@
 import { UniformValue } from '@davidisaaclee/video-graph';
-import { VideoModuleSpecification } from './SimpleVideoGraph';
+import { VideoNode } from './SimpleVideoGraph';
 import { ModuleType, Parameter } from './Kit';
 
 /*
@@ -13,10 +13,10 @@ export interface VideoModule {
 		toUniforms: (values: { [identifier: string]: number }) => { [identifier: string]: UniformValue }
 	};
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
-	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoModuleSpecification) => { [identifier: string]: UniformValue };
+	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => { [identifier: string]: UniformValue };
 
 	// Update internal state on each frame if needed.
-	update?: (frameIndex: number, state: Record<string, number>, node: VideoModuleSpecification) => Record<string, number>;
+	update?: (frameIndex: number, state: Record<string, number>, node: VideoNode) => Record<string, number>;
 
 	inlets?: {
 		// maps display name to uniform identifier

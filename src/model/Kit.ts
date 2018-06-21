@@ -14,7 +14,7 @@ import { crosshatch } from './modules/crosshatch';
 import { dither } from './modules/dither';
 import { rgbOffset } from './modules/rgbOffset';
 import {
-	SimpleVideoGraph, VideoModuleSpecification, InletSpecification
+	SimpleVideoGraph, VideoNode, InletSpecification
 } from './SimpleVideoGraph';
 import { VideoModule } from './VideoModule';
 
@@ -168,7 +168,7 @@ export const modules: { [key: string]: VideoModule } = {
 				data: Math.random() * 1
 			}
 		}),
-		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoModuleSpecification) => {
+		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => {
 			return {
 				'phaseOffset': {
 					type: 'f',
@@ -177,7 +177,7 @@ export const modules: { [key: string]: VideoModule } = {
 				}
 			};
 		},
-		update: (frameIndex: number, state: Record<string, number>, node: VideoModuleSpecification) => {
+		update: (frameIndex: number, state: Record<string, number>, node: VideoNode) => {
 			const previousFrameIndex = state[k.oscillator.state.frameIndex];
 			const previousPhaseOffset = state[k.oscillator.state.phaseOffset];
 			const frequencyUniform = node.uniforms.frequency;
@@ -275,7 +275,7 @@ export const modules: { [key: string]: VideoModule } = {
 				data: Math.random() * 1
 			}
 		}),
-		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoModuleSpecification) => {
+		animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => {
 			return {
 				'phaseOffset': {
 					type: 'f',
@@ -284,7 +284,7 @@ export const modules: { [key: string]: VideoModule } = {
 				}
 			};
 		},
-		update: (frameIndex: number, state: Record<string, number>, node: VideoModuleSpecification) => {
+		update: (frameIndex: number, state: Record<string, number>, node: VideoNode) => {
 			const previousFrameIndex = state[k.oscillator.state.frameIndex];
 			const previousPhaseOffset = state[k.oscillator.state.phaseOffset];
 			const frequencyUniform = node.uniforms.frequency;
@@ -406,7 +406,7 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 };
 
-export function videoModuleSpecFromModule(mod: VideoModule): VideoModuleSpecification {
+export function videoModuleSpecFromModule(mod: VideoModule): VideoNode {
 	const parameters = mod.parameters == null
 		? {}
 		: mapValues(
@@ -438,7 +438,7 @@ export function videoGraphFromSimpleVideoGraph(
 	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {
-	const mappedNodes = mapNodes(graph, (moduleSpec: VideoModuleSpecification): PluginNode => {
+	const mappedNodes = mapNodes(graph, (moduleSpec: VideoNode): PluginNode => {
 		const runtimeModule = runtime[moduleSpec.type];
 		const moduleConfiguration = modules[moduleSpec.type];
 

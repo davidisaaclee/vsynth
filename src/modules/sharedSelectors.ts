@@ -2,7 +2,7 @@ import { values, flatMap } from 'lodash';
 import { createSelector, Selector } from 'reselect';
 import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from './index';
-import { SimpleVideoGraph, VideoModuleSpecification } from '../model/SimpleVideoGraph';
+import { SimpleVideoGraph, VideoNode } from '../model/SimpleVideoGraph';
 import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
@@ -22,10 +22,10 @@ export const outletConnections =
 export const nodeOrder =
 	(state: RootState) => state.graph.nodeOrder;
 
-export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoModuleSpecification }>> =
+export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoNode }>> =
 	createSelector(
 		[nodes, nodeOrder],
-		(nodes: Record<string, VideoModuleSpecification>, nodeOrder: string[]) => (
+		(nodes: Record<string, VideoNode>, nodeOrder: string[]) => (
 			nodeOrder.map(key => ({
 				key,
 				node: nodes[key]
@@ -78,7 +78,7 @@ export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 		inletOutletLinks
 	],
 	(
-		nodes: Array<{ key: string, node: VideoModuleSpecification}>,
+		nodes: Array<{ key: string, node: VideoNode}>,
 		inletOutletLinks: Array<{ inlet: Inlet, outlet: Outlet }>
 	) => {
 		let result = Graph.empty;

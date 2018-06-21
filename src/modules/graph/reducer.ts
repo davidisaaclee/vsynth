@@ -1,12 +1,12 @@
 import { mapValues } from 'lodash';
 import { ActionType } from 'typesafe-actions';
-import { VideoModuleSpecification } from '../../model/SimpleVideoGraph';
+import { VideoNode } from '../../model/SimpleVideoGraph';
 import { modules, videoModuleSpecFromModule } from '../../model/Kit';
 import * as Constants from './constants';
 import * as actions from './actions';
 
 export interface State {
-	nodes: { [key: string]: VideoModuleSpecification };
+	nodes: { [key: string]: VideoNode };
 	outputNodeKey: string | null;
 
 	nodeOrder: string[];

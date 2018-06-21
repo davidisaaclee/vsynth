@@ -11,7 +11,7 @@ export interface InletSpecification {
 	inlet: string;
 }
 
-export interface VideoModuleSpecification {
+export interface VideoNode {
 	type: ModuleType;
 	parameters: { [identifier: string]: number };
 	uniforms: { [identifier: string]: UniformValue };
@@ -19,7 +19,7 @@ export interface VideoModuleSpecification {
 }
 
 export type SimpleVideoGraph =
-	Graph<VideoModuleSpecification, InletSpecification>;
+	Graph<VideoNode, InletSpecification>;
 
 // TODO: It'd be nice to be able to automatically get this from a Graph<>.
 export type Edge = Edge<InletSpecification>;
