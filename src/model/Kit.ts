@@ -1,9 +1,4 @@
-import { mapValues } from 'lodash';
-import {
-	VideoGraph, PluginNode, PluginConnection,
-	UniformValue, UniformSpecification
-} from '@davidisaaclee/video-graph';
-import { mapNodes, mapEdges, nodeForKey } from '@davidisaaclee/graph';
+import { UniformValue } from '@davidisaaclee/video-graph';
 import identityShader from '../shaders/identity';
 import oscillatorShader from '../shaders/oscillator.generated';
 import proOscShader from '../shaders/pro-osc';
@@ -13,9 +8,7 @@ import scanlinesShader from '../shaders/scanlines';
 import { crosshatch } from './modules/crosshatch';
 import { dither } from './modules/dither';
 import { rgbOffset } from './modules/rgbOffset';
-import {
-	SimpleVideoGraph, VideoNode, InletSpecification
-} from './SimpleVideoGraph';
+import { VideoNode } from './SimpleVideoGraph';
 import { VideoModule } from './VideoModule';
 
 // TODO: Would be nice to make this typesafe with Kit.modules
@@ -390,104 +383,4 @@ export const modules: Record<ModuleType, VideoModule> = {
 		}
 	},
 };
-
-export function videoModuleSpecFromModuleType(moduleType: ModuleType): VideoNode {
-	const mod = modules[moduleType];
-	if (mod == null) {
-		throw new Error("Invalid video module");
-	}
-
-	const parameters = mod.parameters == null
-		? {}
-		: mapValues(
-			mod.parameters.specifications,
-			param => param.initialValue()
-		);
-	const uniforms = mod.parameters == null
-		? {}
-		: mod.parameters.toUniforms(parameters);
-
-	return {
-		type: moduleType,
-		uniforms,
-		parameters,
-		state: {}
-	};
-}
-
-// Holds all the necessary information to use a specific video module
-// with a specific WebGL runtime.
-export interface RuntimeModule {
-	program: WebGLProgram;
-}
-
-export function videoGraphFromSimpleVideoGraph(
-	graph: SimpleVideoGraph,
-	// moduleKey :: ModuleType
-	runtime: { [moduleKey: string]: RuntimeModule },
-	frameIndex: number,
-	gl: WebGLRenderingContext
-): VideoGraph {
-	const mappedNodes = mapNodes(graph, (moduleSpec: VideoNode): PluginNode => {
-		const runtimeModule = runtime[moduleSpec.type];
-		const moduleConfiguration = modules[moduleSpec.type];
-
-		if (runtimeModule == null) {
-			throw new Error(`No runtime found for module type: ${moduleSpec.type}`);
-		}
-		if (moduleConfiguration == null) {
-			throw new Error(`No module configuration found for module type: ${moduleSpec.type}`);
-		}
-
-		const defaultUniforms = moduleConfiguration.defaultUniforms == null
-			? {} 
-			: moduleConfiguration.defaultUniforms(gl);
-
-		const animationUniforms = moduleConfiguration.animationUniforms == null
-			? {} 
-			: moduleConfiguration.animationUniforms(
-				frameIndex, 
-				{
-					...defaultUniforms,
-					...moduleSpec.uniforms,
-				},
-				moduleSpec);
-
-		return {
-			program: runtimeModule.program,
-			uniforms: {
-				...uniformValuesToSpec(defaultUniforms),
-				...uniformValuesToSpec(animationUniforms),
-				...uniformValuesToSpec(moduleSpec.uniforms),
-			}
-		};
-	});
-
-	return mapEdges(
-		mappedNodes,
-		(inletSpec: InletSpecification, src: string, dst: string): PluginConnection => {
-			const moduleConfiguration = modules[nodeForKey(graph, src)!.type];
-
-			if (moduleConfiguration == null) {
-				throw new Error(`No module configuration found for module type: ${nodeForKey(graph, src)!.type}`);
-			}
-			if (moduleConfiguration.inlets == null) {
-				throw new Error("Edge connecting to node with no inlets");
-			}
-
-			return {
-				uniformIdentifier: moduleConfiguration.inlets.uniformMappings[inletSpec.inlet]
-			};
-		});
-}
-
-function uniformValuesToSpec(
-	valuesDict: { [identifier: string]: UniformValue }
-): { [identifier: string]: UniformSpecification } {
-	const retval = {};
-	for (const identifier of Object.keys(valuesDict)) {
-		retval[identifier] = { identifier, value: valuesDict[identifier] };
-	}
-	return retval;
-}
 

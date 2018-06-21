@@ -1,7 +1,7 @@
 import { mapValues } from 'lodash';
 import { ActionType } from 'typesafe-actions';
-import { VideoNode } from '../../model/SimpleVideoGraph';
-import { modules, videoModuleSpecFromModuleType } from '../../model/Kit';
+import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVideoGraph';
+import { modules } from '../../model/Kit';
 import * as Constants from './constants';
 import * as actions from './actions';
 

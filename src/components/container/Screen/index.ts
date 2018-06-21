@@ -7,11 +7,8 @@ import { empty as emptyGraph } from '@davidisaaclee/graph';
 import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
 import { State as RootState } from '../../../modules';
 import * as Graph from '../../../modules/graph';
-import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
-import {
-	modules as videoModules,
-	videoGraphFromSimpleVideoGraph, RuntimeModule
-} from '../../../model/Kit';
+import { SimpleVideoGraph, RuntimeModule, videoGraphFromSimpleVideoGraph } from '../../../model/SimpleVideoGraph';
+import { modules as videoModules } from '../../../model/Kit';
 import { VideoModule } from '../../../model/VideoModule';
 import * as k from '../../../constants';
 import * as selectors from './selectors';
