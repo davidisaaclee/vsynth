@@ -34,8 +34,6 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "glsl-crosshatch-filter": "^1.0.0",
-    "glslify": "^6.1.1",
     "@types/jest": "^23.0.0",
     "@types/node": "^10.3.0",
     "@types/react": "^16.3.16",
@@ -43,6 +41,9 @@
     "@types/react-modal": "^3.1.2",
     "@types/uuid": "^3.4.3",
     "copyfiles": "^2.0.0",
+    "glsl-crosshatch-filter": "^1.0.0",
+    "glsl-dither": "^1.0.1",
+    "glslify": "^6.1.1",
     "node-glob": "^1.2.0",
     "rimraf": "^2.6.2",
     "typescript": "^2.9.1"

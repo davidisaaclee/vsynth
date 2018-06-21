@@ -3029,6 +3029,12 @@ glsl-crosshatch-filter@^1.0.0:
   dependencies:
     glsl-luma "^1.0.1"
 
+glsl-dither@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/glsl-dither/-/glsl-dither-1.0.1.tgz#64c7bb73cb758327884d83915daea78ae3fbf5d6"
+  dependencies:
+    glsl-luma "^1.0.1"
+
 glsl-inject-defines@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/glsl-inject-defines/-/glsl-inject-defines-1.0.3.tgz#dd1aacc2c17fcb2bd3fc32411c6633d0d7b60fd4"

@@ -11,6 +11,7 @@ import constantShader from '../shaders/constant';
 import mixerShader from '../shaders/mixer';
 import scanlinesShader from '../shaders/scanlines';
 import { crosshatch } from './modules/crosshatch';
+import { dither } from './modules/dither';
 import {
 	SimpleVideoGraph, VideoModuleSpecification, InletSpecification
 } from './SimpleVideoGraph';
@@ -68,6 +69,7 @@ export interface Parameter {
 
 // key :: ModuleType
 export const modules: { [key: string]: VideoModule } = {
+	dither,
 	crosshatch,
 	'identity': {
 		type: 'identity',
