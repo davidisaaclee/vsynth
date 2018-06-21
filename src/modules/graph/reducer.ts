@@ -1,7 +1,7 @@
 import { mapValues } from 'lodash';
 import { ActionType } from 'typesafe-actions';
 import { VideoNode } from '../../model/SimpleVideoGraph';
-import { modules, videoModuleSpecFromModule } from '../../model/Kit';
+import { modules, videoModuleSpecFromModuleType } from '../../model/Kit';
 import * as Constants from './constants';
 import * as actions from './actions';
 
@@ -17,8 +17,8 @@ export interface State {
 
 const initialState: State = {
 	nodes: {
-		'output': videoModuleSpecFromModule(modules.identity),
-		'default-constant': videoModuleSpecFromModule(modules.constant),
+		'output': videoModuleSpecFromModuleType('identity'),
+		'default-constant': videoModuleSpecFromModuleType('constant'),
 	},
 	outputNodeKey: 'output',
 

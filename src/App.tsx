@@ -2,8 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Modal from 'react-modal';
-import { videoModuleSpecFromModule } from './model/Kit';
-import { VideoModule } from './model/VideoModule';
+import { videoModuleSpecFromModuleType, modules as videoModules, ModuleType } from './model/Kit';
 import Screen from './components/container/Screen';
 import BusRouter from './components/container/BusRouter';
 import ModulePicker from './components/container/ModulePicker';
@@ -32,8 +31,8 @@ class App extends React.Component<Props, State> {
 		if (modal === AppModule.Modals.PICK_MODULE) {
 			return e(ModulePicker,
 				{
-					addModule: (mod: VideoModule) => {
-						this.props.addModule(mod);
+					addModule: (modType: ModuleType) => {
+						this.props.addModule(modType);
 						this.props.closeModal();
 					}
 				});
@@ -142,7 +141,7 @@ interface StateProps {
 
 interface DispatchProps {
 	closeModal: () => any;
-	addModule: (mod: VideoModule) => any;
+	addModule: (modType: ModuleType) => any;
 	addBus: () => any;
 	openNodePicker: () => any;
 }
@@ -157,13 +156,14 @@ let counter = 0;
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		closeModal: () => dispatch(AppModule.actions.setModal(null)),
-		addModule: (mod) => {
-			const nodeKey = `${mod.type}-${counter++}`;
+		addModule: (modType) => {
+			const nodeKey = `${modType}-${counter++}`;
 			dispatch(Graph.actions.insertNode(
-				videoModuleSpecFromModule(mod),
+				videoModuleSpecFromModuleType(modType),
 				nodeKey));
 
 			// HACK: Automatically connect all inlets to default bus (-1);
+			const mod = videoModules[modType];
 			if (mod.inlets != null) {
 				Object.keys(mod.inlets.uniformMappings).forEach(inletKey => {
 					dispatch(Graph.actions.setInletConnection(

@@ -72,7 +72,6 @@ export const modules: { [key: string]: VideoModule } = {
 	dither,
 	crosshatch,
 	'identity': {
-		type: 'identity',
 		shaderSource: identityShader,
 		defaultUniforms: (gl: WebGLRenderingContext) => ({
 			'inputTextureDimensions': {
@@ -89,7 +88,6 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 
 	'oscillator': {
-		type: 'oscillator',
 		shaderSource: oscillatorShader,
 		parameters: {
 			specifications: {
@@ -203,7 +201,6 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 	
 	'pro-osc': {
-		type: 'pro-osc',
 		shaderSource: proOscShader,
 		parameters: {
 			specifications: {
@@ -310,7 +307,6 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 
 	'constant': {
-		type: 'constant',
 		shaderSource: constantShader,
 		parameters: {
 			specifications: {
@@ -328,7 +324,6 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 
 	'mixer': {
-		type: 'mixer',
 		shaderSource: mixerShader,
 		parameters: {
 			specifications: {
@@ -353,7 +348,6 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 
 	'scanlines': {
-		type: 'scanlines',
 		shaderSource: scanlinesShader,
 		parameters: {
 			specifications: {
@@ -398,7 +392,12 @@ export const modules: { [key: string]: VideoModule } = {
 	},
 };
 
-export function videoModuleSpecFromModule(mod: VideoModule): VideoNode {
+export function videoModuleSpecFromModuleType(moduleType: ModuleType): VideoNode {
+	const mod = modules[moduleType];
+	if (mod == null) {
+		throw new Error("Invalid video module");
+	}
+
 	const parameters = mod.parameters == null
 		? {}
 		: mapValues(
@@ -410,7 +409,7 @@ export function videoModuleSpecFromModule(mod: VideoModule): VideoNode {
 		: mod.parameters.toUniforms(parameters);
 
 	return {
-		type: mod.type,
+		type: moduleType,
 		uniforms,
 		parameters,
 		state: {}

@@ -1,18 +1,17 @@
 import * as React from 'react';
-import { modules } from '../../../model/Kit';
-import { VideoModule } from '../../../model/VideoModule';
+import { modules, ModuleType } from '../../../model/Kit';
 
 const e = React.createElement;
 
 interface Props {
-	addModule: (mod: VideoModule) => any;
+	addModule: (modType: ModuleType) => any;
 }
 
 const allModuleKeys = Object.keys(modules)
 	.filter(moduleKey => [
 		'identity',
 		'pro-osc'
-	].indexOf(moduleKey) === -1);
+	].indexOf(moduleKey) === -1) as ModuleType[];
 
 const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
 	e('ul',
@@ -22,7 +21,7 @@ const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
 				{},
 				e('button',
 					{
-						onClick: () => addModule(modules[key])
+						onClick: () => addModule(key)
 					},
 					key))));
 

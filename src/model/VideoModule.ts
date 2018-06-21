@@ -1,6 +1,5 @@
 import { UniformValue } from '@davidisaaclee/video-graph';
 import { VideoNode } from './SimpleVideoGraph';
-import { ModuleType } from './Kit';
 
 /*
  * A non-texture-based parameter to a module, which can be translated to a
@@ -14,7 +13,6 @@ interface Parameter {
  * Configurations of nodes to be instantiated in a VideoGraph.
  */
 export interface VideoModule {
-	type: ModuleType;
 	shaderSource: string;
 	parameters?: {
 		specifications: { [identifier: string]: Parameter },

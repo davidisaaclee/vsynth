@@ -8,7 +8,6 @@ const params = {
 };
 
 export const rgbOffset: VideoModule = {
-	type: 'rgbOffset',
 	shaderSource,
 	parameters: {
 		specifications: {
