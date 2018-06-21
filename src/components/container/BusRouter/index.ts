@@ -125,47 +125,43 @@ class BusRouter extends React.Component<Props, State> {
 			rowCount: lanes.length,
 			columnCount: busCount,
 
-			renderRowHeaderContent: (index: number) => e(
-				'div',
-				{},
-				(lane => {
-					if (lane.type === 'inlet') {
-						const node = Graph.nodeForKey(graph, lane.nodeKey)!;
-						const videoModule = Kit.modules[node.type];
-						const hasAssociatedParametersForInlet =
-							videoModule.inlets != null 
-							&& videoModule.inlets.associatedParameters != null
-							&& videoModule.inlets.associatedParameters[lane.inletKey] != null;
+			renderRowHeaderContent: (index: number) => (lane => {
+				if (lane.type === 'inlet') {
+					const node = Graph.nodeForKey(graph, lane.nodeKey)!;
+					const videoModule = Kit.modules[node.type];
+					const hasAssociatedParametersForInlet =
+						videoModule.inlets != null 
+						&& videoModule.inlets.associatedParameters != null
+						&& videoModule.inlets.associatedParameters[lane.inletKey] != null;
 
-						const associatedParameters = hasAssociatedParametersForInlet
-							? videoModule.inlets!.associatedParameters![lane.inletKey]
-							: [];
-						return e('div',
-							{},
-							lane.inletKey,
-							associatedParameters.map((paramKey: string) => (
-								e('input',
-									{
-										key: `${lane.nodeKey}-${paramKey}`,
-										type: 'range',
-										min: 0,
-										max: 1,
-										step: 'any',
-										value: node.parameters[paramKey],
-										onChange: throttle((evt: React.SyntheticEvent<HTMLInputElement>) => (
-											setParameter(lane.nodeKey, paramKey, parseFloat(evt.currentTarget.value))
-										), 1000 / 60),
-									})
-							)));
-					}
+					const associatedParameters = hasAssociatedParametersForInlet
+						? videoModule.inlets!.associatedParameters![lane.inletKey]
+						: [];
+					return [
+						lane.inletKey,
+						associatedParameters.map((paramKey: string) => (
+							e('input',
+								{
+									key: `${lane.nodeKey}-${paramKey}`,
+									type: 'range',
+									min: 0,
+									max: 1,
+									step: 'any',
+									value: node.parameters[paramKey],
+									onChange: throttle((evt: React.SyntheticEvent<HTMLInputElement>) => (
+										setParameter(lane.nodeKey, paramKey, parseFloat(evt.currentTarget.value))
+									), 1000 / 60),
+								})
+						))
+					];
+				}
 
-					return e('button',
-						{
-							onClick: () => openNodeControls(lanes[index].nodeKey)
-						},
-						lanes[index].name);
-				})(lanes[index]),
-			),
+				return e('button',
+					{
+						onClick: () => openNodeControls(lanes[index].nodeKey)
+					},
+					lanes[index].name);
+			})(lanes[index]),
 			renderColumnHeaderContent: (index: number) => e(
 				'div',
 				{

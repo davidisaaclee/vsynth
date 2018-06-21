@@ -16,6 +16,10 @@ th.router-cell[data-lane-type="outlet"] {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
+th.router-cell[data-lane-type] > * {
+	display: block;
+}
+
 .router-cell:not([data-lane-type="outlet"]):nth-child(even) {
 	background-color: rgba(255, 255, 255, 0.75);
 }
