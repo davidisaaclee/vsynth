@@ -129,5 +129,8 @@ export const oscillator: VideoModule = {
 			'phase offset': 'phaseOffsetTexture',
 		},
 		displayOrder: ['rotation', 'phase offset'],
+		associatedParameters: {
+			rotation: [parameterKeys.rotationAmount]
+		}
 	}
 }

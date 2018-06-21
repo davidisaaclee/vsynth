@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { throttle } from 'lodash';
+import * as Graph from '@davidisaaclee/graph';
 import { Table, Props as TableProps } from '@davidisaaclee/react-table';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
+import * as Kit from '../../../model/Kit';
 import * as App from '../../../modules/app';
 import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
@@ -23,6 +26,7 @@ interface DispatchProps {
 	setInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => any;
 	setOutletConnection: (nodeKey: string, busIndex: number) => any;
 	openNodeControls: (nodeKey: string) => any;
+	setParameter: (nodeKey: string, paramKey: string, value: number) => any;
 }
 
 interface OwnProps extends Partial<TableProps> {}
@@ -43,7 +47,7 @@ class BusRouter extends React.Component<Props, State> {
 		const {
 			graph, connections, busCount, lanes,
 			setInletConnection, setOutletConnection,
-			openNodeControls,
+			openNodeControls, setParameter,
 			...restProps
 		} = this.props;
 		return e(Table, {
@@ -56,11 +60,44 @@ class BusRouter extends React.Component<Props, State> {
 				{
 					style: this.styleForLane(index)
 				},
-				e('button',
-					{
-						onClick: () => openNodeControls(lanes[index].nodeKey)
-					},
-					lanes[index].name)),
+				(lane => {
+					if (lane.type === 'inlet') {
+						const node = Graph.nodeForKey(graph, lane.nodeKey)!;
+						const videoModule = Kit.modules[node.type];
+						const hasAssociatedParametersForInlet =
+							videoModule.inlets != null 
+							&& videoModule.inlets.associatedParameters != null
+							&& videoModule.inlets.associatedParameters[lane.inletKey] != null;
+
+						const associatedParameters = hasAssociatedParametersForInlet
+							? videoModule.inlets!.associatedParameters![lane.inletKey]
+							: [];
+						return e('div',
+							{},
+							lane.inletKey,
+							associatedParameters.map(paramKey => (
+								e('input',
+									{
+										key: `${lane.nodeKey}-${paramKey}`,
+										type: 'range',
+										min: 0,
+										max: 1,
+										step: 'any',
+										value: node.parameters[paramKey],
+										onChange: throttle((evt: React.SyntheticEvent<HTMLInputElement>) => (
+											setParameter(lane.nodeKey, paramKey, parseFloat(evt.currentTarget.value))
+										), 1000 / 60),
+									})
+							)));
+					}
+
+					return e('button',
+						{
+							onClick: () => openNodeControls(lanes[index].nodeKey)
+						},
+						lanes[index].name);
+				})(lanes[index]),
+			),
 			renderColumnHeader: (index: number) => e(
 				'div',
 				{
@@ -151,7 +188,13 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 			dispatch(GraphModule.actions.setOutletConnection(nodeKey, busIndex))
 		),
 
-		openNodeControls: (nodeKey) => dispatch(App.actions.setModal(App.Modals.NODE_CONTROLS(nodeKey))),
+		openNodeControls: (nodeKey) => (
+			dispatch(App.actions.setModal(App.Modals.NODE_CONTROLS(nodeKey)))
+		),
+
+		setParameter: (nodeKey: string, paramKey: string, value: number) => (
+			dispatch(GraphModule.actions.setParameter(nodeKey, paramKey, value))
+		)
 	};
 }
 
