@@ -20,9 +20,8 @@ import { VideoModule } from './VideoModule';
 
 // TODO: Would be nice to make this typesafe with Kit.modules
 export type ModuleType =
-	"identity" | "oscillator" | "constant" | "mixer"
-	| "scanlines" | "pro-osc" | "blur" | "crosshatch"
-	| "dither" | "rgbOffset";
+	"identity" | "oscillator" | "constant" | "mixer" | "scanlines"
+	| "pro-osc" | "crosshatch" | "dither" | "rgbOffset";
 
 const k = {
 	oscillator: {
@@ -67,7 +66,7 @@ const k = {
 
 
 // key :: ModuleType
-export const modules: { [key: string]: VideoModule } = {
+export const modules: Record<ModuleType, VideoModule> = {
 	rgbOffset,
 	dither,
 	crosshatch,

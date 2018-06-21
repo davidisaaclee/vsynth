@@ -7,11 +7,15 @@ interface Props {
 	addModule: (modType: ModuleType) => any;
 }
 
-const allModuleKeys = Object.keys(modules)
+function keys<T, K extends keyof T>(obj: T): K[] {
+	return Object.keys(obj) as K[];
+}
+
+const allModuleKeys = keys(modules)
 	.filter(moduleKey => [
 		'identity',
 		'pro-osc'
-	].indexOf(moduleKey) === -1) as ModuleType[];
+	].indexOf(moduleKey) === -1);
 
 const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
 	e('ul',
