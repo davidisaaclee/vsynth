@@ -10,9 +10,11 @@ import proOscShader from '../shaders/pro-osc';
 import constantShader from '../shaders/constant';
 import mixerShader from '../shaders/mixer';
 import scanlinesShader from '../shaders/scanlines';
+import { crosshatch } from './modules/crosshatch';
 import {
-	SimpleVideoGraph, VideoModuleSpecification, InletSpecification, ModuleType
+	SimpleVideoGraph, VideoModuleSpecification, InletSpecification
 } from './SimpleVideoGraph';
+import { VideoModule } from './VideoModule';
 
 const k = {
 	oscillator: {
@@ -63,33 +65,10 @@ export interface Parameter {
 	initialValue(): number;
 }
 
-/*
- * Configurations of nodes to be instantiated in a VideoGraph.
- */
-export interface VideoModule {
-	type: ModuleType;
-	shaderSource: string;
-	parameters?: {
-		specifications: { [identifier: string]: Parameter },
-		toUniforms: (values: { [identifier: string]: number }) => { [identifier: string]: UniformValue }
-	};
-	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
-	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoModuleSpecification) => { [identifier: string]: UniformValue };
-
-	// Update internal state on each frame if needed.
-	update?: (frameIndex: number, state: Record<string, number>, node: VideoModuleSpecification) => Record<string, number>;
-
-	inlets?: {
-		// maps display name to uniform identifier
-		uniformMappings: { [key: string]: string },
-
-		// display order of inlets by key
-		displayOrder: string[],
-	}
-}
 
 // key :: ModuleType
 export const modules: { [key: string]: VideoModule } = {
+	crosshatch,
 	'identity': {
 		type: 'identity',
 		shaderSource: identityShader,

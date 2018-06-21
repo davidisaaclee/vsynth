@@ -3023,9 +3023,11 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-glsl-fast-gaussian-blur@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/glsl-fast-gaussian-blur/-/glsl-fast-gaussian-blur-1.0.2.tgz#95bc77f644a22f06e5ed58e128697f8b17290b08"
+glsl-crosshatch-filter@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/glsl-crosshatch-filter/-/glsl-crosshatch-filter-1.0.0.tgz#8ae37cb12798398c755211d6d90ee28b7e1ff336"
+  dependencies:
+    glsl-luma "^1.0.1"
 
 glsl-inject-defines@^1.0.1:
   version "1.0.3"
@@ -3034,6 +3036,10 @@ glsl-inject-defines@^1.0.1:
     glsl-token-inject-block "^1.0.0"
     glsl-token-string "^1.0.1"
     glsl-tokenizer "^2.0.2"
+
+glsl-luma@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/glsl-luma/-/glsl-luma-1.0.1.tgz#b5ec2ade6bae1ba68903870d8ca4483911c7b5f5"
 
 glsl-resolve@0.0.1:
   version "0.0.1"

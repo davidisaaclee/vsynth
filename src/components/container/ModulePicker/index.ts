@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { VideoModule, modules } from '../../../model/Kit';
+import { modules } from '../../../model/Kit';
+import { VideoModule } from '../../../model/VideoModule';
 
 const e = React.createElement;
 
