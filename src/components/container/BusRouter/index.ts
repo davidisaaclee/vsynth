@@ -147,7 +147,10 @@ class BusRouter extends React.Component<Props, State> {
 								}
 							}));
 				}
-			}
+			},
+
+			renderRowContainer: this.RowContainer,
+			renderCellContainer: this.CellContainer,
 		});
 	}
 
@@ -161,6 +164,35 @@ class BusRouter extends React.Component<Props, State> {
 			color: 'white',
 		};
 	}
+
+	private RowContainer: React.StatelessComponent<{ rowIndex: number }> = ({ rowIndex, children }) => {
+		if (rowIndex < 0) {
+			// header
+			return e('tr',
+				{
+					style: {
+						backgroundColor: 'white'
+					}
+				},
+				children)
+		}
+
+		const lane = this.props.lanes[rowIndex];
+		return e('tr',
+			{
+				style: {
+					backgroundColor: (lane.type === 'inlet'
+						? 'white'
+						: 'black')
+				}
+			},
+			children);
+	}
+
+	private CellContainer: React.StatelessComponent<{ rowIndex: number, columnIndex: number }> = ({ rowIndex, columnIndex, children }) => (
+		e('td', {}, children)
+	)
+
 }
 
 function mapStateToProps(state: RootState): StateProps {
