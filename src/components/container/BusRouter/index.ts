@@ -50,9 +50,7 @@ class BusRouter extends React.Component<Props, State> {
 
 			renderRowHeaderContent: (index: number) => e(
 				'div',
-				{
-					style: this.styleForLane(index)
-				},
+				{},
 				(lane => {
 					if (lane.type === 'inlet') {
 						const node = Graph.nodeForKey(graph, lane.nodeKey)!;
@@ -113,7 +111,6 @@ class BusRouter extends React.Component<Props, State> {
 					return e('div',
 						{
 							style: {
-								...this.styleForLane(laneIndex),
 								whiteSpace: 'pre-wrap',
 							},
 							onClick: (lane.type === 'inlet'
@@ -125,7 +122,6 @@ class BusRouter extends React.Component<Props, State> {
 					return e('div',
 						{
 							style: {
-								...this.styleForLane(laneIndex),
 								whiteSpace: 'pre-wrap',
 							},
 							// TODO: Be more explicit about removing edges behavior
@@ -153,43 +149,43 @@ class BusRouter extends React.Component<Props, State> {
 		});
 	}
 
-	// TODO: be safer
-	private styleForLane(laneIndex: number): object {
-		const isInlet = this.props.lanes[laneIndex].type === 'inlet';
-		return isInlet
-		? {}
-		: {
-			backgroundColor: 'black',
-			color: 'white',
-		};
-	}
-
-	private RowContainer: React.StatelessComponent<{ rowIndex: number }> = ({ rowIndex, children }) => {
-		if (rowIndex < 0) {
-			// header
+	private RowContainer: React.StatelessComponent<{ rowIndex: number }> = (
+		({ rowIndex, children }) => {
 			return e('tr',
+				{},
+				children);
+		}
+	)
+
+	private CellContainer: React.StatelessComponent<{ rowIndex: number, columnIndex: number }> = (
+		({ rowIndex, columnIndex, children }) => {
+			if (rowIndex < 0 && columnIndex < 0) {
+				return e('td',
+					{},
+					children);
+			}
+			if (rowIndex < 0) {
+				// header
+				return e('td',
+					{
+						style: {
+							backgroundColor: 'rgba(255, 255, 255, 0.5)'
+						}
+					},
+					children)
+			}
+
+			const lane = this.props.lanes[rowIndex];
+			return e('td',
 				{
 					style: {
-						backgroundColor: 'white'
+						backgroundColor: (lane.type === 'inlet'
+							? 'rgba(255, 255, 255, 0.75)'
+							: 'rgba(0, 0, 0, 0.75)')
 					}
 				},
-				children)
+				children);
 		}
-
-		const lane = this.props.lanes[rowIndex];
-		return e('tr',
-			{
-				style: {
-					backgroundColor: (lane.type === 'inlet'
-						? 'white'
-						: 'black')
-				}
-			},
-			children);
-	}
-
-	private CellContainer: React.StatelessComponent<{ rowIndex: number, columnIndex: number }> = ({ rowIndex, columnIndex, children }) => (
-		e('td', {}, children)
 	)
 
 }
