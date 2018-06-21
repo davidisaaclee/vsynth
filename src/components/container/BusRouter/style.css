@@ -1,0 +1,22 @@
+.router-row {}
+
+td.router-cell[data-lane-type="inlet"] {
+	background-color: rgba(255, 255, 255, 0.75);
+}
+
+td.router-cell[data-lane-type="outlet"] {
+	background-color: rgba(0, 0, 0, 0.75);
+}
+
+.router-cell[data-lane-type="inlet"]:nth-child(even) {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+th.router-cell {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+th.router-cell[data-lane-type="outlet"] {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+

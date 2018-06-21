@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { throttle } from 'lodash';
+import * as classNames from 'classnames';
 import * as Graph from '@davidisaaclee/graph';
 import { Table, Props as TableProps } from '@davidisaaclee/react-table';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
@@ -11,8 +12,27 @@ import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
 import * as selectors from './selectors';
 import { Lane, Connection } from './types';
+import './style.css';
 
 const e = React.createElement;
+
+const css = {
+	classNames: {
+		lane: 'router-lane',
+		row: 'router-row',
+		columnHeader: 'router-column-header',
+		cell: 'router-cell',
+	},
+	data: {
+		laneType: {
+			key: 'data-lane-type',
+			values: {
+				inlet: 'inlet',
+				outlet: 'outlet',
+			}
+		},
+	}
+};
 
 interface StateProps {
 	graph: SimpleVideoGraph;
@@ -39,7 +59,15 @@ class BusRouter extends React.Component<Props, State> {
 	private RowContainer: React.StatelessComponent<{ rowIndex: number }> = (
 		({ rowIndex, children }) => {
 			return e('tr',
-				{},
+				{
+					className: classNames(
+						css.classNames.row,
+						{
+							[css.classNames.lane]: rowIndex >= 0,
+							[css.classNames.columnHeader]: rowIndex < 0,
+						}
+					),
+				},
 				children);
 		}
 	)
@@ -47,43 +75,39 @@ class BusRouter extends React.Component<Props, State> {
 	private CellContainer: React.StatelessComponent<{ rowIndex: number, columnIndex: number }> = (
 		({ rowIndex, columnIndex, children }) => {
 			if (rowIndex < 0 && columnIndex < 0) {
-				return e('td',
+				return e('th',
 					{},
 					children);
 			}
 
 			if (rowIndex < 0) {
 				// column header
-				return e('td',
+				return e('th',
 					{
-						style: {
-							backgroundColor: 'rgba(255, 255, 255, 0.5)'
-						}
+						className: css.classNames.cell,
 					},
-					children)
+					children);
 			}
 
 			const lane = this.props.lanes[rowIndex];
 			if (columnIndex < 0) {
 				// row header
-				return e('td',
+				return e('th',
 					{
-						style: {
-							backgroundColor: (lane.type === 'inlet'
-								? 'rgba(255, 255, 255, 0.5)'
-								: 'rgba(0, 0, 0, 0.5)')
-						}
+						className: css.classNames.cell,
+						[css.data.laneType.key]: (lane.type === 'inlet'
+							? css.data.laneType.values.inlet
+							: css.data.laneType.values.outlet),
 					},
 					children);
 			}
 
 			return e('td',
 				{
-					style: {
-						backgroundColor: (lane.type === 'inlet'
-							? 'rgba(255, 255, 255, 0.75)'
-							: 'rgba(0, 0, 0, 0.75)')
-					}
+					className: css.classNames.cell,
+					[css.data.laneType.key]: (lane.type === 'inlet'
+						? css.data.laneType.values.inlet
+						: css.data.laneType.values.outlet),
 				},
 				children);
 		}
@@ -119,7 +143,7 @@ class BusRouter extends React.Component<Props, State> {
 						return e('div',
 							{},
 							lane.inletKey,
-							associatedParameters.map(paramKey => (
+							associatedParameters.map((paramKey: string) => (
 								e('input',
 									{
 										key: `${lane.nodeKey}-${paramKey}`,
