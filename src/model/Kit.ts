@@ -65,14 +65,6 @@ const k = {
 	},
 };
 
-/*
- * A non-texture-based parameter to a module, which can be translated to a
- * set of uniforms to be provided to the fragment shader.
- */
-export interface Parameter {
-	initialValue(): number;
-}
-
 
 // key :: ModuleType
 export const modules: { [key: string]: VideoModule } = {

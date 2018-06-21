@@ -1,6 +1,14 @@
 import { UniformValue } from '@davidisaaclee/video-graph';
 import { VideoNode } from './SimpleVideoGraph';
-import { ModuleType, Parameter } from './Kit';
+import { ModuleType } from './Kit';
+
+/*
+ * A non-texture-based parameter to a module, which can be translated to a
+ * set of uniforms to be provided to the fragment shader.
+ */
+interface Parameter {
+	initialValue(): number;
+}
 
 /*
  * Configurations of nodes to be instantiated in a VideoGraph.
