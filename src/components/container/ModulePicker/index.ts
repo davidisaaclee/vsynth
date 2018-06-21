@@ -14,7 +14,9 @@ function keys<T, K extends keyof T>(obj: T): K[] {
 const allModuleKeys = keys(modules)
 	.filter(moduleKey => [
 		'identity',
-		'pro-osc'
+		'pro-osc',
+		'dither',
+		'crosshatch'
 	].indexOf(moduleKey) === -1);
 
 const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
