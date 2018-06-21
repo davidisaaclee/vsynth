@@ -30,5 +30,8 @@ export interface VideoModule {
 
 		// display order of inlets by key
 		displayOrder: string[],
+
+		// maps inlet key to a list of parameter keys
+		associatedParameters?: { [inletKey: string]: string[] }
 	}
 }
