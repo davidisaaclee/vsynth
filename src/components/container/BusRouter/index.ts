@@ -11,7 +11,6 @@ import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
 import * as selectors from './selectors';
 import { Lane, Connection } from './types';
-import './style.css';
 
 const e = React.createElement;
 
