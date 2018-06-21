@@ -87,7 +87,6 @@ class App extends React.Component<Props, State> {
 							left: 0,
 							top: 0,
 							position: 'absolute',
-							opacity: 0.5,
 						}
 					},
 					e(BusRouter),
