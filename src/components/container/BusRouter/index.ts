@@ -36,6 +36,45 @@ interface State {}
 
 class BusRouter extends React.Component<Props, State> {
 
+	private RowContainer: React.StatelessComponent<{ rowIndex: number }> = (
+		({ rowIndex, children }) => {
+			return e('tr',
+				{},
+				children);
+		}
+	)
+
+	private CellContainer: React.StatelessComponent<{ rowIndex: number, columnIndex: number }> = (
+		({ rowIndex, columnIndex, children }) => {
+			if (rowIndex < 0 && columnIndex < 0) {
+				return e('td',
+					{},
+					children);
+			}
+			if (rowIndex < 0) {
+				// header
+				return e('td',
+					{
+						style: {
+							backgroundColor: 'rgba(255, 255, 255, 0.5)'
+						}
+					},
+					children)
+			}
+
+			const lane = this.props.lanes[rowIndex];
+			return e('td',
+				{
+					style: {
+						backgroundColor: (lane.type === 'inlet'
+							? 'rgba(255, 255, 255, 0.75)'
+							: 'rgba(0, 0, 0, 0.75)')
+					}
+				},
+				children);
+		}
+	)
+
 	public render() {
 		const {
 			graph, connections, busCount, lanes,
@@ -148,45 +187,6 @@ class BusRouter extends React.Component<Props, State> {
 			renderCellContainer: this.CellContainer,
 		});
 	}
-
-	private RowContainer: React.StatelessComponent<{ rowIndex: number }> = (
-		({ rowIndex, children }) => {
-			return e('tr',
-				{},
-				children);
-		}
-	)
-
-	private CellContainer: React.StatelessComponent<{ rowIndex: number, columnIndex: number }> = (
-		({ rowIndex, columnIndex, children }) => {
-			if (rowIndex < 0 && columnIndex < 0) {
-				return e('td',
-					{},
-					children);
-			}
-			if (rowIndex < 0) {
-				// header
-				return e('td',
-					{
-						style: {
-							backgroundColor: 'rgba(255, 255, 255, 0.5)'
-						}
-					},
-					children)
-			}
-
-			const lane = this.props.lanes[rowIndex];
-			return e('td',
-				{
-					style: {
-						backgroundColor: (lane.type === 'inlet'
-							? 'rgba(255, 255, 255, 0.75)'
-							: 'rgba(0, 0, 0, 0.75)')
-					}
-				},
-				children);
-		}
-	)
 
 }
 
