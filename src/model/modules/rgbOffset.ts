@@ -51,6 +51,11 @@ export const rgbOffset: VideoModule = {
 			'b': 'bOffset',
 		},
 		displayOrder: ['input', 'r', 'g', 'b'],
+		associatedParameters: {
+			'r': [params.rAmount],
+			'g': [params.gAmount],
+			'b': [params.bAmount],
+		}
 	}
 };
 

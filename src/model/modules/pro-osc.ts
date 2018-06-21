@@ -122,5 +122,8 @@ export const proOsc: VideoModule = {
 			'input': 'pixelVariable',
 		},
 		displayOrder: ['input', 'phase offset'],
+		associatedParameters: {
+			'phase offset': [parameterKeys.phaseOffsetAmount],
+		}
 	}
 }

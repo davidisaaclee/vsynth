@@ -48,6 +48,10 @@ export const scanlines: VideoModule = {
 			'phase offset': 'phaseOffsetTexture',
 		},
 		displayOrder: ['rotation', 'phase offset'],
+		associatedParameters: {
+			'rotation': [parameterKeys.rotationAmount],
+			'phase offset': [parameterKeys.phaseOffsetAmount],
+		}
 	}
 };
 
