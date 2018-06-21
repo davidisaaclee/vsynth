@@ -51,8 +51,9 @@ class BusRouter extends React.Component<Props, State> {
 					{},
 					children);
 			}
+
 			if (rowIndex < 0) {
-				// header
+				// column header
 				return e('td',
 					{
 						style: {
@@ -63,6 +64,19 @@ class BusRouter extends React.Component<Props, State> {
 			}
 
 			const lane = this.props.lanes[rowIndex];
+			if (columnIndex < 0) {
+				// row header
+				return e('td',
+					{
+						style: {
+							backgroundColor: (lane.type === 'inlet'
+								? 'rgba(255, 255, 255, 0.5)'
+								: 'rgba(0, 0, 0, 0.5)')
+						}
+					},
+					children);
+			}
+
 			return e('td',
 				{
 					style: {
