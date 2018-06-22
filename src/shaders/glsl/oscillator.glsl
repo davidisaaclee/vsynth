@@ -3,9 +3,6 @@ precision mediump float;
 const float TWO_PI = 6.28318530718;
 const float N_SCANLINES = 500.;
 
-// between 0-1, where 1 is a full period
-uniform float phaseOffset;
-
 uniform vec2 inputTextureDimensions;
 
 uniform vec3 color;
@@ -56,15 +53,18 @@ float sampleTex(sampler2D t, vec2 pt, float scale) {
 }
 
 float calculateFrequency(vec2 textureSamplePoint) {
+	// TODO: Scale by amount
 	float waveSizeSample = sampleTex(
 			waveSize,
 			textureSamplePoint,
-			waveSizeAmount);
+			// waveSizeAmount);
+			waveSizeAmount * 0. + 1.);
 
 	float speedSample = sampleTex(
 			speed,
 			textureSamplePoint,
-			speedAmount);
+			// speedAmount);
+			speedAmount * 0. + 1.);
 
 	return ceil(waveSizeSample * waveSizeSample * 100.)
 		+ 2. * (speedSample - 0.5);
@@ -95,7 +95,8 @@ void main() {
 	float pixelIndex =
 		uv.x / N_SCANLINES + (uv.y - mod(uv.y, 1. / N_SCANLINES));
 
-	float summedPhaseOffset = mod(phaseOffset + phaseOffsetFromTexture, 1.);
+	float frequency =
+		calculateFrequency(textureSamplePoint);
 
 	float sine =
 		(
@@ -104,13 +105,10 @@ void main() {
 				 TWO_PI
 				 * (
 					 frequency * pixelIndex
-					 + (phaseOffset + phaseOffsetFromTexture)),
+					 + phaseOffsetFromTexture),
 				 TWO_PI))
 		 + 1.)
 		/ 2.;
-
-	float frequency =
-		calculateFrequency(textureSamplePoint);
 
 
 	float duty = clamp(shape, 0.5, 1.);
@@ -119,7 +117,7 @@ void main() {
 	float p2 = 1. - p1;
 	float m1 = 0.5 / p1;
 	float m2 = 0.5 / p2;
-	float x = mod((frequency * pixelIndex) + summedPhaseOffset - 0.25, 1.);
+	float x = mod((frequency * pixelIndex) + phaseOffsetFromTexture - 0.25, 1.);
 	float inFirstDuty = 1. - step(p1, x);
 
 	float t =

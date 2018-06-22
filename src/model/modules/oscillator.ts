@@ -1,6 +1,4 @@
-import { UniformValue } from '@davidisaaclee/video-graph';
 import { VideoModule } from '../VideoModule';
-import { VideoNode } from '../SimpleVideoGraph';
 import shaderSource from '../../shaders/oscillator.generated';
 
 const parameterKeys = {
@@ -12,11 +10,6 @@ const parameterKeys = {
 	speedAmount: 'speed amount',
 	rotationAmount: 'rotation amount',
 	phaseOffsetAmount: 'phase offset amount',
-};
-
-const stateKeys = {
-	phaseOffset: 'phaseOffset',
-	frameIndex: 'frameIndex',
 };
 
 export const oscillator: VideoModule = {
@@ -85,41 +78,6 @@ export const oscillator: VideoModule = {
 			data: [gl.canvas.width, gl.canvas.height]
 		},
 	}),
-	animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => {
-		return {
-			'phaseOffset': {
-				type: 'f',
-				// TODO: be safer
-				data: node.state[stateKeys.phaseOffset] || 0
-			}
-		};
-	},
-	update: (frameIndex: number, state: Record<string, number>, node: VideoNode) => {
-		const previousFrameIndex = state[stateKeys.frameIndex];
-		const previousPhaseOffset = state[stateKeys.phaseOffset];
-		const frequencyUniform = node.uniforms.frequency;
-
-		if (previousFrameIndex == null || previousPhaseOffset == null || frequencyUniform == null) {
-			return {
-				[stateKeys.frameIndex]: frameIndex,
-				[stateKeys.phaseOffset]: 0
-			};
-		}
-
-		// TODO: There's no longer a scalar frequency uniform.
-
-		// frequency is multiplied by 2pi inside shader;
-		// period = (2pi / (freq * 2pi)) = 1 / freq
-		const period = 1 / (frequencyUniform.data as number);
-
-		const frameDelta = frameIndex - previousFrameIndex;
-		const phaseDelta = frameDelta / period;
-
-		return {
-			[stateKeys.frameIndex]: frameIndex,
-			[stateKeys.phaseOffset]: (previousPhaseOffset + phaseDelta) % 1
-		};
-	},
 	inlets: {
 		uniformMappings: {
 			'waveSize': 'waveSize',
