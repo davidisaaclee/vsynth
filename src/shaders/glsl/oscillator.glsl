@@ -55,6 +55,21 @@ float sampleTex(sampler2D t, vec2 pt, float scale) {
 		* scale;
 }
 
+float calculateFrequency(vec2 textureSamplePoint) {
+	float waveSizeSample = sampleTex(
+			waveSize,
+			textureSamplePoint,
+			waveSizeAmount);
+
+	float speedSample = sampleTex(
+			speed,
+			textureSamplePoint,
+			speedAmount);
+
+	return ceil(waveSizeSample * waveSizeSample * 100.)
+		+ 2. * (speedSample - 0.5);
+}
+
 void main() {
 	vec2 textureSamplePoint =
 		gl_FragCoord.xy / inputTextureDimensions;
@@ -82,19 +97,6 @@ void main() {
 
 	float summedPhaseOffset = mod(phaseOffset + phaseOffsetFromTexture, 1.);
 
-	float waveSizeSample = sampleTex(
-			waveSize,
-			textureSamplePoint,
-			waveSizeAmount);
-
-	float speedSample = sampleTex(
-			speed,
-			textureSamplePoint,
-			speedAmount);
-
-	float frequency = ceil(waveSizeSample * waveSizeSample * 100.)
-		+ 2. * (speedSample - 0.5);
-
 	float sine =
 		(
 		 sin(
@@ -106,6 +108,9 @@ void main() {
 				 TWO_PI))
 		 + 1.)
 		/ 2.;
+
+	float frequency =
+		calculateFrequency(textureSamplePoint);
 
 
 	float duty = clamp(shape, 0.5, 1.);

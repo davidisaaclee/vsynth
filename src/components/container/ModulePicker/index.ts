@@ -13,7 +13,6 @@ function keys<T, K extends keyof T>(obj: T): K[] {
 
 const allModuleKeys = keys(modules)
 	.filter(moduleKey => [
-		'identity',
 		'pro-osc',
 		'dither',
 		'crosshatch'
