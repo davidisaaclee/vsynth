@@ -4,12 +4,12 @@ import { VideoNode } from '../SimpleVideoGraph';
 import shaderSource from '../../shaders/oscillator.generated';
 
 const parameterKeys = {
-	baseFrequency: 'baseFrequency',
-	fineFrequency: 'fineFrequency',
 	red: 'red',
 	green: 'green',
 	blue: 'blue',
 	shape: 'shape',
+	waveSizeAmount: 'wave size amount',
+	speedAmount: 'speed amount',
 	rotationAmount: 'rotation amount',
 	phaseOffsetAmount: 'phase offset amount',
 };
@@ -23,10 +23,10 @@ export const oscillator: VideoModule = {
 	shaderSource,
 	parameters: {
 		specifications: {
-			[parameterKeys.baseFrequency]: {
-				initialValue: () => Math.random(),
+			[parameterKeys.waveSizeAmount]: {
+				initialValue: () => 0.5,
 			},
-			[parameterKeys.fineFrequency]: {
+			[parameterKeys.speedAmount]: {
 				initialValue: () => 0.5,
 			},
 			[parameterKeys.red]: {
@@ -49,14 +49,13 @@ export const oscillator: VideoModule = {
 			},
 		},
 		toUniforms: values => ({
-			frequency: {
+			waveSizeAmount: {
 				type: 'f',
-				data: ((baseFreq, fineFreq) => {
-					const factor = Math.ceil(Math.pow(baseFreq, 2) * 100);
-					const offsettingScaleFactor = 2 * (fineFreq - 0.5);
-
-					return offsettingScaleFactor + factor;
-				})(values[parameterKeys.baseFrequency], values[parameterKeys.fineFrequency])
+				data: values[parameterKeys.waveSizeAmount]
+			},
+			speedAmount: {
+				type: 'f',
+				data: values[parameterKeys.speedAmount]
 			},
 			shape: {
 				type: 'f',
@@ -85,10 +84,6 @@ export const oscillator: VideoModule = {
 			type: '2f',
 			data: [gl.canvas.width, gl.canvas.height]
 		},
-		'frequency': {
-			type: 'f',
-			data: Math.random() * 1
-		}
 	}),
 	animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => {
 		return {
@@ -111,6 +106,8 @@ export const oscillator: VideoModule = {
 			};
 		}
 
+		// TODO: There's no longer a scalar frequency uniform.
+
 		// frequency is multiplied by 2pi inside shader;
 		// period = (2pi / (freq * 2pi)) = 1 / freq
 		const period = 1 / (frequencyUniform.data as number);
@@ -125,11 +122,20 @@ export const oscillator: VideoModule = {
 	},
 	inlets: {
 		uniformMappings: {
+			'waveSize': 'waveSize',
+			'speed': 'speed',
 			'rotation': 'rotationTheta',
 			'phase offset': 'phaseOffsetTexture',
 		},
-		displayOrder: ['rotation', 'phase offset'],
+		displayOrder: [
+			'waveSize',
+			'speed',
+			'rotation',
+			'phase offset',
+		],
 		associatedParameters: {
+			'waveSize': [parameterKeys.waveSizeAmount],
+			'speed': [parameterKeys.speedAmount],
 			'rotation': [parameterKeys.rotationAmount],
 			'phase offset': [parameterKeys.phaseOffsetAmount],
 		}

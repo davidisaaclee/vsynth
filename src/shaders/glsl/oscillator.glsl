@@ -6,12 +6,20 @@ const float N_SCANLINES = 500.;
 // between 0-1, where 1 is a full period
 uniform float phaseOffset;
 
-// in cycles / frame
-uniform float frequency;
-
 uniform vec2 inputTextureDimensions;
 
 uniform vec3 color;
+
+// Size of the waves created by the oscillator
+// (Corresponds to the integral harmonic of the frequency.)
+uniform sampler2D waveSize;
+uniform float waveSizeAmount;
+
+// The speed of the waves created by the oscillator
+// (Corresponds to the inharmonic portion of the frequency.)
+// 0, 0.5, 1 = still
+uniform sampler2D speed;
+uniform float speedAmount;
 
 // between 0-1, scaled to 0-2pi
 uniform sampler2D rotationTheta;
@@ -39,27 +47,32 @@ float maxComponent(vec3 v) {
 	return max(v.x, max(v.y, v.z));
 }
 
+float sampleTex(sampler2D t, vec2 pt, float scale) {
+	return maxComponent(
+			texture2D(
+				t,
+				pt).rgb)
+		* scale;
+}
+
 void main() {
 	vec2 textureSamplePoint =
 		gl_FragCoord.xy / inputTextureDimensions;
 
-	float theta = maxComponent(
-			texture2D(
-				rotationTheta,
-				textureSamplePoint).rgb
-			) * TWO_PI * rotationAmount;
+	float theta = sampleTex(
+			rotationTheta,
+			textureSamplePoint,
+			rotationAmount) * TWO_PI;
 
-	vec2 position =
-		rotate(
-				gl_FragCoord.xy,
-				theta,
-				inputTextureDimensions * 0.5
-				);
-	float phaseOffsetFromTexture =
-		maxComponent(texture2D(
-					phaseOffsetTexture,
-					textureSamplePoint).rgb)
-		* phaseOffsetTextureAmount;
+	vec2 position = rotate(
+			gl_FragCoord.xy,
+			theta,
+			inputTextureDimensions * 0.5);
+
+	float phaseOffsetFromTexture = sampleTex(
+			phaseOffsetTexture,
+			textureSamplePoint,
+			phaseOffsetTextureAmount);
 
 	highp vec2 uv =
 		position / inputTextureDimensions;
@@ -69,6 +82,18 @@ void main() {
 
 	float summedPhaseOffset = mod(phaseOffset + phaseOffsetFromTexture, 1.);
 
+	float waveSizeSample = sampleTex(
+			waveSize,
+			textureSamplePoint,
+			waveSizeAmount);
+
+	float speedSample = sampleTex(
+			speed,
+			textureSamplePoint,
+			speedAmount);
+
+	float frequency = ceil(waveSizeSample * waveSizeSample * 100.)
+		+ 2. * (speedSample - 0.5);
 
 	float sine =
 		(
