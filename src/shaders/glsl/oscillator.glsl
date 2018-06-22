@@ -35,15 +35,15 @@ vec2 rotate(vec2 v, float a, vec2 center) {
 	return center + m * (v - center);
 }
 
-float luminance(vec3 rgb) {
-	return (0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b);
+float maxComponent(vec3 v) {
+	return max(v.x, max(v.y, v.z));
 }
 
 void main() {
 	vec2 textureSamplePoint =
 		gl_FragCoord.xy / inputTextureDimensions;
 
-	float theta = luminance(
+	float theta = maxComponent(
 			texture2D(
 				rotationTheta,
 				textureSamplePoint).rgb
@@ -56,7 +56,7 @@ void main() {
 				inputTextureDimensions * 0.5
 				);
 	float phaseOffsetFromTexture =
-		luminance(texture2D(
+		maxComponent(texture2D(
 					phaseOffsetTexture,
 					textureSamplePoint).rgb)
 		* phaseOffsetTextureAmount;
