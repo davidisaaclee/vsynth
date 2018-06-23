@@ -1,41 +1,45 @@
 import { UniformValue } from '@davidisaaclee/video-graph';
-
-/*
- * A non-texture-based parameter to a module, which can be translated to a
- * set of uniforms to be provided to the fragment shader.
- */
-interface Parameter {
-	initialValue(): number;
-}
+import { Inlet } from './Inlet';
 
 /*
  * Configurations of nodes to be instantiated in a VideoGraph.
  */
-export type VideoModule = ShaderVideoModule;
-
-export function shaderVideoModule(config: ShaderVideoModule): VideoModule {
-	return config;
-}
-
-export interface ShaderVideoModule {
-	shaderSource: string;
-
-	parameters?: {
-		specifications: { [identifier: string]: Parameter },
-		toUniforms: (values: { [identifier: string]: number }) => { [identifier: string]: UniformValue }
+export interface VideoModule {
+	parameters: {
+		keys: string[],
+		defaultValues: Record<string, number>,
 	};
 
-	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
+	inlets: {
+		keys: string[],
+		associatedParameters: Record<string, string[]>,
+	};
+}
 
-	inlets?: {
-		// maps display name to uniform identifier
-		uniformMappings: { [key: string]: string },
+export interface SubgraphModule extends VideoModule {
+	// Maps a set of parameters from an instance of this module to a mapping from subnode key to a parameter set for that subnode
+	// :: Record<ParamKey, ParamValue> -> Record<NodeKey, Record<ParamKey, ParamValue>>
+	parametersToSubParameters: (params: Record<string, number>) => Record<string, Record<string, number>>;
+	
+	// Maps each inlet to a set of subinlets
+	inletsToSubInlets: Record<string, Inlet>[];
+}
 
-		// display order of inlets by key
-		displayOrder: string[],
+export interface ShaderModule extends VideoModule {
+	shaderSource: string;
 
-		// maps inlet key to a list of parameter keys
-		associatedParameters?: { [inletKey: string]: string[] }
-	}
+	// :: Record<UniformKey, UniformValue>;
+	defaultUniforms: Record<string, UniformValue>;
+
+	// :: Record<ParamKey, ParamValue> -> Record<UniformKey, UniformValue>
+	parametersToUniforms: (params: Record<string, number>) => Record<string, UniformValue>;
+
+	// :: Record<InletKey, UniformKey>
+	inletsToUniforms: Record<string, string>;
+}
+
+
+export function shaderVideoModule(config: ShaderModule): VideoModule {
+	return config;
 }
 

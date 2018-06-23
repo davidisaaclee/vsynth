@@ -19,11 +19,23 @@ export interface InletSpecification {
 	inlet: string;
 }
 
+type SubgraphModuleType = 'oscillator-subgraph';
+type ShaderModuleType = 'oscillator';
+
 export interface VideoNode {
-	type: ModuleType;
-	parameters: { [identifier: string]: number };
-	uniforms: { [identifier: string]: UniformValue };
+	parameters: Record<string, number>;
 }
+
+export interface SubgraphNode extends VideoNode {
+	type: SubgraphModuleType;
+	subgraph: SimpleVideoGraph;
+}
+
+export interface ShaderNode extends VideoNode {
+	type: ShaderModuleType;
+	uniforms: Record<string, UniformValue>;
+}
+
 
 export type SimpleVideoGraph =
 	Graph<VideoNode, InletSpecification>;
