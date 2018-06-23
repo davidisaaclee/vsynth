@@ -1,4 +1,4 @@
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 import shaderSource from '../../shaders/scanlines';
 
 const parameterKeys = {
@@ -7,7 +7,7 @@ const parameterKeys = {
 	phaseOffsetAmount: 'phase offset amount',
 };
 
-export const scanlines: VideoModule = {
+export const scanlines: VideoModule = shaderVideoModule({
 	shaderSource,
 	parameters: {
 		specifications: {
@@ -53,5 +53,5 @@ export const scanlines: VideoModule = {
 			'phase offset': [parameterKeys.phaseOffsetAmount],
 		}
 	}
-};
+});
 

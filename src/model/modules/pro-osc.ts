@@ -1,6 +1,5 @@
-
 import { UniformValue } from '@davidisaaclee/video-graph';
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 import { VideoNode } from '../SimpleVideoGraph';
 import shaderSource from '../../shaders/pro-osc';
 
@@ -19,7 +18,7 @@ const stateKeys = {
 	frameIndex: 'frameIndex',
 };
 
-export const proOsc: VideoModule = {
+export const proOsc: VideoModule = shaderVideoModule({
 	shaderSource,
 	parameters: {
 		specifications: {
@@ -126,4 +125,5 @@ export const proOsc: VideoModule = {
 			'phase offset': [parameterKeys.phaseOffsetAmount],
 		}
 	}
-}
+});
+

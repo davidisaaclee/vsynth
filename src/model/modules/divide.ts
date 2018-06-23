@@ -1,5 +1,5 @@
 import { glsl } from '@davidisaaclee/video-graph';
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 
 const shaderSource = glsl`
 	precision mediump float;
@@ -21,7 +21,7 @@ const shaderSource = glsl`
 
 // Takes the component-wise quotient of two textures.
 // Guards against division-by-zero by clamping values below DIVISOR_MIN.
-export const divide: VideoModule = {
+export const divide: VideoModule = shaderVideoModule({
 	shaderSource,
 	defaultUniforms: (gl: WebGLRenderingContext) => ({
 		'inputTextureDimensions': {
@@ -36,4 +36,4 @@ export const divide: VideoModule = {
 		},
 		displayOrder: ['numerator', 'denominator'],
 	}
-};
+});

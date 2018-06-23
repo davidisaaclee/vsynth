@@ -1,5 +1,5 @@
 import { glsl, UniformValue } from '@davidisaaclee/video-graph';
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 import { VideoNode } from '../SimpleVideoGraph';
 
 const stateKeys = {
@@ -70,7 +70,7 @@ const shaderSource = glsl`
 `;
 
 // Calculates the phase offset delta for an oscillator, given a frequency.
-export const phaseDelta: VideoModule = {
+export const phaseDelta: VideoModule = shaderVideoModule({
 	shaderSource,
 	defaultUniforms: (gl: WebGLRenderingContext) => ({
 		'inputTextureDimensions': {
@@ -101,4 +101,4 @@ export const phaseDelta: VideoModule = {
 			}
 		};
 	},
-};
+});

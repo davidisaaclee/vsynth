@@ -1,5 +1,5 @@
 import shaderSource from '../../shaders/rgb-offset.generated';
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 
 const params = {
 	rAmount: 'rAmount',
@@ -7,7 +7,7 @@ const params = {
 	bAmount: 'bAmount',
 };
 
-export const rgbOffset: VideoModule = {
+export const rgbOffset: VideoModule = shaderVideoModule({
 	shaderSource,
 	parameters: {
 		specifications: {
@@ -57,5 +57,5 @@ export const rgbOffset: VideoModule = {
 			'b': [params.bAmount],
 		}
 	}
-};
+});
 

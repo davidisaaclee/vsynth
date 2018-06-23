@@ -1,7 +1,7 @@
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 import identityShader from '../../shaders/identity';
 
-export const identity: VideoModule = {
+export const identity: VideoModule = shaderVideoModule({
 	shaderSource: identityShader,
 	defaultUniforms: (gl: WebGLRenderingContext) => ({
 		'inputTextureDimensions': {
@@ -15,4 +15,4 @@ export const identity: VideoModule = {
 		},
 		displayOrder: ['input'],
 	}
-};
+});

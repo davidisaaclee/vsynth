@@ -1,5 +1,5 @@
 import { glsl } from '@davidisaaclee/video-graph';
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 
 const shaderSource = glsl`
 	precision mediump float;
@@ -19,7 +19,7 @@ const shaderSource = glsl`
 `;
 
 // Adds two textures together, and takes the fractional component of the result.
-export const addFract: VideoModule = {
+export const addFract: VideoModule = shaderVideoModule({
 	shaderSource,
 	defaultUniforms: (gl: WebGLRenderingContext) => ({
 		'inputTextureDimensions': {
@@ -34,4 +34,5 @@ export const addFract: VideoModule = {
 		},
 		displayOrder: ['a', 'b'],
 	}
-};
+});
+

@@ -1,11 +1,11 @@
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 import shaderSource from '../../shaders/mixer';
 
 const parameterKeys = {
 	mixAmount: 'mix amount',
 };
 
-export const mixer: VideoModule = {
+export const mixer: VideoModule = shaderVideoModule({
 	shaderSource,
 	parameters: {
 		specifications: {
@@ -27,5 +27,5 @@ export const mixer: VideoModule = {
 		},
 		displayOrder: ['a', 'b']
 	}
-};
+});
 

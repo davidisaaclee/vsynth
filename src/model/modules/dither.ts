@@ -1,7 +1,7 @@
 import shaderSource from '../../shaders/dither.generated';
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 
-export const dither: VideoModule = {
+export const dither: VideoModule = shaderVideoModule({
 	shaderSource,
 	defaultUniforms: (gl: WebGLRenderingContext) => ({
 		'inputTextureDimensions': {
@@ -15,5 +15,5 @@ export const dither: VideoModule = {
 		},
 		displayOrder: ['input'],
 	}
-};
+});
 

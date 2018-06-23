@@ -1,7 +1,7 @@
 import shaderSource from '../../shaders/crosshatch.generated';
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 
-export const crosshatch: VideoModule = {
+export const crosshatch: VideoModule = shaderVideoModule({
 	shaderSource,
 	defaultUniforms: (gl: WebGLRenderingContext) => ({
 		'inputTextureDimensions': {
@@ -15,5 +15,5 @@ export const crosshatch: VideoModule = {
 		},
 		displayOrder: ['input'],
 	}
-};
+});
 

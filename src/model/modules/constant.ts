@@ -1,11 +1,11 @@
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 import shaderSource from '../../shaders/constant';
 
 const parameterKeys = {
 	value: 'value',
 };
 
-export const constant: VideoModule = {
+export const constant: VideoModule = shaderVideoModule({
 	shaderSource,
 	parameters: {
 		specifications: {
@@ -20,4 +20,5 @@ export const constant: VideoModule = {
 			}
 		})
 	},
-};
+});
+

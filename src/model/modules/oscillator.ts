@@ -1,4 +1,4 @@
-import { VideoModule } from '../VideoModule';
+import { VideoModule, shaderVideoModule } from '../VideoModule';
 import shaderSource from '../../shaders/oscillator.generated';
 
 const parameterKeys = {
@@ -12,7 +12,7 @@ const parameterKeys = {
 	phaseOffsetAmount: 'phase offset amount',
 };
 
-export const oscillator: VideoModule = {
+export const oscillator: VideoModule = shaderVideoModule({
 	shaderSource,
 	parameters: {
 		specifications: {
@@ -98,4 +98,5 @@ export const oscillator: VideoModule = {
 			'phase offset': [parameterKeys.phaseOffsetAmount],
 		}
 	}
-}
+});
+

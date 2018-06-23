@@ -12,13 +12,22 @@ interface Parameter {
 /*
  * Configurations of nodes to be instantiated in a VideoGraph.
  */
-export interface VideoModule {
+export type VideoModule = ShaderVideoModule;
+
+export function shaderVideoModule(config: ShaderVideoModule): VideoModule {
+	return config;
+}
+
+export interface ShaderVideoModule {
 	shaderSource: string;
+
 	parameters?: {
 		specifications: { [identifier: string]: Parameter },
 		toUniforms: (values: { [identifier: string]: number }) => { [identifier: string]: UniformValue }
 	};
+
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
+
 	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => { [identifier: string]: UniformValue };
 
 	// Update internal state on each frame if needed.
