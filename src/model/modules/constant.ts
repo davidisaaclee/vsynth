@@ -1,24 +1,38 @@
-import { VideoModule, shaderVideoModule } from '../VideoModule';
+import { VideoModule, ShaderModule } from '../VideoModule';
 import shaderSource from '../../shaders/constant';
 
 const parameterKeys = {
 	value: 'value',
 };
 
-export const constant: VideoModule = shaderVideoModule({
-	shaderSource,
+export const constant: VideoModule<ShaderModule> = {
 	parameters: {
-		specifications: {
-			[parameterKeys.value]: {
-				initialValue: () => 1,
-			}
-		},
-		toUniforms: values => ({
+		keys: [parameterKeys.value],
+		defaultValues: {
+			[parameterKeys.value]: 1
+		}
+	},
+
+	inlets: {
+		keys: [],
+		associatedParameters: {},
+	},
+
+	details: {
+		type: 'shader',
+
+		shaderSource,
+
+		defaultUniforms: () => ({}),
+
+		inletsToUniforms: {},
+
+		parametersToUniforms: values => ({
 			'value': {
 				type: '3f',
 				data: [values[parameterKeys.value], values[parameterKeys.value], values[parameterKeys.value]]
 			}
-		})
-	},
-});
+		}),
+	}
+};
 

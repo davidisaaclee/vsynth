@@ -7,8 +7,8 @@ import { empty as emptyGraph } from '@davidisaaclee/graph';
 import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
 import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, RuntimeModule, videoGraphFromSimpleVideoGraph } from '../../../model/SimpleVideoGraph';
-import { modules as videoModules } from '../../../model/Kit';
-import { VideoModule } from '../../../model/VideoModule';
+import * as Kit from '../../../model/Kit';
+import { VideoModule, ShaderModule } from '../../../model/VideoModule';
 import * as k from '../../../constants';
 import * as selectors from './selectors';
 
@@ -88,8 +88,8 @@ class Screen extends React.Component<Props, State> {
 
 	private setup(gl: WebGLRenderingContext) {
 		this.gl = gl;
-		this.modulesRuntime = mapValues(videoModules, (mod: VideoModule): RuntimeModule => ({
-			program: createProgramWithFragmentShader(gl, mod.shaderSource)
+		this.modulesRuntime = mapValues(Kit.shaderModules, (mod: VideoModule<ShaderModule>): RuntimeModule => ({
+			program: createProgramWithFragmentShader(gl, mod.details.shaderSource)
 		}));
 		this.forceUpdate();
 	}

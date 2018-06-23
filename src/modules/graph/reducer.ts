@@ -1,6 +1,6 @@
 import { ActionType } from 'typesafe-actions';
 import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVideoGraph';
-import { modules } from '../../model/Kit';
+import * as Kit from '../../model/Kit';
 import * as Constants from './constants';
 import * as actions from './actions';
 
@@ -87,12 +87,19 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				};
 
 				// Write new uniforms from parameter change to node.
-				const videoModule = modules[node.type];
-				if (videoModule.parameters != null) {
+				const videoModule = Kit.moduleForNode(node);
+
+				if (node.nodeType === 'shader') {
+					if (videoModule.details.type !== 'shader') {
+						throw new Error("Mismatched node and module types");
+					}
+
 					node.uniforms = {
 						...node.uniforms,
-						...videoModule.parameters.toUniforms(node.parameters)
+						...videoModule.details.parametersToUniforms(node.parameters)
 					};
+				} else {
+					throw new Error("TODO");
 				}
 
 				return {

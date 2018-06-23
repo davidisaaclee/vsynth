@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Modal from 'react-modal';
-import { modules as videoModules, ModuleType } from './model/Kit';
+import * as Kit from './model/Kit';
 import { videoModuleSpecFromModuleType } from './model/SimpleVideoGraph';
 import Screen from './components/container/Screen';
 import BusRouter from './components/container/BusRouter';
@@ -32,7 +32,7 @@ class App extends React.Component<Props, State> {
 		if (modal === AppModule.Modals.PICK_MODULE) {
 			return e(ModulePicker,
 				{
-					addModule: (modType: ModuleType) => {
+					addModule: (modType: Kit.ModuleType) => {
 						this.props.addModule(modType);
 						this.props.closeModal();
 					}
@@ -141,7 +141,7 @@ interface StateProps {
 
 interface DispatchProps {
 	closeModal: () => any;
-	addModule: (modType: ModuleType) => any;
+	addModule: (modType: Kit.ModuleType) => any;
 	addBus: () => any;
 	openNodePicker: () => any;
 }
@@ -163,9 +163,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 				nodeKey));
 
 			// HACK: Automatically connect all inlets to default bus (-1);
-			const mod = videoModules[modType];
+			const mod = Kit.moduleForType(modType);
 			if (mod.inlets != null) {
-				Object.keys(mod.inlets.uniformMappings).forEach(inletKey => {
+				mod.inlets.keys.forEach(inletKey => {
 					dispatch(Graph.actions.setInletConnection(
 						nodeKey,
 						inletKey,

@@ -1,17 +1,13 @@
 import * as React from 'react';
-import { modules, ModuleType } from '../../../model/Kit';
+import * as Kit from '../../../model/Kit';
 
 const e = React.createElement;
 
 interface Props {
-	addModule: (modType: ModuleType) => any;
+	addModule: (modType: Kit.ModuleType) => any;
 }
 
-function keys<T, K extends keyof T>(obj: T): K[] {
-	return Object.keys(obj) as K[];
-}
-
-const allModuleKeys = keys(modules)
+const allModuleKeys = Kit.moduleKeys
 	.filter(moduleKey => [
 		'pro-osc',
 		'dither',

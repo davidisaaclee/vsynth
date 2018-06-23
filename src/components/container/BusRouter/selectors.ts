@@ -3,7 +3,7 @@ import { createSelector, Selector } from 'reselect';
 import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, VideoNode } from '../../../model/SimpleVideoGraph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
-import { modules as videoModules } from '../../../model/Kit';
+import * as Kit from '../../../model/Kit';
 import { Lane } from './types';
 
 export const busCount =
@@ -21,12 +21,9 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 		nodeOrder,
 		({ key: nodeKey, node }) => {
 			const videoMod =
-				videoModules[node.type];
+				Kit.moduleForNode(node);
 
-			const inletKeys =
-				videoMod.inlets == null
-				? []
-				: videoMod.inlets.displayOrder;
+			const inletKeys = videoMod.inlets.keys;
 
 			return [
 				{

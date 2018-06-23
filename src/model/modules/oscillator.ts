@@ -1,4 +1,4 @@
-import { ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule } from '../VideoModule';
 import shaderSource from '../../shaders/oscillator.generated';
 
 const parameterKeys = {
@@ -12,9 +12,7 @@ const parameterKeys = {
 	phaseOffsetAmount: 'phase offset amount',
 };
 
-export const oscillator: ShaderModule = {
-	shaderSource,
-
+export const oscillator: VideoModule<ShaderModule> = {
 	parameters: {
 		keys: Object.keys(parameterKeys),
 		defaultValues: {
@@ -45,50 +43,56 @@ export const oscillator: ShaderModule = {
 		}
 	},
 
-	defaultUniforms: (gl: WebGLRenderingContext) => ({
-		'inputTextureDimensions': {
-			type: '2f',
-			data: [gl.canvas.width, gl.canvas.height]
-		},
-	}),
+	details: {
+		type: 'shader',
 
-	parametersToUniforms: values => ({
-		waveSizeAmount: {
-			type: 'f',
-			data: values[parameterKeys.waveSizeAmount]
-		},
-		speedAmount: {
-			type: 'f',
-			data: values[parameterKeys.speedAmount]
-		},
-		shape: {
-			type: 'f',
-			data: values[parameterKeys.shape]
-		},
-		rotationAmount: {
-			type: 'f',
-			data: values[parameterKeys.rotationAmount]
-		},
-		phaseOffsetTextureAmount: {
-			type: 'f',
-			data: values[parameterKeys.phaseOffsetAmount]
-		},
-		color: {
-			type: '3f',
-			data: [
-				values[parameterKeys.red],
-				values[parameterKeys.green],
-				values[parameterKeys.blue],
-			]
-		},
-	}),
+		shaderSource,
 
-	inletsToUniforms: {
-		'waveSize': 'waveSize',
-		'speed': 'speed',
-		'rotation': 'rotationTheta',
-		'phase offset': 'phaseOffsetTexture',
-	},
+		defaultUniforms: (gl: WebGLRenderingContext) => ({
+			'inputTextureDimensions': {
+				type: '2f',
+				data: [gl.canvas.width, gl.canvas.height]
+			},
+		}),
+
+		parametersToUniforms: values => ({
+			waveSizeAmount: {
+				type: 'f',
+				data: values[parameterKeys.waveSizeAmount]
+			},
+			speedAmount: {
+				type: 'f',
+				data: values[parameterKeys.speedAmount]
+			},
+			shape: {
+				type: 'f',
+				data: values[parameterKeys.shape]
+			},
+			rotationAmount: {
+				type: 'f',
+				data: values[parameterKeys.rotationAmount]
+			},
+			phaseOffsetTextureAmount: {
+				type: 'f',
+				data: values[parameterKeys.phaseOffsetAmount]
+			},
+			color: {
+				type: '3f',
+				data: [
+					values[parameterKeys.red],
+					values[parameterKeys.green],
+					values[parameterKeys.blue],
+				]
+			},
+		}),
+
+		inletsToUniforms: {
+			'waveSize': 'waveSize',
+			'speed': 'speed',
+			'rotation': 'rotationTheta',
+			'phase offset': 'phaseOffsetTexture',
+		},
+	}
 
 };
 

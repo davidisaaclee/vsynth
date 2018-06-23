@@ -129,14 +129,9 @@ class BusRouter extends React.Component<Props, State> {
 			renderRowHeaderContent: (index: number) => (lane => {
 				if (lane.type === 'inlet') {
 					const node = Graph.nodeForKey(graph, lane.nodeKey)!;
-					const videoModule = Kit.modules[node.type];
-					const hasAssociatedParametersForInlet =
-						videoModule.inlets != null 
-						&& videoModule.inlets.associatedParameters != null
-						&& videoModule.inlets.associatedParameters[lane.inletKey] != null;
-
-					const associatedParameters = hasAssociatedParametersForInlet
-						? videoModule.inlets!.associatedParameters![lane.inletKey]
+					const videoModule = Kit.moduleForNode(node);
+					const associatedParameters = videoModule.inlets.associatedParameters[lane.inletKey] != null
+						? videoModule.inlets.associatedParameters[lane.inletKey]
 						: [];
 					return e('div',
 						{

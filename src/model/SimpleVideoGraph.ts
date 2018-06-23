@@ -3,7 +3,6 @@
  * for use in a Redux store.
  */
 
-import { mapValues } from 'lodash';
 import {
 	Graph, Edge,
 	mapNodes, mapEdges, nodeForKey
@@ -13,26 +12,26 @@ import {
 	PluginConnection, UniformValue,
 	UniformSpecification
 } from '@davidisaaclee/video-graph';
-import { ModuleType, modules } from './Kit';
+import * as Kit from './Kit';
 
 export interface InletSpecification {
 	inlet: string;
 }
 
-type SubgraphModuleType = 'oscillator-subgraph';
-type ShaderModuleType = 'oscillator';
+export type VideoNode = {
+	parameters: Record<string, number>,
+} & (
+	({ nodeType: 'subgraph' } & SubgraphNode)
+	| ({ nodeType: 'shader' } & ShaderNode)
+);
 
-export interface VideoNode {
-	parameters: Record<string, number>;
-}
-
-export interface SubgraphNode extends VideoNode {
-	type: SubgraphModuleType;
+export interface SubgraphNode {
+	type: Kit.SubgraphModuleType;
 	subgraph: SimpleVideoGraph;
 }
 
-export interface ShaderNode extends VideoNode {
-	type: ShaderModuleType;
+export interface ShaderNode {
+	type: Kit.ShaderModuleType;
 	uniforms: Record<string, UniformValue>;
 }
 
@@ -46,27 +45,27 @@ export type Edge = Edge<InletSpecification>;
 
 // -- Methods
 
-export function videoModuleSpecFromModuleType(moduleType: ModuleType): VideoNode {
-	const mod = modules[moduleType];
+export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): VideoNode {
+	const mod = Kit.moduleForType(moduleType);
 	if (mod == null) {
 		throw new Error("Invalid video module");
 	}
 
-	const parameters = mod.parameters == null
-		? {}
-		: mapValues(
-			mod.parameters.specifications,
-			param => param.initialValue()
-		);
-	const uniforms = mod.parameters == null
-		? {}
-		: mod.parameters.toUniforms(parameters);
+	const parameters = mod.parameters.defaultValues;
 
-	return {
-		type: moduleType,
-		uniforms,
-		parameters,
-	};
+	if (mod.details.type === 'shader') {
+		const uniforms =
+			mod.details.parametersToUniforms(parameters);
+		return {
+			nodeType: 'shader',
+			type: moduleType,
+			parameters,
+			uniforms
+		};
+	} else {
+		throw new Error("TODO");
+	}
+
 }
 
 // Holds all the necessary information to use a specific video module
@@ -82,46 +81,57 @@ export function videoGraphFromSimpleVideoGraph(
 	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {
-	const mappedNodes = mapNodes(graph, (moduleSpec: VideoNode): PluginNode => {
-		const runtimeModule = runtime[moduleSpec.type];
-		const moduleConfiguration = modules[moduleSpec.type];
+	const mappedNodes = mapNodes(graph, (node: VideoNode): PluginNode => {
+		const runtimeModule = runtime[node.type];
+		const videoModule = Kit.moduleForNode(node);
 
 		if (runtimeModule == null) {
-			throw new Error(`No runtime found for module type: ${moduleSpec.type}`);
+			throw new Error(`No runtime found for module type: ${node.type}`);
 		}
-		if (moduleConfiguration == null) {
-			throw new Error(`No module configuration found for module type: ${moduleSpec.type}`);
+		if (videoModule == null) {
+			throw new Error(`No module configuration found for module type: ${node.type}`);
 		}
 
-		const defaultUniforms = moduleConfiguration.defaultUniforms == null
-			? {} 
-			: moduleConfiguration.defaultUniforms(gl);
-
-		return {
-			program: runtimeModule.program,
-			uniforms: {
-				...uniformValuesToSpec(defaultUniforms),
-				...uniformValuesToSpec(moduleSpec.uniforms),
-			}
-		};
-	});
-
-	return mapEdges(
-		mappedNodes,
-		(inletSpec: InletSpecification, src: string, dst: string): PluginConnection => {
-			const moduleConfiguration = modules[nodeForKey(graph, src)!.type];
-
-			if (moduleConfiguration == null) {
-				throw new Error(`No module configuration found for module type: ${nodeForKey(graph, src)!.type}`);
-			}
-			if (moduleConfiguration.inlets == null) {
-				throw new Error("Edge connecting to node with no inlets");
+		if (videoModule.details.type === 'shader') {
+			if (node.nodeType !== 'shader') {
+				throw new Error("Mismatched node and module types");
 			}
 
 			return {
-				uniformIdentifier: moduleConfiguration.inlets.uniformMappings[inletSpec.inlet]
+				program: runtimeModule.program,
+				uniforms: {
+					...uniformValuesToSpec(videoModule.details.defaultUniforms(gl)),
+					...uniformValuesToSpec(node.uniforms),
+				}
 			};
+		} else {
+			throw new Error('TODO');
+		}
+	});
+
+	const videoGraph = mapEdges(
+		mappedNodes,
+		(inletSpec: InletSpecification, inletNodeKey: string, outletNodeKey: string): PluginConnection => {
+			const inletNode = nodeForKey(graph, inletNodeKey)!;
+			const videoModule = Kit.moduleForNode(inletNode);
+
+			if (videoModule == null) {
+				throw new Error(`No module configuration found for module type: ${nodeForKey(graph, inletNodeKey)!.type}`);
+			}
+			if (videoModule.inlets == null) {
+				throw new Error("Edge connecting to node with no inlets");
+			}
+			
+			if (videoModule.details.type === 'shader') {
+				return {
+					uniformIdentifier: videoModule.details.inletsToUniforms[inletSpec.inlet]
+				};
+			} else {
+				throw new Error("TODO");
+			}
 		});
+
+	return videoGraph;
 }
 
 function uniformValuesToSpec(
