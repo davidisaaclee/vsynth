@@ -98,8 +98,6 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 						...node.uniforms,
 						...videoModule.details.parametersToUniforms(node.parameters)
 					};
-				} else {
-					throw new Error("TODO");
 				}
 
 				return {

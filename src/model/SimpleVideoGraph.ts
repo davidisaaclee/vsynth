@@ -157,13 +157,31 @@ function flattenSimpleVideoGraph(graph: SimpleVideoGraph): SimpleVideoGraph {
 			// by their non-namespaced keys.
 			const subgraphWithUpdatedParameters = entries(subparameters).reduce(
 				(subgraph, [nodeKey, paramsFromParent]) => (
-					Graph.mutateNode(subgraph, nodeKey, node => ({
-						...node,
-						parameters: {
+					Graph.mutateNode(subgraph, nodeKey, node => {
+						const parameters = {
 							...node.parameters,
 							...paramsFromParent
+						};
+
+						if (node.nodeType === 'shader') {
+							// TODO: This should probably be unified with non-subgraphs
+							const uniforms = {
+								...node.uniforms,
+								...Kit.shaderModules[node.type].details.parametersToUniforms(parameters)
+							};
+
+							return {
+								...node,
+								parameters,
+								uniforms
+							};
+						} else {
+							return {
+								...node,
+								parameters,
+							};
 						}
-					}))
+					})
 				),
 				node.subgraph);
 
@@ -282,7 +300,6 @@ export function videoGraphFromSimpleVideoGraph(
 		}
 
 		if (videoModule.details.type === 'shader') {
-			// TODO: Transform node keys if connected to subgraph
 			return Graph.insertEdge(result, {
 				src: inletNodeKey,
 				dst: outletNodeKey,
