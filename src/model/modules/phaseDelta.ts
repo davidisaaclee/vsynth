@@ -1,10 +1,5 @@
-import { glsl, UniformValue } from '@davidisaaclee/video-graph';
+import { glsl } from '@davidisaaclee/video-graph';
 import { VideoModule, shaderVideoModule } from '../VideoModule';
-import { VideoNode } from '../SimpleVideoGraph';
-
-const stateKeys = {
-	frameIndex: 'frameIndex',
-};
 
 const shaderSource = glsl`
 	precision mediump float;
@@ -77,6 +72,10 @@ export const phaseDelta: VideoModule = shaderVideoModule({
 			type: '2f',
 			data: [gl.canvas.width, gl.canvas.height]
 		},
+		'frameDelta': {
+			type: 'f',
+			data: 1
+		},
 	}),
 	inlets: {
 		uniformMappings: {
@@ -84,21 +83,5 @@ export const phaseDelta: VideoModule = shaderVideoModule({
 			'speed': 'speed',
 		},
 		displayOrder: ['wave size', 'speed'],
-	},
-	update: (frameIndex: number, state: Record<string, number>, node: VideoNode) => {
-		return {
-			[stateKeys.frameIndex]: frameIndex,
-		};
-	},
-	animationUniforms: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => {
-		const previousFrameIndex = node.state[stateKeys.frameIndex];
-		return {
-			'frameDelta': {
-				type: 'f',
-				data: previousFrameIndex == null
-				? 0
-				: previousFrameIndex - frameIndex
-			}
-		};
 	},
 });

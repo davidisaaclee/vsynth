@@ -23,7 +23,6 @@ export interface VideoNode {
 	type: ModuleType;
 	parameters: { [identifier: string]: number };
 	uniforms: { [identifier: string]: UniformValue };
-	state: Record<string, number>;
 }
 
 export type SimpleVideoGraph =
@@ -55,7 +54,6 @@ export function videoModuleSpecFromModuleType(moduleType: ModuleType): VideoNode
 		type: moduleType,
 		uniforms,
 		parameters,
-		state: {}
 	};
 }
 
@@ -87,21 +85,10 @@ export function videoGraphFromSimpleVideoGraph(
 			? {} 
 			: moduleConfiguration.defaultUniforms(gl);
 
-		const animationUniforms = moduleConfiguration.animationUniforms == null
-			? {} 
-			: moduleConfiguration.animationUniforms(
-				frameIndex, 
-				{
-					...defaultUniforms,
-					...moduleSpec.uniforms,
-				},
-				moduleSpec);
-
 		return {
 			program: runtimeModule.program,
 			uniforms: {
 				...uniformValuesToSpec(defaultUniforms),
-				...uniformValuesToSpec(animationUniforms),
 				...uniformValuesToSpec(moduleSpec.uniforms),
 			}
 		};

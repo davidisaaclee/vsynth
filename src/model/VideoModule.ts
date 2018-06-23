@@ -1,5 +1,4 @@
 import { UniformValue } from '@davidisaaclee/video-graph';
-import { VideoNode } from './SimpleVideoGraph';
 
 /*
  * A non-texture-based parameter to a module, which can be translated to a
@@ -28,11 +27,6 @@ export interface ShaderVideoModule {
 
 	defaultUniforms?: (gl: WebGLRenderingContext) => { [identifier: string]: UniformValue };
 
-	animationUniforms?: (frameIndex: number, uniforms: { [identifier: string]: UniformValue }, node: VideoNode) => { [identifier: string]: UniformValue };
-
-	// Update internal state on each frame if needed.
-	update?: (frameIndex: number, state: Record<string, number>, node: VideoNode) => Record<string, number>;
-
 	inlets?: {
 		// maps display name to uniform identifier
 		uniformMappings: { [key: string]: string },
@@ -44,3 +38,4 @@ export interface ShaderVideoModule {
 		associatedParameters?: { [inletKey: string]: string[] }
 	}
 }
+
