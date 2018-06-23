@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "http://david-lee.net/vsynth",
   "dependencies": {
-    "@davidisaaclee/graph": "^0.1.0",
+    "@davidisaaclee/graph": "^0.3.0",
     "@davidisaaclee/react-table": "^1.0.0",
     "@davidisaaclee/react-video-graph": "^0.2.3",
     "@davidisaaclee/video-graph": "^0.2.2",

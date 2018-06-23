@@ -1,5 +1,8 @@
+import { Graph } from '@davidisaaclee/graph';
 import { UniformValue } from '@davidisaaclee/video-graph';
 import { Inlet } from './Inlet';
+import { InletSpecification } from './SimpleVideoGraph';
+import { ModuleType } from './Kit';
 
 /*
  * Configurations of nodes to be instantiated in a VideoGraph.
@@ -27,7 +30,11 @@ export interface SubgraphModule {
 	parametersToSubParameters: (params: Record<string, number>) => Record<string, Record<string, number>>;
 	
 	// Maps each inlet to a set of subinlets
-	inletsToSubInlets: Array<Record<string, Inlet>>;
+	// :: { [subinlet: InletKey]: Inlet }
+	inletsToSubInlets: Record<string, Inlet>;
+
+	// TODO: This is confusingly-named: it's building a specification for a subgraph...
+	buildSubgraph: () => { graph: Graph<ModuleType, InletSpecification>, outputNodeKey: string };
 }
 
 export interface ShaderModule {

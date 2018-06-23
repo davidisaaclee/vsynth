@@ -8,6 +8,7 @@ import { rgbOffset } from './modules/rgbOffset';
 import { oscillator } from './modules/oscillator';
 import { identity } from './modules/identity';
 import { constant } from './modules/constant';
+import { testSubgraph } from './modules/testSubgraph';
 /*
 import { addFract } from './modules/addFract';
 import { divide } from './modules/divide';
@@ -24,21 +25,23 @@ export type ModuleType =
 	| "divide" | "phaseDelta";
 	*/
 
-export type SubgraphModuleType = never;
+export type SubgraphModuleType = 'testSubgraph';
 export type ShaderModuleType = 'oscillator' | 'identity' | 'constant';
 
-// TODO: add SubgraphModuleType
-export type ModuleType = ShaderModuleType;
+export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
-// const subgraphModules: Record<SubgraphModuleType, SubgraphModule> = {};
+export const subgraphModules: Record<SubgraphModuleType, VideoModule<SubgraphModule>> = {
+	testSubgraph,
+};
+
 export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> = {
 	oscillator,
 	identity,
 	constant,
 };
 
-export const moduleKeys: ShaderModuleType[] = [
-	'oscillator', 'identity', 'constant'
+export const moduleKeys: ModuleType[] = [
+	'oscillator', 'identity', 'constant', 'testSubgraph'
 ];
 
 
@@ -62,14 +65,14 @@ export function moduleForType(moduleType: ModuleType): VideoModule<ShaderModule 
 	if (shaderModules[moduleType] != null) {
 		return shaderModules[moduleType];
 	} else {
-		throw new Error("TODO");
+		return subgraphModules[moduleType];
 	}
 }
 
 
 export function moduleForNode(node: VideoNode): VideoModule<ShaderModule | SubgraphModule> {
 	if (node.nodeType === 'subgraph') {
-		throw new Error("TODO");
+		return subgraphModules[node.type];
 	} else {
 		return shaderModules[node.type];
 	}

@@ -3,16 +3,16 @@
  * for use in a Redux store.
  */
 
+import { entries } from 'lodash';
+import * as Graph from '@davidisaaclee/graph';
 import {
-	Graph, Edge,
-	mapNodes, mapEdges, nodeForKey
-} from '@davidisaaclee/graph';
-import {
-	VideoGraph, PluginNode,
-	PluginConnection, UniformValue,
+	VideoGraph, 
+	UniformValue,
 	UniformSpecification
 } from '@davidisaaclee/video-graph';
 import * as Kit from './Kit';
+import { Outlet } from './Outlet';
+import { Inlet } from './Inlet';
 
 export interface InletSpecification {
 	inlet: string;
@@ -28,6 +28,7 @@ export type VideoNode = {
 export interface SubgraphNode {
 	type: Kit.SubgraphModuleType;
 	subgraph: SimpleVideoGraph;
+	outputNodeKey: string;
 }
 
 export interface ShaderNode {
@@ -37,10 +38,10 @@ export interface ShaderNode {
 
 
 export type SimpleVideoGraph =
-	Graph<VideoNode, InletSpecification>;
+	Graph.Graph<VideoNode, InletSpecification>;
 
 // TODO: It'd be nice to be able to automatically get this from a Graph<>.
-export type Edge = Edge<InletSpecification>;
+export type Edge = Graph.Edge<InletSpecification>;
 
 
 // -- Methods
@@ -58,12 +59,25 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 			mod.details.parametersToUniforms(parameters);
 		return {
 			nodeType: 'shader',
-			type: moduleType,
+			type: moduleType as Kit.ShaderModuleType,
 			parameters,
 			uniforms
 		};
 	} else {
-		throw new Error("TODO");
+		const { graph: graphSpec, outputNodeKey } =
+			mod.details.buildSubgraph();
+
+		// Convert from specification (via module types) to real nodes.
+		const subgraph =
+			Graph.mapNodes(graphSpec, videoModuleSpecFromModuleType);
+
+		return {
+			nodeType: 'subgraph',
+			type: moduleType as Kit.SubgraphModuleType,
+			subgraph,
+			outputNodeKey,
+			parameters
+		};
 	}
 
 }
@@ -74,6 +88,131 @@ export interface RuntimeModule {
 	program: WebGLProgram;
 }
 
+function namespaceNodeKey(parentNodeKey: string, childNodeKey: string): string {
+	return `${parentNodeKey}-${childNodeKey}`;
+}
+
+function flattenOutlet(
+	outlet: Outlet,
+	graph: SimpleVideoGraph
+): Outlet {
+	const node = Graph.nodeForKey(graph, outlet.nodeKey);
+
+	if (node == null) {
+		throw new Error('No such node');
+	} 
+
+	if (node.nodeType === 'shader') {
+		return outlet;
+	} else {
+		const r = flattenOutlet({ nodeKey: node.outputNodeKey }, node.subgraph);
+		return {
+			...r,
+			nodeKey: namespaceNodeKey(outlet.nodeKey, r.nodeKey)
+		};
+	}
+}
+
+function flattenInlet(
+	inlet: Inlet,
+	graph: SimpleVideoGraph
+): Inlet {
+	const node = Graph.nodeForKey(graph, inlet.nodeKey);
+
+	if (node == null) {
+		throw new Error('No such node');
+	} 
+
+	if (node.nodeType === 'shader') {
+		return inlet;
+	} else {
+		const videoModule = Kit.subgraphModules[node.type];
+		const r = flattenInlet(
+			videoModule.details.inletsToSubInlets[inlet.inletKey],
+			node.subgraph);
+
+		return {
+			...r,
+			nodeKey: namespaceNodeKey(inlet.nodeKey, r.nodeKey)
+		};
+	}
+}
+
+// Converts each subgraph node to a set of connected shader nodes.
+function flattenSimpleVideoGraph(graph: SimpleVideoGraph): SimpleVideoGraph {
+	let result = Graph.empty;
+
+	// Flatten and insert all nodes.
+	result = entries(Graph.allNodes(graph)).reduce((acc, [nodeKey, node]) => {
+		if (node.nodeType === 'shader') {
+			return Graph.insertNode(acc, node, nodeKey);
+		} else {
+			const videoModule = Kit.subgraphModules[node.type];
+
+			// Build dictionary of parameters to pass to children.
+			const subparameters = videoModule.details.parametersToSubParameters(node.parameters);
+
+			// Pass parameters to those children in the subgraph.
+			// This happens before flattening the subgraph, so we can reference the children
+			// by their non-namespaced keys.
+			const subgraphWithUpdatedParameters = entries(subparameters).reduce(
+				(subgraph, [nodeKey, paramsFromParent]) => (
+					Graph.mutateNode(subgraph, nodeKey, node => ({
+						...node,
+						parameters: {
+							...node.parameters,
+							...paramsFromParent
+						}
+					}))
+				),
+				node.subgraph);
+
+			// Recursively flatten the subgraph.
+			const flattenedSubgraph = flattenSimpleVideoGraph(subgraphWithUpdatedParameters);
+
+			// Namespace the resulting flattened graph under this subgraph node's key,
+			// and merge it into the accumulating graph.
+			return Graph.merge(
+				acc,
+				transformAllGraphKeys(
+					flattenedSubgraph,
+					subgraphNodeKey => namespaceNodeKey(nodeKey, subgraphNodeKey)));
+		}
+	}, result);
+
+	// Flatten and insert all top-level edges.
+	result = entries(Graph.allEdges(graph)).reduce((acc, [edgeKey, edge]) => {
+		const flattenedOutlet =
+			flattenOutlet({ nodeKey: edge.dst }, graph);
+		const flattenedInlet =
+			flattenInlet({ nodeKey: edge.src, inletKey: edge.metadata.inlet }, graph);
+
+		return Graph.insertEdge(
+			acc,
+			{
+				src: flattenedInlet.nodeKey,
+				dst: flattenedOutlet.nodeKey,
+				metadata: {
+					inlet: flattenedInlet.inletKey
+				},
+			},
+			edgeKey);
+	}, result);
+
+	return result;
+}
+
+function transformAllGraphKeys<N, E>(
+	graph: Graph.Graph<N, E>,
+	transformKey: (key: string) => string
+): Graph.Graph<N, E> {
+	return Graph.transformEdgeKeys(
+		Graph.transformNodeKeys(
+			graph,
+			transformKey),
+		transformKey);
+}
+
 export function videoGraphFromSimpleVideoGraph(
 	graph: SimpleVideoGraph,
 	// moduleKey :: ModuleType
@@ -81,7 +220,9 @@ export function videoGraphFromSimpleVideoGraph(
 	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {
-	const mappedNodes = mapNodes(graph, (node: VideoNode): PluginNode => {
+	const flattenedGraph = flattenSimpleVideoGraph(graph);
+
+	const result = entries(Graph.allNodes(flattenedGraph)).reduce((result, [nodeKey, node]) => {
 		const runtimeModule = runtime[node.type];
 		const videoModule = Kit.moduleForNode(node);
 
@@ -97,41 +238,62 @@ export function videoGraphFromSimpleVideoGraph(
 				throw new Error("Mismatched node and module types");
 			}
 
-			return {
+			return Graph.insertNode(result, {
 				program: runtimeModule.program,
 				uniforms: {
 					...uniformValuesToSpec(videoModule.details.defaultUniforms(gl)),
 					...uniformValuesToSpec(node.uniforms),
 				}
-			};
+			}, nodeKey);
 		} else {
-			throw new Error('TODO');
+			throw new Error();
+			/*
+			if (node.nodeType !== 'subgraph') {
+				throw new Error("Mismatched node and module types");
+			}
+
+			let subgraph = videoGraphFromSimpleVideoGraph(
+				node.subgraph,
+				runtime,
+				frameIndex,
+				gl);
+
+			// Prefix subgraph keys
+			subgraph = Graph.transformEdgeKeys(
+				subgraph,
+				key => `${nodeKey}-${key}`);
+
+			subgraph = Graph.transformNodeKeys(
+				subgraph,
+				key => `${nodeKey}-${key}`);
+
+			return Graph.merge(result, subgraph);
+			*/
 		}
-	});
+	}, Graph.empty);
 
-	const videoGraph = mapEdges(
-		mappedNodes,
-		(inletSpec: InletSpecification, inletNodeKey: string, outletNodeKey: string): PluginConnection => {
-			const inletNode = nodeForKey(graph, inletNodeKey)!;
-			const videoModule = Kit.moduleForNode(inletNode);
+	return entries(Graph.allEdges(flattenedGraph)).reduce((result, [edgeKey, edge]) => {
+		const { src: inletNodeKey, dst: outletNodeKey, metadata: inletSpec } = edge;
+		const inletNode = Graph.nodeForKey(flattenedGraph, inletNodeKey)!;
+		const videoModule = Kit.moduleForNode(inletNode);
 
-			if (videoModule == null) {
-				throw new Error(`No module configuration found for module type: ${nodeForKey(graph, inletNodeKey)!.type}`);
-			}
-			if (videoModule.inlets == null) {
-				throw new Error("Edge connecting to node with no inlets");
-			}
-			
-			if (videoModule.details.type === 'shader') {
-				return {
+		if (videoModule == null) {
+			throw new Error(`No module configuration found for module type: ${Graph.nodeForKey(flattenedGraph, inletNodeKey)!.type}`);
+		}
+
+		if (videoModule.details.type === 'shader') {
+			// TODO: Transform node keys if connected to subgraph
+			return Graph.insertEdge(result, {
+				src: inletNodeKey,
+				dst: outletNodeKey,
+				metadata: {
 					uniformIdentifier: videoModule.details.inletsToUniforms[inletSpec.inlet]
-				};
-			} else {
-				throw new Error("TODO");
-			}
-		});
-
-	return videoGraph;
+				}
+			}, edgeKey);
+		} else {
+			throw new Error("TODO");
+		}
+	}, result);
 }
 
 function uniformValuesToSpec(
