@@ -1,7 +1,3 @@
-/*
-import { crosshatch } from './modules/crosshatch';
-import { dither } from './modules/dither';
-*/
 import { rgbOffset } from './modules/rgbOffset';
 import { scanlines } from './modules/scanlines';
 import { oscillator } from './modules/oscillator';
@@ -15,14 +11,6 @@ import { divide } from './modules/divide';
 
 import { VideoModule, ShaderModule, SubgraphModule } from './VideoModule';
 import { VideoNode } from './SimpleVideoGraph';
-
-	/*
-export type ModuleType =
-	"oscillator";
-	"identity" | "oscillator" | "constant" | "mixer" | "scanlines"
-	| "crosshatch" | "dither" | "rgbOffset" | "addFract"
-	| "divide" | "phaseDelta";
-	*/
 
 export type SubgraphModuleType = 'autoOsc';
 export type ShaderModuleType =
@@ -53,14 +41,6 @@ export const moduleKeys: ModuleType[] = [
 	'rgbOffset', 'divide',
 ];
 
-
-	/*
-const modules: Record<ModuleType, VideoModule> = {
-	dither,
-	crosshatch,
-	divide,
-};
-	*/
 
 export function moduleForType(moduleType: ModuleType): VideoModule<ShaderModule | SubgraphModule> {
 	if (shaderModules[moduleType] != null) {
