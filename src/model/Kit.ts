@@ -11,9 +11,8 @@ import { autoOsc } from './modules/autoOsc';
 import { addFract } from './modules/addFract';
 import { phaseDelta } from './modules/phaseDelta';
 import { mixer } from './modules/mixer';
-/*
 import { divide } from './modules/divide';
-*/
+
 import { VideoModule, ShaderModule, SubgraphModule } from './VideoModule';
 import { VideoNode } from './SimpleVideoGraph';
 
@@ -28,7 +27,7 @@ export type ModuleType =
 export type SubgraphModuleType = 'autoOsc';
 export type ShaderModuleType =
 	'oscillator' | 'identity' | 'constant' | 'addFract'
-	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset';
+	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide';
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
@@ -45,18 +44,18 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	mixer,
 	scanlines,
 	rgbOffset,
+	divide,
 };
 
 export const moduleKeys: ModuleType[] = [
 	'oscillator', 'identity', 'constant', 'addFract',
 	'phaseDelta', 'autoOsc', 'mixer', 'scanlines',
-	'rgbOffset',
+	'rgbOffset', 'divide',
 ];
 
 
 	/*
 const modules: Record<ModuleType, VideoModule> = {
-	rgbOffset,
 	dither,
 	crosshatch,
 	divide,
