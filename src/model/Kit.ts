@@ -1,10 +1,9 @@
 /*
-import { scanlines } from './modules/scanlines';
-import { mixer } from './modules/mixer';
 import { crosshatch } from './modules/crosshatch';
 import { dither } from './modules/dither';
 import { rgbOffset } from './modules/rgbOffset';
 */
+import { scanlines } from './modules/scanlines';
 import { oscillator } from './modules/oscillator';
 import { identity } from './modules/identity';
 import { constant } from './modules/constant';
@@ -29,7 +28,7 @@ export type ModuleType =
 export type SubgraphModuleType = 'autoOsc';
 export type ShaderModuleType =
 	'oscillator' | 'identity' | 'constant' | 'addFract'
-	| 'phaseDelta' | 'mixer';
+	| 'phaseDelta' | 'mixer' | 'scanlines';
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
@@ -44,11 +43,12 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	addFract,
 	phaseDelta,
 	mixer,
+	scanlines,
 };
 
 export const moduleKeys: ModuleType[] = [
 	'oscillator', 'identity', 'constant', 'addFract',
-	'phaseDelta', 'autoOsc', 'mixer',
+	'phaseDelta', 'autoOsc', 'mixer', 'scanlines',
 ];
 
 
