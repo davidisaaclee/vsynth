@@ -18,6 +18,7 @@ const paramKeys = {
 	blue: 'blue',
 	rotationAmount: 'rotationAmount',
 	phaseOffsetAmount: 'phaseOffsetAmount',
+	shape: 'shape',
 };
 
 const nodeKeys = {
@@ -44,6 +45,7 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 		keys: [
 			paramKeys.sizeAmount,
 			paramKeys.speedAmount,
+			paramKeys.shape,
 			paramKeys.red,
 			paramKeys.green,
 			paramKeys.blue,
@@ -54,6 +56,7 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 		defaultValues: {
 			[paramKeys.sizeAmount]: 0.5,
 			[paramKeys.speedAmount]: 0.5,
+			[paramKeys.shape]: 0,
 			[paramKeys.red]: 1,
 			[paramKeys.green]: 0,
 			[paramKeys.blue]: 0,
@@ -101,6 +104,7 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				[Osc.parameterKeys.blue]: params[paramKeys.blue],
 				[Osc.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
 				[Osc.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
+				[Osc.parameterKeys.shape]: params[paramKeys.shape],
 			},
 			[nodeKeys.phase]: {
 				[PhaseDelta.parameterKeys.sizeAmount]: params[paramKeys.sizeAmount],
