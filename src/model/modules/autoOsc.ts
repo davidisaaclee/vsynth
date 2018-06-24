@@ -1,15 +1,18 @@
 import * as Graph from '@davidisaaclee/graph';
 import { VideoModule, SubgraphModule } from '../VideoModule';
 import * as Osc from './oscillator';
+import * as AddFract from './addFract';
+import * as PhaseDelta from './phaseDelta';
 
 const inletKeys = {
 	size: 'size',
 	speed: 'speed',
 	rotation: 'rotation',
-	phaseOffset: 'phase offset',
 };
 
 const paramKeys = {
+	sizeAmount: 'sizeAmount',
+	speedAmount: 'speedAmount',
 	red: 'red',
 	green: 'green',
 	blue: 'blue',
@@ -19,6 +22,8 @@ const paramKeys = {
 
 const nodeKeys = {
 	osc: 'osc',
+	add: 'add',
+	phase: 'phase',
 };
 
 export const autoOsc: VideoModule<SubgraphModule> = {
@@ -27,28 +32,33 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 			inletKeys.size,
 			inletKeys.speed,
 			inletKeys.rotation,
-			inletKeys.phaseOffset
 		],
 		associatedParameters: {
+			[inletKeys.size]: [paramKeys.sizeAmount],
+			[inletKeys.speed]: [paramKeys.speedAmount],
 			[inletKeys.rotation]: [paramKeys.rotationAmount],
-			[inletKeys.phaseOffset]: [paramKeys.phaseOffsetAmount],
 		}
 	},
 
 	parameters: {
 		keys: [
+			paramKeys.sizeAmount,
+			paramKeys.speedAmount,
 			paramKeys.red,
 			paramKeys.green,
 			paramKeys.blue,
 			paramKeys.rotationAmount,
+			// TODO: phaseOffsetAmount should be hidden...
 			paramKeys.phaseOffsetAmount,
 		],
 		defaultValues: {
+			[paramKeys.sizeAmount]: 0.5,
+			[paramKeys.speedAmount]: 0.5,
 			[paramKeys.red]: 1,
 			[paramKeys.green]: 0,
 			[paramKeys.blue]: 0,
 			[paramKeys.rotationAmount]: 0,
-			[paramKeys.phaseOffsetAmount]: 0,
+			[paramKeys.phaseOffsetAmount]: 1,
 		}
 	},
 
@@ -56,32 +66,46 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 		type: 'subgraph',
 
 		inletsToSubInlets: {
-			[inletKeys.size]: [{
-				nodeKey: nodeKeys.osc,
-				inletKey: Osc.inletKeys.waveSize,
-			}],
-			[inletKeys.speed]: [{
-				nodeKey: nodeKeys.osc,
-				inletKey: Osc.inletKeys.speed,
-			}],
+			[inletKeys.size]: [
+				{
+					nodeKey: nodeKeys.osc,
+					inletKey: Osc.inletKeys.waveSize,
+				},
+				{
+					nodeKey: nodeKeys.phase,
+					inletKey: PhaseDelta.inletKeys.size,
+				}
+			],
+			[inletKeys.speed]: [
+				{
+					nodeKey: nodeKeys.osc,
+					inletKey: Osc.inletKeys.speed,
+				},
+				{
+					nodeKey: nodeKeys.phase,
+					inletKey: PhaseDelta.inletKeys.speed,
+				},
+			],
 			[inletKeys.rotation]: [{
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.rotation,
-			}],
-			[inletKeys.phaseOffset]: [{
-				nodeKey: nodeKeys.osc,
-				inletKey: Osc.inletKeys.phaseOffset,
 			}],
 		},
 
 		parametersToSubParameters: params => ({
 			[nodeKeys.osc]: {
+				[Osc.parameterKeys.waveSizeAmount]: params[paramKeys.sizeAmount],
+				[Osc.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
 				[Osc.parameterKeys.red]: params[paramKeys.red],
 				[Osc.parameterKeys.green]: params[paramKeys.green],
 				[Osc.parameterKeys.blue]: params[paramKeys.blue],
 				[Osc.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
 				[Osc.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
 			},
+			[nodeKeys.phase]: {
+				[PhaseDelta.parameterKeys.sizeAmount]: params[paramKeys.sizeAmount],
+				[PhaseDelta.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
+			}
 		}),
 
 		buildSubgraph: () => {
@@ -90,6 +114,46 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				result,
 				'oscillator',
 				nodeKeys.osc);
+			result = Graph.insertNode(
+				result,
+				'addFract',
+				nodeKeys.add);
+			result = Graph.insertNode(
+				result,
+				'phaseDelta',
+				nodeKeys.phase);
+
+			result = Graph.insertEdge(
+				result,
+				{
+					src: nodeKeys.add,
+					dst: nodeKeys.phase,
+					metadata: {
+						inlet: AddFract.inletKeys.a,
+					}
+				},
+				'phaseDelta -> add.a');
+			result = Graph.insertEdge(
+				result,
+				{
+					src: nodeKeys.add,
+					dst: nodeKeys.add,
+					metadata: {
+						inlet: AddFract.inletKeys.b,
+					}
+				},
+				'add -> add.b');
+			result = Graph.insertEdge(
+				result,
+				{
+					src: nodeKeys.osc,
+					dst: nodeKeys.add,
+					metadata: {
+						inlet: Osc.inletKeys.phaseOffset,
+					}
+				},
+				'add -> oscillator.phaseOffset');
+
 			return {
 				graph: result,
 				outputNodeKey: nodeKeys.osc

@@ -1,6 +1,11 @@
 import { glsl } from '@davidisaaclee/video-graph';
 import { VideoModule, ShaderModule } from '../VideoModule';
 
+export const parameterKeys = {
+	sizeAmount: 'sizeAmount',
+	speedAmount: 'speedAmount'
+};
+
 export const inletKeys = {
 	size: 'size',
 	speed: 'speed'
@@ -14,11 +19,13 @@ const shaderSource = glsl`
 	// Size of the waves created by the oscillator
 	// (Corresponds to the integral harmonic of the frequency.)
 	uniform sampler2D waveSize;
+	uniform float waveSizeAmount;
 
 	// The speed of the waves created by the oscillator
 	// (Corresponds to the inharmonic portion of the frequency.)
 	// 0, 0.5, 1 = still
 	uniform sampler2D speed;
+	uniform float speedAmount;
 
 	// TODO: This might be out of bounds of a lowp float.
 	uniform float frameDelta;
@@ -41,14 +48,12 @@ const shaderSource = glsl`
 		float waveSizeSample = sampleTex(
 				waveSize,
 				textureSamplePoint,
-				//waveSizeAmount);
-				1.);
+				waveSizeAmount);
 
 		float speedSample = sampleTex(
 				speed,
 				textureSamplePoint,
-				//speedAmount);
-				1.);
+				speedAmount);
 
 		return ceil(waveSizeSample * waveSizeSample * 100.)
 			+ 2. * (speedSample - 0.5);
@@ -72,13 +77,25 @@ const shaderSource = glsl`
 // Calculates the phase offset delta for an oscillator, given a frequency.
 export const phaseDelta: VideoModule<ShaderModule> = {
 	parameters: {
-		keys: [],
-		defaultValues: {},
+		keys: [
+			parameterKeys.sizeAmount,
+			parameterKeys.speedAmount,
+		],
+		defaultValues: {
+			[parameterKeys.sizeAmount]: 1,
+			[parameterKeys.speedAmount]: 1,
+		},
 	},
 
 	inlets: {
-		keys: [inletKeys.size, inletKeys.speed],
-		associatedParameters: {},
+		keys: [
+			inletKeys.size,
+			inletKeys.speed
+		],
+		associatedParameters: {
+			[inletKeys.size]: [parameterKeys.sizeAmount],
+			[inletKeys.speed]: [parameterKeys.speedAmount],
+		},
 	},
 
 	details: {
@@ -97,7 +114,16 @@ export const phaseDelta: VideoModule<ShaderModule> = {
 			}
 		}),
 
-		parametersToUniforms: () => ({}),
+		parametersToUniforms: (values) => ({
+			waveSizeAmount: {
+				type: 'f',
+				data: values[parameterKeys.sizeAmount]
+			},
+			speedAmount: {
+				type: 'f',
+				data: values[parameterKeys.speedAmount]
+			},
+		}),
 
 		inletsToUniforms: {
 			[inletKeys.size]: 'waveSize',

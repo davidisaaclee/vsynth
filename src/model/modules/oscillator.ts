@@ -23,8 +23,8 @@ export const oscillator: VideoModule<ShaderModule> = {
 	parameters: {
 		keys: Object.keys(parameterKeys),
 		defaultValues: {
-			[parameterKeys.waveSizeAmount]: 0.5,
-			[parameterKeys.speedAmount]: 0.5,
+			[parameterKeys.waveSizeAmount]: 1,
+			[parameterKeys.speedAmount]: 1,
 			[parameterKeys.red]: 1,
 			[parameterKeys.green]: 0,
 			[parameterKeys.blue]: 0,
