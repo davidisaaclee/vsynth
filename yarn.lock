@@ -28,9 +28,9 @@
   dependencies:
     lodash "^4.17.10"
 
-"@davidisaaclee/graph@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/graph/-/graph-0.3.0.tgz#6530109964009d87e151474974ca0ebc56907132"
+"@davidisaaclee/graph@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/graph/-/graph-0.3.1.tgz#7cec2fe3c9e5cd07a724e2466b7d4c2407b8adff"
   dependencies:
     lodash "^4.17.10"
 
