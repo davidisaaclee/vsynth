@@ -6,15 +6,15 @@ export const parameterKeys = {
 	green: 'green',
 	blue: 'blue',
 	shape: 'shape',
-	waveSizeAmount: 'wave size amount',
-	speedAmount: 'speed amount',
+	waveSizeAmount: 'harmonics amount',
+	speedAmount: 'inharmonics amount',
 	rotationAmount: 'rotation amount',
 	phaseOffsetAmount: 'phase offset amount',
 };
 
 export const inletKeys = {
-	waveSize: 'waveSize',
-	speed: 'speed',
+	waveSize: 'harmonics',
+	speed: 'inharmonics',
 	rotation: 'rotation',
 	phaseOffset: 'phase offset',
 };
