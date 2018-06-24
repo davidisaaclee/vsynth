@@ -1,6 +1,6 @@
 {
   "name": "@davidisaaclee/vsynth",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "homepage": "http://david-lee.net/vsynth",
   "dependencies": {
@@ -23,7 +23,7 @@
     "uuid": "^3.2.1"
   },
   "scripts": {
-		"deploy": "npm run build && npm run clean:gh-pages && npm run gh-pages-populate && sh ./scripts/deploy.sh patch",
+    "deploy": "npm run build && npm run clean:gh-pages && npm run gh-pages-populate && sh ./scripts/deploy.sh patch",
     "deploy:patch": "npm run deploy patch",
     "deploy:minor": "npm run deploy minor",
     "gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
