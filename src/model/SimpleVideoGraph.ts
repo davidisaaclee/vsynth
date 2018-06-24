@@ -240,7 +240,7 @@ function transformAllGraphKeys<N, E>(
 export function videoGraphFromSimpleVideoGraph(
 	graph: SimpleVideoGraph,
 	// moduleKey :: ModuleType
-	runtime: { [moduleKey: string]: RuntimeModule },
+	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
 	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {

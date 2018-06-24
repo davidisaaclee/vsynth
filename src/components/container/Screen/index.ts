@@ -42,7 +42,7 @@ class Screen extends React.Component<Props, State> {
 	};
 
 	private gl: WebGLRenderingContext | null = null;
-	private modulesRuntime: { [moduleKey: string]: RuntimeModule } = {};
+	private modulesRuntime: Record<Kit.ShaderModuleType, RuntimeModule> | null = null;
 
 
 	public componentDidMount() {
@@ -63,7 +63,7 @@ class Screen extends React.Component<Props, State> {
 			e(VideoGraphView,
 				{
 					cacheBufferSize: 2,
-					graph: (this.gl == null
+					graph: ((this.gl == null || this.modulesRuntime == null)
 						? emptyGraph
 						: videoGraphFromSimpleVideoGraph(
 							graph,
@@ -88,9 +88,11 @@ class Screen extends React.Component<Props, State> {
 
 	private setup(gl: WebGLRenderingContext) {
 		this.gl = gl;
-		this.modulesRuntime = mapValues(Kit.shaderModules, (mod: VideoModule<ShaderModule>): RuntimeModule => ({
-			program: createProgramWithFragmentShader(gl, mod.details.shaderSource)
-		}));
+		this.modulesRuntime = mapValues(
+			Kit.shaderModules,
+			(mod: VideoModule<ShaderModule>): RuntimeModule => ({
+				program: createProgramWithFragmentShader(gl, mod.details.shaderSource)
+			})) as Record<Kit.ShaderModuleType, RuntimeModule>;
 		this.forceUpdate();
 	}
 
