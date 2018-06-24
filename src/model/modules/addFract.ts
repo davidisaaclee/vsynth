@@ -1,6 +1,11 @@
 import { glsl } from '@davidisaaclee/video-graph';
 import { VideoModule, ShaderModule } from '../VideoModule';
 
+export const inletKeys = {
+	'a': 'a',
+	'b': 'b',
+};
+
 const shaderSource = glsl`
 	precision mediump float;
 
@@ -26,7 +31,7 @@ export const addFract: VideoModule<ShaderModule> = {
 	},
 
 	inlets: {
-		keys: ['a', 'b'],
+		keys: [inletKeys.a, inletKeys.b],
 		associatedParameters: {},
 	},
 
@@ -45,8 +50,8 @@ export const addFract: VideoModule<ShaderModule> = {
 		parametersToUniforms: () => ({}),
 
 		inletsToUniforms: {
-			'a': 'leftTexture',
-			'b': 'rightTexture',
+			[inletKeys.a]: 'leftTexture',
+			[inletKeys.b]: 'rightTexture',
 		}
 	}
 };

@@ -1,6 +1,11 @@
 import { glsl } from '@davidisaaclee/video-graph';
 import { VideoModule, ShaderModule } from '../VideoModule';
 
+export const inletKeys = {
+	size: 'size',
+	speed: 'speed'
+};
+
 const shaderSource = glsl`
 	precision mediump float;
 
@@ -72,7 +77,7 @@ export const phaseDelta: VideoModule<ShaderModule> = {
 	},
 
 	inlets: {
-		keys: ['size', 'speed'],
+		keys: [inletKeys.size, inletKeys.speed],
 		associatedParameters: {},
 	},
 
@@ -95,8 +100,8 @@ export const phaseDelta: VideoModule<ShaderModule> = {
 		parametersToUniforms: () => ({}),
 
 		inletsToUniforms: {
-			'size': 'waveSize',
-			'speed': 'speed',
+			[inletKeys.size]: 'waveSize',
+			[inletKeys.speed]: 'speed',
 		}
 	}
 };
