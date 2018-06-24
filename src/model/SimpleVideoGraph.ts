@@ -257,43 +257,21 @@ export function videoGraphFromSimpleVideoGraph(
 			throw new Error(`No module configuration found for module type: ${node.type}`);
 		}
 
-		if (videoModule.details.type === 'shader') {
-			if (node.nodeType !== 'shader') {
-				throw new Error("Mismatched node and module types");
-			}
-
-			return Graph.insertNode(result, {
-				program: runtimeModule.program,
-				uniforms: {
-					...uniformValuesToSpec(videoModule.details.defaultUniforms(gl)),
-					...uniformValuesToSpec(node.uniforms),
-				}
-			}, nodeKey);
-		} else {
-			throw new Error();
-			/*
-			if (node.nodeType !== 'subgraph') {
-				throw new Error("Mismatched node and module types");
-			}
-
-			let subgraph = videoGraphFromSimpleVideoGraph(
-				node.subgraph,
-				runtime,
-				frameIndex,
-				gl);
-
-			// Prefix subgraph keys
-			subgraph = Graph.transformEdgeKeys(
-				subgraph,
-				key => `${nodeKey}-${key}`);
-
-			subgraph = Graph.transformNodeKeys(
-				subgraph,
-				key => `${nodeKey}-${key}`);
-
-			return Graph.merge(result, subgraph);
-			*/
+		if (videoModule.details.type !== 'shader') {
+			throw new Error("Attempted to render a non-flattened graph.");
 		}
+
+		if (node.nodeType !== 'shader') {
+			throw new Error("Mismatched node and module types");
+		}
+
+		return Graph.insertNode(result, {
+			program: runtimeModule.program,
+			uniforms: {
+				...uniformValuesToSpec(videoModule.details.defaultUniforms(gl)),
+				...uniformValuesToSpec(node.uniforms),
+			}
+		}, nodeKey);
 	}, Graph.empty);
 
 	return entries(Graph.allEdges(flattenedGraph)).reduce((result, [edgeKey, edge]) => {
@@ -305,17 +283,17 @@ export function videoGraphFromSimpleVideoGraph(
 			throw new Error(`No module configuration found for module type: ${Graph.nodeForKey(flattenedGraph, inletNodeKey)!.type}`);
 		}
 
-		if (videoModule.details.type === 'shader') {
-			return Graph.insertEdge(result, {
-				src: inletNodeKey,
-				dst: outletNodeKey,
-				metadata: {
-					uniformIdentifier: videoModule.details.inletsToUniforms[inletSpec.inlet]
-				}
-			}, edgeKey);
-		} else {
-			throw new Error("TODO");
+		if (videoModule.details.type !== 'shader') {
+			throw new Error("Attempted to render a non-flattened graph.");
 		}
+
+		return Graph.insertEdge(result, {
+			src: inletNodeKey,
+			dst: outletNodeKey,
+			metadata: {
+				uniformIdentifier: videoModule.details.inletsToUniforms[inletSpec.inlet]
+			}
+		}, edgeKey);
 	}, result);
 }
 
