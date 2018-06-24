@@ -30,8 +30,8 @@ export interface SubgraphModule {
 	parametersToSubParameters: (params: Record<string, number>) => Record<string, Record<string, number>>;
 	
 	// Maps each inlet to a set of subinlets
-	// :: { [subinlet: InletKey]: Inlet }
-	inletsToSubInlets: Record<string, Inlet>;
+	// :: { [ownInlet: InletKey]: Inlet[] }
+	inletsToSubInlets: Record<string, Inlet[]>;
 
 	// TODO: This is confusingly-named: it's building a specification for a subgraph...
 	buildSubgraph: () => { graph: Graph<ModuleType, InletSpecification>, outputNodeKey: string };

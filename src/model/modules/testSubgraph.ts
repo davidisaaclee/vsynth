@@ -8,8 +8,11 @@ export const testSubgraph: VideoModule<SubgraphModule> = {
 	},
 
 	parameters: {
-		keys: ['p'],
-		defaultValues: { p: 0 }
+		keys: ['p', 'rotation'],
+		defaultValues: {
+			p: 0,
+			rotation: 0,
+		}
 	},
 
 	details: {
@@ -24,7 +27,11 @@ export const testSubgraph: VideoModule<SubgraphModule> = {
 
 		parametersToSubParameters: params => ({
 			'osc': {
-				'green': params['p']
+				'green': params['p'],
+			},
+
+			'k': {
+				'value': params['rotation'],
 			}
 		}),
 
@@ -34,6 +41,20 @@ export const testSubgraph: VideoModule<SubgraphModule> = {
 				result,
 				'oscillator',
 				'osc');
+			result = Graph.insertNode(
+				result,
+				'constant',
+				'k');
+			result = Graph.insertEdge(
+				result,
+				{
+					src: 'osc',
+					dst: 'k',
+					metadata: {
+						inlet: 'rotation',
+					}
+				},
+				'k -> osc.rot');
 			return {
 				graph: result,
 				outputNodeKey: 'osc'

@@ -1,7 +1,7 @@
 import { VideoModule, ShaderModule } from '../VideoModule';
 import shaderSource from '../../shaders/oscillator.generated';
 
-const parameterKeys = {
+export const parameterKeys = {
 	red: 'red',
 	green: 'green',
 	blue: 'blue',
@@ -10,6 +10,13 @@ const parameterKeys = {
 	speedAmount: 'speed amount',
 	rotationAmount: 'rotation amount',
 	phaseOffsetAmount: 'phase offset amount',
+};
+
+export const inletKeys = {
+	waveSize: 'waveSize',
+	speed: 'speed',
+	rotation: 'rotation',
+	phaseOffset: 'phase offset',
 };
 
 export const oscillator: VideoModule<ShaderModule> = {
@@ -29,17 +36,17 @@ export const oscillator: VideoModule<ShaderModule> = {
 
 	inlets: {
 		keys: [
-			'waveSize',
-			'speed',
-			'rotation',
-			'phase offset',
+			inletKeys.waveSize,
+			inletKeys.speed,
+			inletKeys.rotation,
+			inletKeys.phaseOffset,
 		],
 
 		associatedParameters: {
-			'waveSize': [parameterKeys.waveSizeAmount],
-			'speed': [parameterKeys.speedAmount],
-			'rotation': [parameterKeys.rotationAmount],
-			'phase offset': [parameterKeys.phaseOffsetAmount],
+			[inletKeys.waveSize]: [parameterKeys.waveSizeAmount],
+			[inletKeys.speed]: [parameterKeys.speedAmount],
+			[inletKeys.rotation]: [parameterKeys.rotationAmount],
+			[inletKeys.phaseOffset]: [parameterKeys.phaseOffsetAmount],
 		}
 	},
 
@@ -87,10 +94,10 @@ export const oscillator: VideoModule<ShaderModule> = {
 		}),
 
 		inletsToUniforms: {
-			'waveSize': 'waveSize',
-			'speed': 'speed',
-			'rotation': 'rotationTheta',
-			'phase offset': 'phaseOffsetTexture',
+			[inletKeys.waveSize]: 'waveSize',
+			[inletKeys.speed]: 'speed',
+			[inletKeys.rotation]: 'rotationTheta',
+			[inletKeys.phaseOffset]: 'phaseOffsetTexture',
 		},
 	}
 

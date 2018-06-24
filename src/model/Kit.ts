@@ -8,7 +8,7 @@ import { rgbOffset } from './modules/rgbOffset';
 import { oscillator } from './modules/oscillator';
 import { identity } from './modules/identity';
 import { constant } from './modules/constant';
-import { testSubgraph } from './modules/testSubgraph';
+import { autoOsc } from './modules/autoOsc';
 import { addFract } from './modules/addFract';
 import { phaseDelta } from './modules/phaseDelta';
 /*
@@ -25,14 +25,14 @@ export type ModuleType =
 	| "divide" | "phaseDelta";
 	*/
 
-export type SubgraphModuleType = 'testSubgraph';
+export type SubgraphModuleType = 'autoOsc';
 export type ShaderModuleType =
 	'oscillator' | 'identity' | 'constant' | 'addFract' | 'phaseDelta';
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
 export const subgraphModules: Record<SubgraphModuleType, VideoModule<SubgraphModule>> = {
-	testSubgraph,
+	autoOsc,
 };
 
 export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> = {
@@ -44,8 +44,8 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 };
 
 export const moduleKeys: ModuleType[] = [
-	'oscillator', 'identity', 'constant', 'testSubgraph', 'addFract',
-	'phaseDelta'
+	'oscillator', 'identity', 'constant', 'addFract',
+	'phaseDelta', 'autoOsc',
 ];
 
 

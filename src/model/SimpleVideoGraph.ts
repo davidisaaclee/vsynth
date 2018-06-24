@@ -3,7 +3,7 @@
  * for use in a Redux store.
  */
 
-import { entries } from 'lodash';
+import { entries, flatMap } from 'lodash';
 import * as Graph from '@davidisaaclee/graph';
 import {
 	VideoGraph, 
@@ -116,7 +116,7 @@ function flattenOutlet(
 function flattenInlet(
 	inlet: Inlet,
 	graph: SimpleVideoGraph
-): Inlet {
+): Inlet[] {
 	const node = Graph.nodeForKey(graph, inlet.nodeKey);
 
 	if (node == null) {
@@ -124,17 +124,17 @@ function flattenInlet(
 	} 
 
 	if (node.nodeType === 'shader') {
-		return inlet;
+		return [inlet];
 	} else {
 		const videoModule = Kit.subgraphModules[node.type];
-		const r = flattenInlet(
+		const flattened = flatMap(
 			videoModule.details.inletsToSubInlets[inlet.inletKey],
-			node.subgraph);
+			subinlet => flattenInlet(subinlet, node.subgraph));
 
-		return {
-			...r,
-			nodeKey: namespaceNodeKey(inlet.nodeKey, r.nodeKey)
-		};
+		return flattened.map(flattenedInlet => ({
+			...flattenedInlet,
+			nodeKey: namespaceNodeKey(inlet.nodeKey, flattenedInlet.nodeKey)
+		}));
 	}
 }
 
@@ -186,7 +186,8 @@ function flattenSimpleVideoGraph(graph: SimpleVideoGraph): SimpleVideoGraph {
 				node.subgraph);
 
 			// Recursively flatten the subgraph.
-			const flattenedSubgraph = flattenSimpleVideoGraph(subgraphWithUpdatedParameters);
+			const flattenedSubgraph =
+				flattenSimpleVideoGraph(subgraphWithUpdatedParameters);
 
 			// Namespace the resulting flattened graph under this subgraph node's key,
 			// and merge it into the accumulating graph.
@@ -202,19 +203,24 @@ function flattenSimpleVideoGraph(graph: SimpleVideoGraph): SimpleVideoGraph {
 	result = entries(Graph.allEdges(graph)).reduce((acc, [edgeKey, edge]) => {
 		const flattenedOutlet =
 			flattenOutlet({ nodeKey: edge.dst }, graph);
-		const flattenedInlet =
+		const flattenedInlets =
 			flattenInlet({ nodeKey: edge.src, inletKey: edge.metadata.inlet }, graph);
-
-		return Graph.insertEdge(
-			acc,
-			{
-				src: flattenedInlet.nodeKey,
-				dst: flattenedOutlet.nodeKey,
-				metadata: {
-					inlet: flattenedInlet.inletKey
+		
+		return flattenedInlets.reduce(
+			(acc, flattenedInlet, i) => Graph.insertEdge(
+				acc,
+				{
+					src: flattenedInlet.nodeKey,
+					dst: flattenedOutlet.nodeKey,
+					metadata: {
+						inlet: flattenedInlet.inletKey
+					},
 				},
-			},
-			edgeKey);
+				// TODO: Edge keys don't really matter right now, as long as they are unique.
+				// It'd probably be good to be more explicit about how they're being
+				// disambiguated here, though.
+				`${edgeKey}-${i}`),
+			acc);
 	}, result);
 
 	return result;
