@@ -52,6 +52,10 @@ class Screen extends React.Component<Props, State> {
 		}, this.frame);
 	}
 
+	public shouldComponentUpdate(nextProps: Props, nextState: State) {
+		return this.state.frameIndex !== nextState.frameIndex;
+	}
+
   public render() {
 		const {
 			graph, outputNodeKey,
