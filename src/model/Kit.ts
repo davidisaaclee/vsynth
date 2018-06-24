@@ -9,10 +9,10 @@ import { oscillator } from './modules/oscillator';
 import { identity } from './modules/identity';
 import { constant } from './modules/constant';
 import { testSubgraph } from './modules/testSubgraph';
-/*
 import { addFract } from './modules/addFract';
-import { divide } from './modules/divide';
 import { phaseDelta } from './modules/phaseDelta';
+/*
+import { divide } from './modules/divide';
 */
 import { VideoModule, ShaderModule, SubgraphModule } from './VideoModule';
 import { VideoNode } from './SimpleVideoGraph';
@@ -26,7 +26,8 @@ export type ModuleType =
 	*/
 
 export type SubgraphModuleType = 'testSubgraph';
-export type ShaderModuleType = 'oscillator' | 'identity' | 'constant';
+export type ShaderModuleType =
+	'oscillator' | 'identity' | 'constant' | 'addFract' | 'phaseDelta';
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
@@ -38,10 +39,13 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	oscillator,
 	identity,
 	constant,
+	addFract,
+	phaseDelta,
 };
 
 export const moduleKeys: ModuleType[] = [
-	'oscillator', 'identity', 'constant', 'testSubgraph'
+	'oscillator', 'identity', 'constant', 'testSubgraph', 'addFract',
+	'phaseDelta'
 ];
 
 
