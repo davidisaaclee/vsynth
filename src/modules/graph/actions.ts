@@ -20,3 +20,6 @@ export const setParameter = (nodeKey: string, parameterKey: string, value: numbe
 export const addBus = () =>
 	action(Constants.ADD_BUS);
 
+export const removeNode = (nodeKey: string) =>
+	action(Constants.REMOVE_NODE, nodeKey);
+

@@ -1,3 +1,4 @@
+import { pickBy as _pickBy, ValueKeyIteratee } from 'lodash';
 import { ActionType } from 'typesafe-actions';
 import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVideoGraph';
 import * as Kit from '../../model/Kit';
@@ -5,12 +6,20 @@ import * as Constants from './constants';
 import * as actions from './actions';
 
 export interface State {
+	// The set of all nodes.
+	// Maps a string node key to a VideoNode.
 	nodes: { [key: string]: VideoNode };
 	outputNodeKey: string | null;
 
 	nodeOrder: string[];
+
+	// Maps each node key to a dictionary,
+	// which maps inlet keys of that node to a bus index.
 	inletConnections: { [nodeKey: string]: { [inletKey: string]: number } };
+
+	// Maps each node key to a connected bus index.
 	outletConnections: { [nodeKey: string]: number };
+
 	busCount: number;
 };
 
@@ -115,9 +124,37 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				busCount: state.busCount + 1
 			};
 
+		case Constants.REMOVE_NODE:
+			return (nodeKeyToDelete => ({
+				...state,
+				nodes: pickBy(
+					state.nodes,
+					(_, nodeKey) => nodeKey !== nodeKeyToDelete),
+				nodeOrder: (state.nodeOrder
+					.filter(nodeKey => nodeKey !== nodeKeyToDelete)),
+				inletConnections: pickBy(
+					state.inletConnections,
+					(_, nodeKey) => nodeKey !== nodeKeyToDelete),
+				outletConnections: pickBy(
+					state.outletConnections,
+					(_, nodeKey) => nodeKey !== nodeKeyToDelete),
+			}))(action.payload);
+
 		default:
 			return state;
 	}
 };
 
+// Typing shim :(
+// This is needed because _.pickBy is typed to return a Partial<T>, where T is
+// the original object.
+// Partial<T> is not assignable to T under TypeScript's rules.
+// However, if T is a general map type (i.e. Record<string, V>),
+// I believe that Partial<T> can be safely assigned to T.
+function pickBy<V, T extends Record<string, V>>(
+	object: T | null | undefined,
+	predicate?: ValueKeyIteratee<T[keyof T]>
+): T {
+	return _pickBy(object, predicate) as T;
+}
 
