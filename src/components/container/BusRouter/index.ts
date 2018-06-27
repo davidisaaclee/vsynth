@@ -47,6 +47,7 @@ interface DispatchProps {
 	setOutletConnection: (nodeKey: string, busIndex: number) => any;
 	openNodeControls: (nodeKey: string) => any;
 	setParameter: (nodeKey: string, paramKey: string, value: number) => any;
+	removeNode: (nodeKey: string) => any;
 }
 
 interface OwnProps extends Partial<TableProps> {}
@@ -118,7 +119,7 @@ class BusRouter extends React.Component<Props, State> {
 		const {
 			graph, connections, busCount, lanes,
 			setInletConnection, setOutletConnection,
-			openNodeControls, setParameter,
+			openNodeControls, setParameter, removeNode,
 			...restProps
 		} = this.props;
 		return e(Table, {
@@ -154,12 +155,20 @@ class BusRouter extends React.Component<Props, State> {
 						)));
 				}
 
-				return e('button',
-					{
-						onClick: () => openNodeControls(lanes[index].nodeKey)
-					},
-					lanes[index].name);
+				return e('span',
+					{},
+					e('button',
+						{
+							onClick: () => openNodeControls(lane.nodeKey),
+						},
+						lanes[index].name),
+					e('button',
+						{
+							onClick: () => removeNode(lane.nodeKey),
+						},
+						'x'));
 			})(lanes[index]),
+
 			renderColumnHeaderContent: (index: number) => e(
 				'div',
 				{
@@ -247,7 +256,11 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 
 		setParameter: (nodeKey: string, paramKey: string, value: number) => (
 			dispatch(GraphModule.actions.setParameter(nodeKey, paramKey, value))
-		)
+		),
+
+		removeNode: (nodeKey: string) => (
+			dispatch(GraphModule.actions.removeNode(nodeKey))
+		),
 	};
 }
 
