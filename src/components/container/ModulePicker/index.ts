@@ -7,17 +7,10 @@ interface Props {
 	addModule: (modType: Kit.ModuleType) => any;
 }
 
-const allModuleKeys = Kit.moduleKeys
-	.filter(moduleKey => [
-		'pro-osc',
-		'dither',
-		'crosshatch'
-	].indexOf(moduleKey) === -1);
-
 const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
 	e('ul',
 		{},
-		...allModuleKeys.map(key =>
+		...Kit.moduleKeys.map(key =>
 			e('li',
 				{},
 				e('button',
