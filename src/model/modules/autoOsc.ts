@@ -73,10 +73,6 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				{
 					nodeKey: nodeKeys.osc,
 					inletKey: Osc.inletKeys.waveSize,
-				},
-				{
-					nodeKey: nodeKeys.phase,
-					inletKey: PhaseDelta.inletKeys.size,
 				}
 			],
 			[inletKeys.speed]: [
@@ -107,7 +103,6 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				[Osc.parameterKeys.shape]: params[paramKeys.shape],
 			},
 			[nodeKeys.phase]: {
-				[PhaseDelta.parameterKeys.sizeAmount]: params[paramKeys.sizeAmount],
 				[PhaseDelta.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
 			}
 		}),

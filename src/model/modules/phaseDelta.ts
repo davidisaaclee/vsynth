@@ -2,12 +2,10 @@ import { glsl } from '@davidisaaclee/video-graph';
 import { VideoModule, ShaderModule } from '../VideoModule';
 
 export const parameterKeys = {
-	sizeAmount: 'sizeAmount',
 	speedAmount: 'speedAmount'
 };
 
 export const inletKeys = {
-	size: 'size',
 	speed: 'speed'
 };
 
@@ -15,11 +13,6 @@ const shaderSource = glsl`
 	precision mediump float;
 
 	uniform vec2 inputTextureDimensions;
-
-	// Size of the waves created by the oscillator
-	// (Corresponds to the integral harmonic of the frequency.)
-	uniform sampler2D waveSize;
-	uniform float waveSizeAmount;
 
 	// The speed of the waves created by the oscillator
 	// (Corresponds to the inharmonic portion of the frequency.)
@@ -45,18 +38,12 @@ const shaderSource = glsl`
 	}
 
 	float calculateFrequency(vec2 textureSamplePoint) {
-		float waveSizeSample = sampleTex(
-				waveSize,
-				textureSamplePoint,
-				waveSizeAmount);
-
 		float speedSample = sampleTex(
 				speed,
 				textureSamplePoint,
 				speedAmount);
 
-		return ceil(waveSizeSample * waveSizeSample * 100.)
-			+ 2. * (speedSample - 0.5);
+		return 2. * (speedSample - 0.5);
 	}
 
 	void main() {
@@ -78,22 +65,18 @@ const shaderSource = glsl`
 export const phaseDelta: VideoModule<ShaderModule> = {
 	parameters: {
 		keys: [
-			parameterKeys.sizeAmount,
 			parameterKeys.speedAmount,
 		],
 		defaultValues: {
-			[parameterKeys.sizeAmount]: 1,
 			[parameterKeys.speedAmount]: 1,
 		},
 	},
 
 	inlets: {
 		keys: [
-			inletKeys.size,
 			inletKeys.speed
 		],
 		associatedParameters: {
-			[inletKeys.size]: [parameterKeys.sizeAmount],
 			[inletKeys.speed]: [parameterKeys.speedAmount],
 		},
 	},
@@ -115,10 +98,6 @@ export const phaseDelta: VideoModule<ShaderModule> = {
 		}),
 
 		parametersToUniforms: (values) => ({
-			waveSizeAmount: {
-				type: 'f',
-				data: values[parameterKeys.sizeAmount]
-			},
 			speedAmount: {
 				type: 'f',
 				data: values[parameterKeys.speedAmount]
@@ -126,7 +105,6 @@ export const phaseDelta: VideoModule<ShaderModule> = {
 		}),
 
 		inletsToUniforms: {
-			[inletKeys.size]: 'waveSize',
 			[inletKeys.speed]: 'speed',
 		}
 	}
