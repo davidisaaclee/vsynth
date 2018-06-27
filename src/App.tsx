@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Modal from 'react-modal';
+import styled from './styled-components';
 import * as Kit from './model/Kit';
 import { videoModuleSpecFromModuleType } from './model/SimpleVideoGraph';
 import Screen from './components/container/Screen';
@@ -16,6 +17,14 @@ import { State as RootState } from './modules';
 Modal.setAppElement('#root');
 
 const e = React.createElement;
+
+const StyledBusRouter = styled(BusRouter)`
+	display: inline;
+`;
+
+const AddButton = styled.button`
+	margin: 20px;
+`;
 
 type Props = StateProps & DispatchProps;
 
@@ -89,23 +98,20 @@ class App extends React.Component<Props, State> {
 							position: 'absolute',
 						}
 					},
-					e(BusRouter),
-					e('button',
+					e('div',
 						{
 							style: {
-								margin: 0,
-								position: 'absolute',
-								right: -50,
-								top: 0
-							},
-							onClick: addBus
+								whiteSpace: 'nowrap'
+							}
 						},
-						'Add bus'),
-					e('button',
-						{
-							style: {
-								margin: 20,
+						e(StyledBusRouter),
+						e(AddButton,
+							{
+								onClick: addBus
 							},
+							'Add bus')),
+					e(AddButton,
+						{
 							onClick: openNodePicker
 						},
 						'Add node'),
