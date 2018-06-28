@@ -5,7 +5,6 @@
   "homepage": "http://david-lee.net/vsynth",
   "dependencies": {
     "@davidisaaclee/graph": "^0.3.1",
-    "@davidisaaclee/react-drag-capture": "/Users/david/Documents/Drawer/packages/react-drag-capture",
     "@davidisaaclee/react-table": "^1.0.0",
     "@davidisaaclee/react-video-graph": "^0.2.3",
     "@davidisaaclee/video-graph": "^0.2.2",

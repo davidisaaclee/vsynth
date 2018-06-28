@@ -1,10 +1,10 @@
+import { clamp } from 'lodash';
 import * as React from 'react';
 import styled from '../../styled-components';
-import { RelativeDragCapture, RelativeDragData } from '@davidisaaclee/react-drag-capture';
 
 const e = React.createElement;
 
-const ControlContainer = styled(RelativeDragCapture)`
+const ControlContainer = styled.span`
 	display: inline-block;
 
 	width: 50px;
@@ -67,37 +67,38 @@ class ParameterControl extends React.Component<Props, State> {
 				{},
 				e(ControlContainer,
 					{
-						dragDidBegin: (
-							pointerID: string,
-							{ relativePosition }: RelativeDragData
-						) => {
+						onPointerDown: (evt: React.PointerEvent<HTMLSpanElement>) => {
+							evt.currentTarget.setPointerCapture(evt.pointerId);
+
+							const relativePosition =
+								relativePositionFromMouseEvent(evt);
 							this.setState({
-								cursorState: { relativePosition },
+								cursorState: { relativePosition }
 							});
 						},
-						dragDidMove: (
-							pointerID: string,
-							{ relativePosition }: RelativeDragData
-						) => {
-							const cursorState = this.state.cursorState;
+
+						onPointerMove: (evt: React.PointerEvent<HTMLSpanElement>) => {
+							const cursorState =
+								this.state.cursorState;
 							if (cursorState == null) {
 								return;
 							}
 
-							const clamped = Math.min(1, Math.max(0, value + relativePosition.x - cursorState.relativePosition.x));
-							onChange(clamped);
+							const relativePosition =
+								relativePositionFromMouseEvent(evt);
+
+							const delta =
+								relativePosition.x - cursorState.relativePosition.x;
+							onChange(clamp(value + delta, 0, 1));
 
 							this.setState({
 								cursorState: { relativePosition }
 							});
 						},
-						dragDidEnd: (
-							pointerID: string,
-						) => {
-							this.setState({
-								cursorState: null
-							});
-						},
+						
+						onPointerUp: (evt: React.PointerEvent<HTMLSpanElement>) => {
+							this.setState({ cursorState: null });
+						}
 					},
 					e(Fill,
 						{
@@ -105,6 +106,28 @@ class ParameterControl extends React.Component<Props, State> {
 						}))));
 	}
 
+}
+
+
+function relativePositionFromMouseEvent<E extends HTMLElement>(evt: React.MouseEvent<E>): { x: number, y: number } {
+	return clientToRelative(
+		clientPositionFromMouseEvent(evt),
+		evt.currentTarget);
+}
+
+function clientPositionFromMouseEvent<E extends HTMLElement>(evt: React.MouseEvent<E>): { x: number, y: number } {
+	return {
+		x: evt.clientX,
+		y: evt.clientY,
+	};
+}
+
+function clientToRelative(clientPosition: { x: number, y: number }, element: HTMLElement): { x: number, y: number } {
+	const boundingBox = element.getBoundingClientRect();
+	return {
+		x: (clientPosition.x - boundingBox.left) / boundingBox.width,
+		y: (clientPosition.y - boundingBox.top) / boundingBox.height
+	};
 }
 
 export default ParameterControl;
