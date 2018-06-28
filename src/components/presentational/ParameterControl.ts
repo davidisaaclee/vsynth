@@ -5,18 +5,25 @@ import styled from '../../styled-components';
 const e = React.createElement;
 
 const FieldSet = styled.div`
-	border: none;
-	background-color: rgba(255, 255, 255, 0.5);
-	padding: 0;
+	position: relative;
 
-	display: flex;
-	flex-flow: column-reverse nowrap;
-	align-items: center;
+	text-align: center;
 
 	padding: 10px;
+
+	border: none;
+	background-color: rgba(255, 255, 255, 0.5);
 `;
 
 const ParameterNameLabel = styled.label`
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+
+	pointer-events: none;
+	color: rgba(50, 50, 50, 1);
+	text-shadow: 1px 1px 0px rgba(200, 200, 200, 1);
 `;
 
 const ControlContainer = styled.span.attrs({
