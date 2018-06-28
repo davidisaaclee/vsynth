@@ -93,7 +93,7 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 
 		parametersToSubParameters: params => ({
 			[nodeKeys.osc]: {
-				[Osc.parameterKeys.waveSizeAmount]: params[paramKeys.sizeAmount],
+				[Osc.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
 				[Osc.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
 				[Osc.parameterKeys.red]: params[paramKeys.red],
 				[Osc.parameterKeys.green]: params[paramKeys.green],
