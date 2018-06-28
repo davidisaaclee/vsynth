@@ -4,6 +4,14 @@ import styled from '../../styled-components';
 
 const e = React.createElement;
 
+const FieldSet = styled.fieldset`
+	border: none;
+	background-color: rgba(255, 255, 255, 0.5);
+
+	display: flex;
+	flex-flow: column-reverse nowrap;
+`;
+
 const ControlContainer = styled.span`
 	display: inline-block;
 
@@ -54,12 +62,8 @@ class ParameterControl extends React.Component<Props, State> {
 			onChange,
 		} = this.props;
 
-		return e('fieldset',
-			{
-				style: {
-					backgroundColor: 'rgba(255, 255, 255, 0.5)',
-				}
-			},
+		return e(FieldSet,
+			{},
 			e('label',
 				{},
 				name),
