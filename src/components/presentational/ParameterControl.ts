@@ -41,10 +41,14 @@ const ControlContainer = styled.span.attrs({
 	width: 80%;
 	height: 50px;
 
-	background-color: black;
+	background-color: #1a1a1a;
 
 	&:hover {
-		background-color: #333;
+		background-color: #000;
+
+		& > .parameter-control-fill {
+			background-color: #fff;
+		}
 	}
 `;
 
@@ -52,13 +56,14 @@ interface FillProps {
 	value: number;
 }
 const Fill = styled.span.attrs<FillProps>({
+	className: 'parameter-control-fill',
 	style: ({ value }: FillProps) => ({
 		width: `${value * 100}%`
 	})
 })`
 	display: block;
 	height: 100%;
-	background-color: white;
+	background-color: #ededed;
 `;
 
 interface Props {
