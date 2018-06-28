@@ -6,6 +6,10 @@
 	width: 30px;
 }
 
+.router-cell:focus {
+	outline: 1px solid white;
+}
+
 .router-cell[data-lane-type="inlet"] {
 	background-color: rgba(255, 255, 255, 0.5);
 }
