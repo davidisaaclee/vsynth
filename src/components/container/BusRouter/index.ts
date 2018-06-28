@@ -48,12 +48,6 @@ const StyledTable = styled(Table)`
 	user-select: none;
 `;
 
-const PinCellContent = styled.div`
-	&:focus {
-		border: none;
-	}
-`;
-
 interface StateProps {
 	graph: SimpleVideoGraph;
 	connections: Connection[];
@@ -95,6 +89,11 @@ class BusRouter extends React.Component<Props, State> {
 
 	private CellContainer: React.StatelessComponent<{ rowIndex: number, columnIndex: number }> = (
 		({ rowIndex, columnIndex, children }) => {
+			const {
+				lanes, connections,
+				setInletConnection, setOutletConnection,
+			} = this.props;
+
 			if (rowIndex < 0 && columnIndex < 0) {
 				return e('th',
 					{},
@@ -110,7 +109,7 @@ class BusRouter extends React.Component<Props, State> {
 					children);
 			}
 
-			const lane = this.props.lanes[rowIndex];
+			const lane = lanes[rowIndex];
 			if (columnIndex < 0) {
 				// row header
 				return e('th',
@@ -123,12 +122,41 @@ class BusRouter extends React.Component<Props, State> {
 					children);
 			}
 
+			const laneIndex = rowIndex;
+			const busIndex = columnIndex;
+
+			const connection =
+				connections.find(c => (
+					c.busIndex === busIndex
+					&& laneIndex === c.laneIndex
+				));
+
+			const toggleCell = lane.type === 'inlet'
+				? () => setInletConnection(
+					lane.nodeKey,
+					lane.inletKey,
+					(connection == null
+						? busIndex
+						: -1))
+				: () => setOutletConnection(
+					lane.nodeKey,
+					(connection == null
+						? busIndex
+						: -2));
+
 			return e('td',
 				{
 					className: css.classNames.cell,
 					[css.data.laneType.key]: (lane.type === 'inlet'
 						? css.data.laneType.values.inlet
 						: css.data.laneType.values.outlet),
+					tabIndex: 0,
+					onClick: toggleCell,
+					onKeyDown: evt => {
+						if (isSpaceKeyEvent(evt) || isEnterKeyEvent(evt)) {
+							toggleCell();
+						}
+					}
 				},
 				children);
 		}
@@ -203,58 +231,26 @@ class BusRouter extends React.Component<Props, State> {
 						&& laneIndex === c.laneIndex
 					));
 
-				const lane = lanes[laneIndex];
-
-				const toggleCell = lane.type === 'inlet'
-					? () => setInletConnection(lane.nodeKey, lane.inletKey, busIndex)
-					: () => setOutletConnection(lane.nodeKey, busIndex);
-
-				if (connection == null) {
-					return e(PinCellContent,
-						{
-							tabIndex: 0,
-							style: {
-								whiteSpace: 'pre-wrap',
-							},
-							onClick: toggleCell,
-							onKeyDown: (evt: React.KeyboardEvent<HTMLDivElement>) => {
-								if (isSpaceKeyEvent(evt) || isEnterKeyEvent(evt)) {
-									toggleCell();
-								}
-							}
+				return e('div',
+					{
+						style: {
+							whiteSpace: 'pre-wrap',
 						},
-						' ');
-				} else {
-					const toggleCell = lane.type === 'inlet'
-						? () => setInletConnection(lane.nodeKey, lane.inletKey, -1)
-						: () => setOutletConnection(lane.nodeKey, -2);
-
-					return e(PinCellContent,
+					},
+					connection == null
+					? ' '
+					: e('div',
 						{
-							tabIndex: 0,
 							style: {
-								whiteSpace: 'pre-wrap',
-							},
-							onClick: toggleCell,
-							onKeyDown: (evt: React.KeyboardEvent<HTMLDivElement>) => {
-								if (isSpaceKeyEvent(evt) || isEnterKeyEvent(evt)) {
-									toggleCell();
-								}
+								backgroundColor: lanes[laneIndex].type === 'inlet'
+								? 'black'
+								: 'white',
+								width: 10,
+								height: 10,
+								display: 'block',
+								margin: '0 auto',
 							}
-						},
-						e('div',
-							{
-								style: {
-									backgroundColor: lanes[laneIndex].type === 'inlet'
-									? 'black'
-									: 'white',
-									width: 10,
-									height: 10,
-									display: 'block',
-									margin: '0 auto',
-								}
-							}));
-				}
+						}));
 			},
 
 			renderRowContainer: this.RowContainer,
