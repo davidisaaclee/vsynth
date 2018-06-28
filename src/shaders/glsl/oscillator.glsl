@@ -6,6 +6,9 @@ const float N_SCANLINES = 500.;
 uniform vec2 inputTextureDimensions;
 
 uniform vec3 color;
+uniform sampler2D red;
+uniform sampler2D green;
+uniform sampler2D blue;
 
 // Size of the waves created by the oscillator
 // (Corresponds to the integral harmonic of the frequency.)
@@ -128,7 +131,13 @@ void main() {
 
 	float z = mix(sine, triangle, clamp(shape, 0., 0.5) * 2.);
 
+
+	vec3 weightedColor =
+		vec3(sampleTex(red, textureSamplePoint, color.r),
+				sampleTex(green, textureSamplePoint, color.g),
+				sampleTex(blue, textureSamplePoint, color.b));
+
 	gl_FragColor = vec4(
-			color * vec3(z),
+			weightedColor * vec3(z),
 			1);
 }

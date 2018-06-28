@@ -13,6 +13,9 @@ export const parameterKeys = {
 };
 
 export const inletKeys = {
+	red: 'red',
+	green: 'green',
+	blue: 'blue',
 	waveSize: 'harmonics',
 	speed: 'inharmonics',
 	rotation: 'rotation',
@@ -36,6 +39,9 @@ export const oscillator: VideoModule<ShaderModule> = {
 
 	inlets: {
 		keys: [
+			inletKeys.red,
+			inletKeys.green,
+			inletKeys.blue,
 			inletKeys.waveSize,
 			inletKeys.speed,
 			inletKeys.rotation,
@@ -43,6 +49,9 @@ export const oscillator: VideoModule<ShaderModule> = {
 		],
 
 		associatedParameters: {
+			[inletKeys.red]: [parameterKeys.red],
+			[inletKeys.green]: [parameterKeys.green],
+			[inletKeys.blue]: [parameterKeys.blue],
 			[inletKeys.waveSize]: [parameterKeys.waveSizeAmount],
 			[inletKeys.speed]: [parameterKeys.speedAmount],
 			[inletKeys.rotation]: [parameterKeys.rotationAmount],
@@ -94,6 +103,9 @@ export const oscillator: VideoModule<ShaderModule> = {
 		}),
 
 		inletsToUniforms: {
+			[inletKeys.red]: 'red',
+			[inletKeys.green]: 'green',
+			[inletKeys.blue]: 'blue',
 			[inletKeys.waveSize]: 'waveSize',
 			[inletKeys.speed]: 'speed',
 			[inletKeys.rotation]: 'rotationTheta',
