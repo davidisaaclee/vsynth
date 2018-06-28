@@ -7,12 +7,8 @@ const e = React.createElement;
 
 const FieldSet = styled.div`
 	position: relative;
-
-	text-align: center;
-
-	padding: 10px;
-
 	border: none;
+	text-align: center;
 `;
 
 const ParameterNameLabel = styled.label`
