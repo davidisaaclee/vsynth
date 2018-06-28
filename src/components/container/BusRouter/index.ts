@@ -5,6 +5,7 @@ import { throttle } from 'lodash';
 import * as classNames from 'classnames';
 import * as Graph from '@davidisaaclee/graph';
 import { Table, Props as TableProps } from '@davidisaaclee/react-table';
+import styled from '../../../styled-components';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import * as Kit from '../../../model/Kit';
 import * as App from '../../../modules/app';
@@ -34,6 +35,10 @@ const css = {
 		},
 	}
 };
+
+const StyledTable = styled(Table)`
+	user-select: none;
+`;
 
 interface StateProps {
 	graph: SimpleVideoGraph;
@@ -122,7 +127,7 @@ class BusRouter extends React.Component<Props, State> {
 			openNodeControls, setParameter, removeNode,
 			...restProps
 		} = this.props;
-		return e(Table, {
+		return e(StyledTable, {
 			...restProps,
 			rowCount: lanes.length,
 			columnCount: busCount,
