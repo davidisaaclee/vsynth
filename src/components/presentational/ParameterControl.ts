@@ -7,9 +7,9 @@ const e = React.createElement;
 const FieldSet = styled.fieldset`
 	border: none;
 	background-color: rgba(255, 255, 255, 0.5);
+	padding: 0;
 
 	display: flex;
-	flex-flow: column-reverse nowrap;
 `;
 
 const ControlContainer = styled.span.attrs({
