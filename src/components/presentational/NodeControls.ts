@@ -6,8 +6,9 @@ import ParameterControl from './ParameterControl';
 const e = React.createElement;
 
 const Container = styled.div`
-	display: flex;
-	flex-flow: row wrap;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 10px;
 `;
 
 export interface Props {
