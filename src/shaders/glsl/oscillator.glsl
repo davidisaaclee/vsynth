@@ -5,10 +5,8 @@ const float N_SCANLINES = 500.;
 
 uniform vec2 inputTextureDimensions;
 
-uniform vec3 color;
-uniform sampler2D red;
-uniform sampler2D green;
-uniform sampler2D blue;
+uniform sampler2D hue;
+uniform float hueAmount;
 
 // Size of the waves created by the oscillator
 // (Corresponds to the integral harmonic of the frequency.)
@@ -41,6 +39,12 @@ vec2 rotate(vec2 v, float a, vec2 center) {
 	float c = cos(a);
 	mat2 m = mat2(c, -s, s, c);
 	return center + m * (v - center);
+}
+
+vec3 hsv2rgb(vec3 c) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
 float maxComponent(vec3 v) {
@@ -132,12 +136,10 @@ void main() {
 	float z = mix(sine, triangle, clamp(shape, 0., 0.5) * 2.);
 
 
-	vec3 weightedColor =
-		vec3(sampleTex(red, textureSamplePoint, color.r),
-				sampleTex(green, textureSamplePoint, color.g),
-				sampleTex(blue, textureSamplePoint, color.b));
+	float sampledHue =
+		sampleTex(hue, textureSamplePoint, hueAmount);
 
 	gl_FragColor = vec4(
-			weightedColor * vec3(z),
+			hsv2rgb(vec3(sampledHue, 1., 1.)) * vec3(z),
 			1);
 }

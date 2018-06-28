@@ -5,6 +5,7 @@ import * as AddFract from './addFract';
 import * as PhaseDelta from './phaseDelta';
 
 const inletKeys = {
+	hue: 'hue',
 	size: 'size',
 	speed: 'speed',
 	rotation: 'rotation',
@@ -13,9 +14,7 @@ const inletKeys = {
 const paramKeys = {
 	sizeAmount: 'sizeAmount',
 	speedAmount: 'speedAmount',
-	red: 'red',
-	green: 'green',
-	blue: 'blue',
+	hue: 'hue',
 	rotationAmount: 'rotationAmount',
 	phaseOffsetAmount: 'phaseOffsetAmount',
 	shape: 'shape',
@@ -30,11 +29,13 @@ const nodeKeys = {
 export const autoOsc: VideoModule<SubgraphModule> = {
 	inlets: {
 		keys: [
+			inletKeys.hue,
 			inletKeys.size,
 			inletKeys.speed,
 			inletKeys.rotation,
 		],
 		associatedParameters: {
+			[inletKeys.hue]: [paramKeys.hue],
 			[inletKeys.size]: [paramKeys.sizeAmount],
 			[inletKeys.speed]: [paramKeys.speedAmount],
 			[inletKeys.rotation]: [paramKeys.rotationAmount],
@@ -46,9 +47,7 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 			paramKeys.sizeAmount,
 			paramKeys.speedAmount,
 			paramKeys.shape,
-			paramKeys.red,
-			paramKeys.green,
-			paramKeys.blue,
+			paramKeys.hue,
 			paramKeys.rotationAmount,
 			// TODO: phaseOffsetAmount should be hidden...
 			paramKeys.phaseOffsetAmount,
@@ -57,9 +56,7 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 			[paramKeys.sizeAmount]: 0.5,
 			[paramKeys.speedAmount]: 0.5,
 			[paramKeys.shape]: 0,
-			[paramKeys.red]: 1,
-			[paramKeys.green]: 0,
-			[paramKeys.blue]: 0,
+			[paramKeys.hue]: 1,
 			[paramKeys.rotationAmount]: 0,
 			[paramKeys.phaseOffsetAmount]: 1,
 		}
@@ -89,15 +86,17 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.rotation,
 			}],
+			[inletKeys.hue]: [{
+				nodeKey: nodeKeys.osc,
+				inletKey: Osc.inletKeys.hue,
+			}]
 		},
 
 		parametersToSubParameters: params => ({
 			[nodeKeys.osc]: {
 				[Osc.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
 				[Osc.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
-				[Osc.parameterKeys.red]: params[paramKeys.red],
-				[Osc.parameterKeys.green]: params[paramKeys.green],
-				[Osc.parameterKeys.blue]: params[paramKeys.blue],
+				[Osc.parameterKeys.hue]: params[paramKeys.hue],
 				[Osc.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
 				[Osc.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
 				[Osc.parameterKeys.shape]: params[paramKeys.shape],

@@ -2,9 +2,7 @@ import { VideoModule, ShaderModule } from '../VideoModule';
 import shaderSource from '../../shaders/oscillator.generated';
 
 export const parameterKeys = {
-	red: 'red',
-	green: 'green',
-	blue: 'blue',
+	hue: 'hue',
 	shape: 'shape',
 	waveSizeAmount: 'harmonics amount',
 	speedAmount: 'inharmonics amount',
@@ -13,9 +11,7 @@ export const parameterKeys = {
 };
 
 export const inletKeys = {
-	red: 'red',
-	green: 'green',
-	blue: 'blue',
+	hue: 'hue',
 	waveSize: 'harmonics',
 	speed: 'inharmonics',
 	rotation: 'rotation',
@@ -28,9 +24,7 @@ export const oscillator: VideoModule<ShaderModule> = {
 		defaultValues: {
 			[parameterKeys.waveSizeAmount]: 1,
 			[parameterKeys.speedAmount]: 1,
-			[parameterKeys.red]: 1,
-			[parameterKeys.green]: 0,
-			[parameterKeys.blue]: 0,
+			[parameterKeys.hue]: 1,
 			[parameterKeys.shape]: 0,
 			[parameterKeys.rotationAmount]: 0,
 			[parameterKeys.phaseOffsetAmount]: 0,
@@ -39,9 +33,7 @@ export const oscillator: VideoModule<ShaderModule> = {
 
 	inlets: {
 		keys: [
-			inletKeys.red,
-			inletKeys.green,
-			inletKeys.blue,
+			inletKeys.hue,
 			inletKeys.waveSize,
 			inletKeys.speed,
 			inletKeys.rotation,
@@ -49,9 +41,7 @@ export const oscillator: VideoModule<ShaderModule> = {
 		],
 
 		associatedParameters: {
-			[inletKeys.red]: [parameterKeys.red],
-			[inletKeys.green]: [parameterKeys.green],
-			[inletKeys.blue]: [parameterKeys.blue],
+			[inletKeys.hue]: [parameterKeys.hue],
 			[inletKeys.waveSize]: [parameterKeys.waveSizeAmount],
 			[inletKeys.speed]: [parameterKeys.speedAmount],
 			[inletKeys.rotation]: [parameterKeys.rotationAmount],
@@ -92,20 +82,14 @@ export const oscillator: VideoModule<ShaderModule> = {
 				type: 'f',
 				data: values[parameterKeys.phaseOffsetAmount]
 			},
-			color: {
-				type: '3f',
-				data: [
-					values[parameterKeys.red],
-					values[parameterKeys.green],
-					values[parameterKeys.blue],
-				]
+			hueAmount: {
+				type: 'f',
+				data: values[parameterKeys.hue]
 			},
 		}),
 
 		inletsToUniforms: {
-			[inletKeys.red]: 'red',
-			[inletKeys.green]: 'green',
-			[inletKeys.blue]: 'blue',
+			[inletKeys.hue]: 'hue',
 			[inletKeys.waveSize]: 'waveSize',
 			[inletKeys.speed]: 'speed',
 			[inletKeys.rotation]: 'rotationTheta',
