@@ -12,7 +12,12 @@ const FieldSet = styled.fieldset`
 	flex-flow: column-reverse nowrap;
 `;
 
-const ControlContainer = styled.span`
+const ControlContainer = styled.span.attrs({
+	// HACK: Providing custom attributes to DOM elements is supported in React 16,
+	// but the typings don't reflect this.
+	// To provide a custom attribute, hide it from the type checker.
+	...{ 'touch-action': 'none' } as {},
+})`
 	display: inline-block;
 
 	width: 50px;
