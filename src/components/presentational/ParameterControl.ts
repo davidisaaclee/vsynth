@@ -1,6 +1,7 @@
 import { clamp } from 'lodash';
 import * as React from 'react';
 import styled from '../../styled-components';
+import { deviceQueries } from '../../utility/mediaQueries';
 
 const e = React.createElement;
 
@@ -24,6 +25,10 @@ const ParameterNameLabel = styled.label`
 	pointer-events: none;
 	color: rgba(50, 50, 50, 1);
 	text-shadow: 1px 1px 0px rgba(200, 200, 200, 1);
+
+	${deviceQueries.mobile`
+		font-size: 9pt;
+	`}
 `;
 
 const ControlContainer = styled.span.attrs({
