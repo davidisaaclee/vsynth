@@ -4,12 +4,19 @@ import styled from '../../styled-components';
 
 const e = React.createElement;
 
-const FieldSet = styled.fieldset`
+const FieldSet = styled.div`
 	border: none;
 	background-color: rgba(255, 255, 255, 0.5);
 	padding: 0;
 
 	display: flex;
+	flex-flow: column-reverse nowrap;
+	align-items: center;
+
+	padding: 10px;
+`;
+
+const ParameterNameLabel = styled.label`
 `;
 
 const ControlContainer = styled.span.attrs({
@@ -20,7 +27,7 @@ const ControlContainer = styled.span.attrs({
 })`
 	display: inline-block;
 
-	width: 50px;
+	width: 80%;
 	height: 50px;
 
 	background-color: black;
@@ -69,50 +76,48 @@ class ParameterControl extends React.Component<Props, State> {
 
 		return e(FieldSet,
 			{},
-			e('label',
+			e(ParameterNameLabel,
 				{},
 				name),
-			e('div',
-				{},
-				e(ControlContainer,
-					{
-						onPointerDown: (evt: React.PointerEvent<HTMLSpanElement>) => {
-							evt.currentTarget.setPointerCapture(evt.pointerId);
+			e(ControlContainer,
+				{
+					onPointerDown: (evt: React.PointerEvent<HTMLSpanElement>) => {
+						evt.currentTarget.setPointerCapture(evt.pointerId);
 
-							const relativePosition =
-								relativePositionFromMouseEvent(evt);
-							this.setState({
-								cursorState: { relativePosition }
-							});
-						},
-
-						onPointerMove: (evt: React.PointerEvent<HTMLSpanElement>) => {
-							const cursorState =
-								this.state.cursorState;
-							if (cursorState == null) {
-								return;
-							}
-
-							const relativePosition =
-								relativePositionFromMouseEvent(evt);
-
-							const delta =
-								relativePosition.x - cursorState.relativePosition.x;
-							onChange(clamp(value + delta, 0, 1));
-
-							this.setState({
-								cursorState: { relativePosition }
-							});
-						},
-						
-						onPointerUp: (evt: React.PointerEvent<HTMLSpanElement>) => {
-							this.setState({ cursorState: null });
-						}
+						const relativePosition =
+							relativePositionFromMouseEvent(evt);
+						this.setState({
+							cursorState: { relativePosition }
+						});
 					},
-					e(Fill,
-						{
-							value
-						}))));
+
+					onPointerMove: (evt: React.PointerEvent<HTMLSpanElement>) => {
+						const cursorState =
+							this.state.cursorState;
+						if (cursorState == null) {
+							return;
+						}
+
+						const relativePosition =
+							relativePositionFromMouseEvent(evt);
+
+						const delta =
+							relativePosition.x - cursorState.relativePosition.x;
+						onChange(clamp(value + delta, 0, 1));
+
+						this.setState({
+							cursorState: { relativePosition }
+						});
+					},
+
+					onPointerUp: (evt: React.PointerEvent<HTMLSpanElement>) => {
+						this.setState({ cursorState: null });
+					}
+				},
+				e(Fill,
+					{
+						value
+					})));
 	}
 
 }
