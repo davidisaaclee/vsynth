@@ -96,6 +96,43 @@ class ParameterControl extends React.Component<Props, State> {
 				name),
 			e(ControlContainer,
 				{
+					tabIndex: 0,
+
+					onKeyDown: (evt: React.KeyboardEvent<HTMLSpanElement>) => {
+						type Command = "increment" | "decrement";
+
+						function commandFromKeyCode(keyCode: number): Command | null {
+							switch (keyCode) {
+								case 37:
+									return 'decrement';
+
+								case 38:
+									return 'increment';
+
+								case 39:
+									return 'increment';
+
+								case 40:
+									return 'decrement';
+
+								default:
+									return null;
+							}
+						}
+
+						const deltaMagnitude = 0.01;
+
+						switch (commandFromKeyCode(evt.keyCode)) {
+							case 'increment':
+								onChangeValue(value + deltaMagnitude);
+								return;
+
+							case 'decrement':
+								onChangeValue(value - deltaMagnitude);
+								return;
+						}
+					},
+
 					onPointerDown: (evt: React.PointerEvent<HTMLSpanElement>) => {
 						evt.currentTarget.setPointerCapture(evt.pointerId);
 
