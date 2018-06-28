@@ -9,7 +9,6 @@ export interface State {
 	// The set of all nodes.
 	// Maps a string node key to a VideoNode.
 	nodes: { [key: string]: VideoNode };
-	outputNodeKey: string | null;
 
 	nodeOrder: string[];
 
@@ -28,7 +27,6 @@ const initialState: State = {
 		'output': videoModuleSpecFromModuleType('identity'),
 		'default-constant': videoModuleSpecFromModuleType('constant'),
 	},
-	outputNodeKey: 'output',
 
 	nodeOrder: ['output', 'default-constant'],
 	inletConnections: {},

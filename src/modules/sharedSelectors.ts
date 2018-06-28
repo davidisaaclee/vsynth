@@ -99,5 +99,5 @@ export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 	});
 
 export const outputNodeKey =
-	(state: RootState) => state.graph.outputNodeKey;
+	(state: RootState) => 'output';
 
