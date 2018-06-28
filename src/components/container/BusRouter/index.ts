@@ -5,11 +5,13 @@ import { throttle } from 'lodash';
 import * as classNames from 'classnames';
 import * as Graph from '@davidisaaclee/graph';
 import { Table, Props as TableProps } from '@davidisaaclee/react-table';
+import styled from '../../../styled-components';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import * as Kit from '../../../model/Kit';
 import * as App from '../../../modules/app';
 import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
+import ParameterControl from '../../presentational/ParameterControl';
 import * as selectors from './selectors';
 import { Lane, Connection } from './types';
 import './style.css';
@@ -22,7 +24,6 @@ const css = {
 		row: 'router-row',
 		columnHeader: 'router-column-header',
 		cell: 'router-cell',
-		controlledInlet: 'router-controlled-inlet',
 	},
 	data: {
 		laneType: {
@@ -34,6 +35,10 @@ const css = {
 		},
 	}
 };
+
+const StyledTable = styled(Table)`
+	user-select: none;
+`;
 
 interface StateProps {
 	graph: SimpleVideoGraph;
@@ -122,7 +127,7 @@ class BusRouter extends React.Component<Props, State> {
 			openNodeControls, setParameter, removeNode,
 			...restProps
 		} = this.props;
-		return e(Table, {
+		return e(StyledTable, {
 			...restProps,
 			rowCount: lanes.length,
 			columnCount: busCount,
@@ -134,25 +139,24 @@ class BusRouter extends React.Component<Props, State> {
 					const associatedParameters = videoModule.inlets.associatedParameters[lane.inletKey] != null
 						? videoModule.inlets.associatedParameters[lane.inletKey]
 						: [];
-					return e('div',
-						{
-							className: css.classNames.controlledInlet
-						},
-						e('div', {}, lane.inletKey),
-						associatedParameters.map((paramKey: string) => (
-							e('input',
-								{
-									key: `${lane.nodeKey}-${paramKey}`,
-									type: 'range',
-									min: 0,
-									max: 1,
-									step: 'any',
-									value: node.parameters[paramKey],
-									onChange: throttle((evt: React.SyntheticEvent<HTMLInputElement>) => (
-										setParameter(lane.nodeKey, paramKey, parseFloat(evt.currentTarget.value))
-									), 1000 / 60),
-								})
-						)));
+
+					if (associatedParameters.length === 0) {
+						return lane.inletKey;
+					}
+
+					return associatedParameters.map(paramKey => (
+						e(ParameterControl,
+							{
+								key: lane.inletKey,
+								name: lane.inletKey,
+								value: node.parameters[paramKey],
+								onChangeValue: throttle(value => (
+									setParameter(lane.nodeKey, paramKey, value)
+								), 1000 / 60),
+								style: {
+									height: 20,
+								}
+							})));
 				}
 
 				return e('span',

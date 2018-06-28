@@ -1,7 +1,15 @@
 import * as React from 'react';
+import styled from '../../styled-components';
 import { throttle } from 'lodash';
+import ParameterControl from './ParameterControl';
 
 const e = React.createElement;
+
+const Container = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 10px;
+`;
 
 export interface Props {
 	parameters: Array<{ key: string, name: string, value: number }>;
@@ -12,34 +20,21 @@ export default class NodeControls extends React.Component<Props, object> {
 	public render() {
 		const { parameters, onEdit } = this.props;
 
-		return e('div',
+		return e(Container,
 			{},
 			parameters.map(({ key, name, value }, parameterIndex) =>
-				e('fieldset',
+				e(ParameterControl,
 					{
 						key,
+						name,
+						value,
+						onChangeValue: throttle((newValue: number) => (
+							onEdit(parameterIndex, newValue, key)
+						), 1000 / 60),
 						style: {
-							backgroundColor: 'rgba(255, 255, 255, 0.5)'
+							height: 40
 						}
-					},
-					e('label',
-						{},
-						name),
-					e('input',
-						{
-							type: 'range',
-							min: 0,
-							max: 1,
-							step: 'any',
-							value,
-							onChange: throttle((evt: React.SyntheticEvent<HTMLInputElement>) => (
-								onEdit(parameterIndex, parseFloat(evt.currentTarget.value), key)
-							), 1000 / 60),
-							style: {
-								width: '100%',
-							}
-						}))
-			));
+					})));
 	}
 }
 
