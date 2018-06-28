@@ -18,6 +18,14 @@ import './style.css';
 
 const e = React.createElement;
 
+function isSpaceKeyEvent<E extends HTMLElement>(keyEvent: React.KeyboardEvent<E>): boolean {
+	return keyEvent.keyCode === 32;
+}
+
+function isEnterKeyEvent<E extends HTMLElement>(keyEvent: React.KeyboardEvent<E>): boolean {
+	return keyEvent.keyCode === 13;
+}
+
 const css = {
 	classNames: {
 		lane: 'router-lane',
@@ -38,6 +46,12 @@ const css = {
 
 const StyledTable = styled(Table)`
 	user-select: none;
+`;
+
+const PinCellContent = styled.div`
+	&:focus {
+		border: none;
+	}
 `;
 
 interface StateProps {
@@ -191,27 +205,42 @@ class BusRouter extends React.Component<Props, State> {
 
 				const lane = lanes[laneIndex];
 
+				const toggleCell = lane.type === 'inlet'
+					? () => setInletConnection(lane.nodeKey, lane.inletKey, busIndex)
+					: () => setOutletConnection(lane.nodeKey, busIndex);
+
 				if (connection == null) {
-					return e('div',
+					return e(PinCellContent,
 						{
+							tabIndex: 0,
 							style: {
 								whiteSpace: 'pre-wrap',
 							},
-							onClick: (lane.type === 'inlet'
-								? () => setInletConnection(lane.nodeKey, lane.inletKey, busIndex)
-								: () => setOutletConnection(lane.nodeKey, busIndex))
+							onClick: toggleCell,
+							onKeyDown: (evt: React.KeyboardEvent<HTMLDivElement>) => {
+								if (isSpaceKeyEvent(evt) || isEnterKeyEvent(evt)) {
+									toggleCell();
+								}
+							}
 						},
 						' ');
 				} else {
-					return e('div',
+					const toggleCell = lane.type === 'inlet'
+						? () => setInletConnection(lane.nodeKey, lane.inletKey, -1)
+						: () => setOutletConnection(lane.nodeKey, -2);
+
+					return e(PinCellContent,
 						{
+							tabIndex: 0,
 							style: {
 								whiteSpace: 'pre-wrap',
 							},
-							// TODO: Be more explicit about removing edges behavior
-							onClick: (lane.type === 'inlet'
-								? () => setInletConnection(lane.nodeKey, lane.inletKey, -1)
-								: () => setOutletConnection(lane.nodeKey, -2))
+							onClick: toggleCell,
+							onKeyDown: (evt: React.KeyboardEvent<HTMLDivElement>) => {
+								if (isSpaceKeyEvent(evt) || isEnterKeyEvent(evt)) {
+									toggleCell();
+								}
+							}
 						},
 						e('div',
 							{
