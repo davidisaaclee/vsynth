@@ -28,9 +28,12 @@ export default class NodeControls extends React.Component<Props, object> {
 						key,
 						name,
 						value,
-						onChange: throttle((newValue: number) => (
+						onChangeValue: throttle((newValue: number) => (
 							onEdit(parameterIndex, newValue, key)
-						), 1000 / 60)
+						), 1000 / 60),
+						style: {
+							height: 40
+						}
 					})));
 	}
 }

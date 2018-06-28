@@ -38,8 +38,8 @@ const ControlContainer = styled.span.attrs({
 })`
 	display: inline-block;
 
-	width: 80%;
-	height: 50px;
+	width: 100%;
+	height: 100%;
 
 	background-color: #1a1a1a;
 
@@ -66,12 +66,14 @@ const Fill = styled.span.attrs<FillProps>({
 	background-color: #ededed;
 `;
 
-interface Props {
+interface OwnProps {
 	name: string;
 	value: number;
 
-	onChange: (value: number) => any;
+	onChangeValue: (value: number) => any;
 }
+
+type Props = OwnProps & React.HTMLAttributes<HTMLDivElement>;
 
 interface State {
 	cursorState: { relativePosition: { x: number, y: number } } | null;
@@ -87,11 +89,12 @@ class ParameterControl extends React.Component<Props, State> {
 	public render() {
 		const {
 			name, value,
-			onChange,
+			onChangeValue,
+			...restProps
 		} = this.props;
 
 		return e(FieldSet,
-			{},
+			restProps,
 			e(ParameterNameLabel,
 				{},
 				name),
@@ -119,7 +122,7 @@ class ParameterControl extends React.Component<Props, State> {
 
 						const delta =
 							relativePosition.x - cursorState.relativePosition.x;
-						onChange(clamp(value + delta, 0, 1));
+						onChangeValue(clamp(value + delta, 0, 1));
 
 						this.setState({
 							cursorState: { relativePosition }
