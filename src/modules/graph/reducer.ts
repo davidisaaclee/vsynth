@@ -138,6 +138,9 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					(_, nodeKey) => nodeKey !== nodeKeyToDelete),
 			}))(action.payload);
 
+		case Constants.RESET_ALL:
+			return initialState;
+
 		default:
 			return state;
 	}

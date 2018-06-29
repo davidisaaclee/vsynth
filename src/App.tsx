@@ -9,6 +9,7 @@ import Screen from './components/container/Screen';
 import BusRouter from './components/container/BusRouter';
 import ModulePicker from './components/container/ModulePicker';
 import NodeControls from './components/container/ConnectedNodeControls';
+import MainMenu from './components/container/MainMenu';
 import * as AppModule from './modules/app';
 import * as Graph from './modules/graph';
 import './App.css';
@@ -49,9 +50,7 @@ class App extends React.Component<Props, State> {
 					});
 
 			case 'MAIN_MENU':
-				return e('div',
-					{},
-					'main menu');
+				return e(MainMenu);
 
 			case 'NODE_CONTROLS':
 				return e(NodeControls, { nodeKey: modal.nodeKey });

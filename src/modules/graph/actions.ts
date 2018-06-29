@@ -23,3 +23,6 @@ export const addBus = () =>
 export const removeNode = (nodeKey: string) =>
 	action(Constants.REMOVE_NODE, nodeKey);
 
+export const resetAll = () =>
+	action(Constants.RESET_ALL);
+
