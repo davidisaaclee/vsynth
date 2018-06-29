@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ActionCreators as UndoActions } from 'redux-undo';
 import * as Graph from '../../../modules/graph';
 import * as App from '../../../modules/app';
+import * as C from './components';
 
 const e = React.createElement;
 
@@ -16,25 +17,25 @@ interface DispatchProps {
 type Props = DispatchProps;
 
 const MainMenu: React.StatelessComponent<Props> = ({ resetDocument, undo, redo }) => (
-	e('ul',
+	e(C.List,
 		{},
-		e('li',
+		e(C.Item,
 			{},
-			e('button',
+			e(C.Button,
 				{
 					onClick: resetDocument
 				},
 				'Reset')),
-		e('li',
+		e(C.Item,
 			{},
-			e('button',
+			e(C.Button,
 				{
 					onClick: undo
 				},
 				'Undo')),
-		e('li',
+		e(C.Item,
 			{},
-			e('button',
+			e(C.Button,
 				{
 					onClick: redo
 				},
