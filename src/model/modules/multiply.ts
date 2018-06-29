@@ -28,7 +28,7 @@ const shaderSource = glsl`
 		gl_FragColor =
 			texture2D(leftTexture, samplePoint) * leftAmount
 			* texture2D(rightTexture, samplePoint) * rightAmount;
-		gl_FragColor.rgb = fract(gl_FragColor.rgb);
+		gl_FragColor.rgb = clamp(gl_FragColor.rgb, 0., 1.);
 	}
 `;
 
