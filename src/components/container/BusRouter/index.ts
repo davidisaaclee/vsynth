@@ -205,6 +205,9 @@ class BusRouter extends React.Component<Props, State> {
 								key: lane.inletKey,
 								name: lane.inletKey,
 								value: node.parameters[paramKey],
+								onInputValue: throttle(value => (
+									setParameter(lane.nodeKey, paramKey, value)
+								), 1000 / 60),
 								onChangeValue: throttle(value => (
 									setParameter(lane.nodeKey, paramKey, value)
 								), 1000 / 60),

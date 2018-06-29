@@ -67,6 +67,7 @@ interface OwnProps {
 	value: number;
 
 	onChangeValue: (value: number) => any;
+	onInputValue: (value: number) => any;
 }
 
 type Props = OwnProps & React.HTMLAttributes<HTMLDivElement>;
@@ -85,6 +86,7 @@ class ParameterControl extends React.Component<Props, State> {
 	public render() {
 		const {
 			name, value,
+			onInputValue,
 			onChangeValue,
 			...restProps
 		} = this.props;
@@ -155,7 +157,7 @@ class ParameterControl extends React.Component<Props, State> {
 
 						const delta =
 							relativePosition.x - cursorState.relativePosition.x;
-						onChangeValue(clamp(value + delta, 0, 1));
+						onInputValue(clamp(value + delta, 0, 1));
 
 						this.setState({
 							cursorState: { relativePosition }
@@ -163,6 +165,7 @@ class ParameterControl extends React.Component<Props, State> {
 					},
 
 					onPointerUp: (evt: React.PointerEvent<HTMLSpanElement>) => {
+						onChangeValue(value);
 						this.setState({ cursorState: null });
 					}
 				},
