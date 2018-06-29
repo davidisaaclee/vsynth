@@ -47,10 +47,10 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 
 	parameters: {
 		keys: [
+			paramKeys.hue,
 			paramKeys.sizeAmount,
 			paramKeys.speedAmount,
 			paramKeys.shape,
-			paramKeys.hue,
 			paramKeys.rotationAmount,
 			// TODO: phaseOffsetAmount should be hidden...
 			paramKeys.phaseOffsetAmount,
