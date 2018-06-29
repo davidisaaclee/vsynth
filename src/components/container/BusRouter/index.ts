@@ -113,7 +113,7 @@ class BusRouter extends React.Component<Props, State> {
 					{},
 					e(HamburgerMenuButton,
 						{ onClick: this.props.openMainMenu },
-						'...'));
+						'menu'));
 			}
 
 			if (rowIndex < 0) {
