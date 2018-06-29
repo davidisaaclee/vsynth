@@ -2,6 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import * as Modal from 'react-modal';
+import { ActionCreators as UndoActions } from 'redux-undo';
+import { HotKeys } from 'react-hotkeys';
 import styled from './styled-components';
 import * as Kit from './model/Kit';
 import { videoModuleSpecFromModuleType } from './model/SimpleVideoGraph';
@@ -61,87 +63,100 @@ class App extends React.Component<Props, State> {
 		const {
 			modal,
 			openNodePicker, closeModal,
+			undo, redo,
 			addBus
 		} = this.props;
 		const {
 			isShowingRouter
 		} = this.state;
 
-		return e('div', {},
-			e(Screen,
-				{
-					onClick: () => {
-						this.setState({ isShowingRouter: true });
-					}
-				}),
-			e(Modal,
-				{
-					isOpen: isShowingRouter,
-					onRequestClose: () => {
-						this.setState({ isShowingRouter: false });
-					},
-					style: {
-						content: {
-							opacity: 1,
-							backgroundColor: 'rgba(255, 255, 255, 0)',
-							borderRadius: 0,
-							border: 'none',
-							outline: 'none',
-						},
-						overlay: {
-							backgroundColor: 'rgba(255, 255, 255, 0)',
-							border: 'none',
-						}
-					}
+		return e(HotKeys,
+			{
+				keyMap: {
+					undo: ['command+z', 'ctrl+z'],
+					redo: ['command+shift+z', 'ctrl+shift+z'],
 				},
-				e('div',
+				handlers: {
+					'undo': undo,
+					'redo': redo
+				},
+				// TODO: This shouldn't be necessary, I think.
+				attach: window,
+			},
+			e('div', {},
+				e(Screen,
 					{
+						onClick: () => {
+							this.setState({ isShowingRouter: true });
+						}
+					}),
+				e(Modal,
+					{
+						isOpen: isShowingRouter,
+						onRequestClose: () => {
+							this.setState({ isShowingRouter: false });
+						},
 						style: {
-							left: 0,
-							top: 0,
-							position: 'absolute',
+							content: {
+								opacity: 1,
+								backgroundColor: 'rgba(255, 255, 255, 0)',
+								borderRadius: 0,
+								border: 'none',
+								outline: 'none',
+							},
+							overlay: {
+								backgroundColor: 'rgba(255, 255, 255, 0)',
+								border: 'none',
+							}
 						}
 					},
 					e('div',
 						{
 							style: {
-								whiteSpace: 'nowrap'
+								left: 0,
+								top: 0,
+								position: 'absolute',
 							}
 						},
-						e(StyledBusRouter),
+						e('div',
+							{
+								style: {
+									whiteSpace: 'nowrap'
+								}
+							},
+							e(StyledBusRouter),
+							e(AddButton,
+								{
+									onClick: addBus
+								},
+								'Add bus')),
 						e(AddButton,
 							{
-								onClick: addBus
+								onClick: openNodePicker
 							},
-							'Add bus')),
-					e(AddButton,
-						{
-							onClick: openNodePicker
-						},
-						'Add node'),
-				)),
-			e(Modal,
-				{
-					isOpen: modal != null,
-					onRequestClose: closeModal,
-					style: {
-						content: {
-							opacity: 1,
-							backgroundColor: 'rgba(255, 255, 255, 0)',
-							borderRadius: 0,
-							border: '1px solid white',
-							outline: '1px solid black',
-						},
-						overlay: {
-							backgroundColor: 'rgba(255, 255, 255, 0)',
-							border: 'none',
+							'Add node'),
+					)),
+				e(Modal,
+					{
+						isOpen: modal != null,
+						onRequestClose: closeModal,
+						style: {
+							content: {
+								opacity: 1,
+								backgroundColor: 'rgba(255, 255, 255, 0)',
+								borderRadius: 0,
+								border: '1px solid white',
+								outline: '1px solid black',
+							},
+							overlay: {
+								backgroundColor: 'rgba(255, 255, 255, 0)',
+								border: 'none',
+							}
 						}
-					}
-				},
-				modal == null
-				? null
-				: this.renderModal(modal))
-		);
+					},
+					modal == null
+					? null
+					: this.renderModal(modal))));
 	}
 }
 
@@ -154,6 +169,8 @@ interface DispatchProps {
 	addModule: (modType: Kit.ModuleType) => any;
 	addBus: () => any;
 	openNodePicker: () => any;
+	undo: () => any;
+	redo: () => any;
 }
 
 function mapStateToProps(state: RootState): StateProps {
@@ -174,6 +191,8 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 		},
 		addBus: () => dispatch(Graph.actions.addBus()),
 		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.pickModule)),
+		undo: () => dispatch(UndoActions.undo()),
+		redo: () => dispatch(UndoActions.redo()),
 	};
 }
 
