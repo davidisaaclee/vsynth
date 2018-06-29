@@ -32,11 +32,11 @@ const AddButton = styled.button`
 
 const StyledMenu = styled(MainMenu)`
 	position: fixed;
-	height: 20px;
+	height: 30px;
 	right: 0;
 	bottom: 0;
 	
-	margin: 10px;
+	margin: 20px;
 `;
 
 interface Props {
@@ -133,6 +133,7 @@ class App extends React.Component<Props, State> {
 								borderRadius: 0,
 								border: 'none',
 								outline: 'none',
+								overflow: 'visible',
 							},
 							overlay: {
 								backgroundColor: 'rgba(255, 255, 255, 0)',
@@ -144,8 +145,11 @@ class App extends React.Component<Props, State> {
 						{
 							style: {
 								left: 0,
+								right: 0,
 								top: 0,
+								bottom: 0,
 								position: 'absolute',
+								overflow: 'auto',
 							}
 						},
 						e('div',
@@ -164,8 +168,8 @@ class App extends React.Component<Props, State> {
 							{
 								onClick: openNodePicker
 							},
-							'Add node'),
-						e(StyledMenu))),
+							'Add node')),
+					e(StyledMenu)),
 				e(Modal,
 					{
 						isOpen: modal != null,

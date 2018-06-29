@@ -23,7 +23,7 @@ export const Button = styled.button`
 
 	border: 2px solid white;
 	outline: 1px solid black;
-	padding: 0;
+	padding: 0 1em;
 
 	background-color: rgba(255, 255, 255, 0.7);
 	color: black;
