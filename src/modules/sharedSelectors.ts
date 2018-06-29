@@ -8,7 +8,7 @@ import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
 
 const document =
-	(state: RootState) => state.graph;
+	(state: RootState) => state.graph.present;
 
 const nodes =
 	createSelector(
