@@ -32,6 +32,7 @@ const AddButton = styled.button`
 
 const StyledMenu = styled(MainMenu)`
 	position: fixed;
+	height: 20px;
 	right: 0;
 	bottom: 0;
 	
