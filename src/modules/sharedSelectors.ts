@@ -3,6 +3,7 @@ import { createSelector, Selector } from 'reselect';
 import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from './index';
 import { SimpleVideoGraph, VideoNode } from '../model/SimpleVideoGraph';
+import { ModuleType } from '../model/Kit';
 import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
@@ -34,6 +35,11 @@ export const nodeOrder =
 	createSelector(
 		document,
 		d => d.nodeOrder);
+
+export const nextNodeKey =
+	createSelector(
+		document,
+		d => (modType: ModuleType) => `${modType}-${d.nodeKeySeed}`);
 
 export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoNode }>> =
 	createSelector(

@@ -9,6 +9,9 @@ import {
 } from '../../constants';
 
 export interface State {
+	// A seed used to generate the next node key.
+	nodeKeySeed: number,
+
 	// The set of all nodes.
 	// Maps a string node key to a VideoNode.
 	nodes: { [key: string]: VideoNode };
@@ -26,6 +29,7 @@ export interface State {
 };
 
 const initialState: State = {
+	nodeKeySeed: 0,
 	nodes: {
 		'output': videoModuleSpecFromModuleType('identity'),
 		'default-constant': videoModuleSpecFromModuleType('constant'),
@@ -68,26 +72,10 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 
 		case Constants.INSERT_NODE:
 			return ((nodeKey, node) => {
-				// Automatically connect all inlets to default constant bus
-				const mod = Kit.moduleForNode(node);
-				if (mod.inlets != null) {
-					state = mod.inlets.keys.reduce((state, inletKey) =>
-						insertInletConnection(
-							state,
-							nodeKey,
-							inletKey,
-							defaultConstantBusIndex),
-						state);
-				}
-
-				return {
-					...state,
-					nodes: {
-						...state.nodes,
-						[nodeKey]: node
-					},
-					nodeOrder: [...state.nodeOrder, nodeKey]
-				};
+				state = connectAllInlets(state, node, nodeKey, defaultConstantBusIndex);
+				state = insertNode(state, node, nodeKey);
+				state = incrementNodeKeySeed(state);
+				return state;
 			})(action.payload.id, action.payload.node);
 
 		case Constants.PREVIEW_PARAMETER:
@@ -167,6 +155,35 @@ function insertInletConnection(state: State, nodeKey: string, inletKey: string, 
 			}
 		}
 	};
+}
+
+function incrementNodeKeySeed(state: State): State {
+	return {
+		...state,
+		nodeKeySeed: state.nodeKeySeed + 1
+	};
+}
+
+function insertNode(state: State, node: VideoNode, nodeKey: string): State {
+	return {
+		...state,
+		nodes: {
+			...state.nodes,
+			[nodeKey]: node
+		},
+		nodeOrder: [...state.nodeOrder, nodeKey]
+	};
+}
+
+function connectAllInlets(state: State, node: VideoNode, nodeKey: string, busIndex: number): State {
+	return Kit.moduleForNode(node).inlets.keys
+		.reduce((state, inletKey) => (
+			insertInletConnection(
+				state,
+				nodeKey,
+				inletKey,
+				busIndex)),
+			state);
 }
 
 // Typing shim :(

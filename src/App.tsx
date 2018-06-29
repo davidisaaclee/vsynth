@@ -14,6 +14,7 @@ import NodeControls from './components/container/ConnectedNodeControls';
 import MainMenu from './components/container/MainMenu';
 import * as AppModule from './modules/app';
 import * as Graph from './modules/graph';
+import * as sharedSelectors from './modules/sharedSelectors';
 import './App.css';
 import { State as RootState } from './modules';
 
@@ -29,7 +30,30 @@ const AddButton = styled.button`
 	margin: 20px;
 `;
 
-type Props = StateProps & DispatchProps;
+interface Props {
+	modal: AppModule.Modals.Modal | null;
+
+	closeModal: () => any;
+	addModule: (modType: Kit.ModuleType) => any;
+	addBus: () => any;
+	openNodePicker: () => any;
+	undo: () => any;
+	redo: () => any;
+};
+
+interface StateProps {
+	modal: AppModule.Modals.Modal | null;
+	nextNodeKey: (modType: Kit.ModuleType) => string;
+}
+
+interface DispatchProps {
+	closeModal: () => any;
+	makeAddModule: (makeNodeKey: (modType: Kit.ModuleType) => string) => (modType: Kit.ModuleType) => any;
+	addBus: () => any;
+	openNodePicker: () => any;
+	undo: () => any;
+	redo: () => any;
+}
 
 interface State {
 	isShowingRouter: boolean;
@@ -160,35 +184,21 @@ class App extends React.Component<Props, State> {
 	}
 }
 
-interface StateProps {
-	modal: AppModule.Modals.Modal | null;
-}
-
-interface DispatchProps {
-	closeModal: () => any;
-	addModule: (modType: Kit.ModuleType) => any;
-	addBus: () => any;
-	openNodePicker: () => any;
-	undo: () => any;
-	redo: () => any;
-}
-
 function mapStateToProps(state: RootState): StateProps {
 	return {
-		modal: state.app.modal
+		modal: state.app.modal,
+		nextNodeKey: sharedSelectors.nextNodeKey(state),
 	};
 }
 
-let counter = 0;
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		closeModal: () => dispatch(AppModule.actions.setModal(null)),
-		addModule: (modType) => {
-			const nodeKey = `${modType}-${counter++}`;
+		makeAddModule: makeNodeKey => modType => (
 			dispatch(Graph.actions.insertNode(
 				videoModuleSpecFromModuleType(modType),
-				nodeKey));
-		},
+				makeNodeKey(modType)))
+		),
+		closeModal: () => dispatch(AppModule.actions.setModal(null)),
 		addBus: () => dispatch(Graph.actions.addBus()),
 		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.pickModule)),
 		undo: () => dispatch(UndoActions.undo()),
@@ -196,8 +206,32 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	};
 }
 
+interface OwnProps {};
+function mergeProps(
+	stateProps: StateProps,
+	dispatchProps: DispatchProps,
+	ownProps: OwnProps
+): Props {
+	const { modal, nextNodeKey } = stateProps;
+	const {
+		makeAddModule,
+		addBus, closeModal,
+		openNodePicker, redo, undo
+	} = dispatchProps;
+	return {
+		addModule: makeAddModule(nextNodeKey),
+		modal,
+		addBus,
+		closeModal,
+		openNodePicker,
+		redo,
+		undo
+	};
+}
+
 export default connect(
 	mapStateToProps,
-	mapDispatchToProps
+	mapDispatchToProps,
+	mergeProps,
 )(App);
 
