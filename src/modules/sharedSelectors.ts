@@ -7,20 +7,33 @@ import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
 
+const document =
+	(state: RootState) => state.graph;
+
 const nodes =
-	(state: RootState) => state.graph.nodes;
+	createSelector(
+		document,
+		d => d.nodes);
 
 export const busCount =
-	(state: RootState) => state.graph.busCount;
+	createSelector(
+		document,
+		d => d.busCount);
 
 export const inletConnections =
-	(state: RootState) => state.graph.inletConnections;
+	createSelector(
+		document,
+		d => d.inletConnections);
 
 export const outletConnections =
-	(state: RootState) => state.graph.outletConnections;
+	createSelector(
+		document,
+		d => d.outletConnections);
 
 export const nodeOrder =
-	(state: RootState) => state.graph.nodeOrder;
+	createSelector(
+		document,
+		d => d.nodeOrder);
 
 export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoNode }>> =
 	createSelector(
