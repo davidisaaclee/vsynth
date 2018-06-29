@@ -51,15 +51,6 @@ const StyledTable = styled(Table)`
 	user-select: none;
 `;
 
-const HamburgerMenuButton = styled.button`
-	background: none;
-	border: none;
-	color: white;
-
-	width: 100%;
-	height: 30px;
-`;
-
 interface StateProps {
 	graph: SimpleVideoGraph;
 	connections: Connection[];
@@ -74,7 +65,6 @@ interface DispatchProps {
 	setParameter: (nodeKey: string, paramKey: string, value: number) => any;
 	previewParameter: (nodeKey: string, paramKey: string, value: number) => any;
 	removeNode: (nodeKey: string) => any;
-	openMainMenu: () => any;
 }
 
 interface OwnProps extends Partial<TableProps> {}
@@ -111,9 +101,7 @@ class BusRouter extends React.Component<Props, State> {
 			if (rowIndex < 0 && columnIndex < 0) {
 				return e('th',
 					{},
-					e(HamburgerMenuButton,
-						{ onClick: this.props.openMainMenu },
-						'menu'));
+					children);
 			}
 
 			if (rowIndex < 0) {
@@ -183,7 +171,7 @@ class BusRouter extends React.Component<Props, State> {
 			graph, connections, busCount, lanes,
 			setInletConnection, setOutletConnection,
 			openNodeControls, setParameter, previewParameter,
-			removeNode, openMainMenu,
+			removeNode, 
 			...restProps
 		} = this.props;
 		return e(StyledTable, {
@@ -314,10 +302,6 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 		removeNode: (nodeKey: string) => (
 			dispatch(GraphModule.actions.removeNode(nodeKey))
 		),
-
-		openMainMenu: () => (
-			dispatch(App.actions.setModal(App.Modals.mainMenu))
-		)
 	};
 }
 

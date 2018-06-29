@@ -30,6 +30,14 @@ const AddButton = styled.button`
 	margin: 20px;
 `;
 
+const StyledMenu = styled(MainMenu)`
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	
+	margin: 10px;
+`;
+
 interface Props {
 	modal: AppModule.Modals.Modal | null;
 
@@ -159,7 +167,7 @@ class App extends React.Component<Props, State> {
 								onClick: openNodePicker
 							},
 							'Add node'),
-					)),
+						e(StyledMenu))),
 				e(Modal,
 					{
 						isOpen: modal != null,

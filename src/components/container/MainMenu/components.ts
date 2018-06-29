@@ -7,14 +7,14 @@ export const List = styled.ul`
 	padding: 0;
 	margin: 0;
 
-	flex-flow: column nowrap;
+	flex-flow: row nowrap;
 	align-items: stretch;
-	justify-content: space-around;
+	justify-content: flex-end;
 `;
 
 export const Item = styled.li`
 	list-style-type: none;
-	height: 20%;
+	margin: 0 10px;
 `
 
 export const Button = styled.button`
@@ -27,7 +27,6 @@ export const Button = styled.button`
 
 	background-color: rgba(255, 255, 255, 0.7);
 	color: black;
-	font-size: 16pt;
 
 	&:hover {
 		background-color: rgba(255, 255, 255, 1);

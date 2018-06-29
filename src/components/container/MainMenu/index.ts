@@ -14,11 +14,16 @@ interface DispatchProps {
 	redo: () => any;
 }
 
-type Props = DispatchProps;
+type OwnProps = React.HTMLAttributes<HTMLUListElement>;
 
-const MainMenu: React.StatelessComponent<Props> = ({ resetDocument, undo, redo }) => (
+type Props = DispatchProps & OwnProps;
+
+const MainMenu: React.StatelessComponent<Props> = ({
+	resetDocument, undo, redo,
+	...restProps
+}) => (
 	e(C.List,
-		{},
+		restProps,
 		e(C.Item,
 			{},
 			e(C.Button,
@@ -59,7 +64,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	};
 }
 
-export default connect(
+export default connect<object, DispatchProps, OwnProps>(
 	null,
 	mapDispatchToProps
 )(MainMenu);
