@@ -87,6 +87,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				};
 			})(action.payload.id, action.payload.node);
 
+		case Constants.PREVIEW_PARAMETER:
 		case Constants.SET_PARAMETER:
 			return (({ nodeKey, parameterKey, value }) => {
 				const node = {

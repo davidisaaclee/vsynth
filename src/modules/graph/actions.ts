@@ -14,6 +14,9 @@ export const setOutletConnection = (nodeKey: string, busIndex: number) =>
 export const insertNode = (node: VideoNode, id: string) =>
 	action(Constants.INSERT_NODE, { node, id });
 
+export const previewParameter = (nodeKey: string, parameterKey: string, value: number) =>
+	action(Constants.PREVIEW_PARAMETER, { nodeKey, parameterKey, value });
+
 export const setParameter = (nodeKey: string, parameterKey: string, value: number) =>
 	action(Constants.SET_PARAMETER, { nodeKey, parameterKey, value });
 
