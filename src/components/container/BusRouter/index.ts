@@ -69,6 +69,7 @@ interface DispatchProps {
 	setOutletConnection: (nodeKey: string, busIndex: number) => any;
 	openNodeControls: (nodeKey: string) => any;
 	setParameter: (nodeKey: string, paramKey: string, value: number) => any;
+	previewParameter: (nodeKey: string, paramKey: string, value: number) => any;
 	removeNode: (nodeKey: string) => any;
 	openMainMenu: () => any;
 }
@@ -178,8 +179,8 @@ class BusRouter extends React.Component<Props, State> {
 		const {
 			graph, connections, busCount, lanes,
 			setInletConnection, setOutletConnection,
-			openNodeControls, setParameter, removeNode,
-			openMainMenu,
+			openNodeControls, setParameter, previewParameter,
+			removeNode, openMainMenu,
 			...restProps
 		} = this.props;
 		return e(StyledTable, {
@@ -206,7 +207,7 @@ class BusRouter extends React.Component<Props, State> {
 								name: lane.inletKey,
 								value: node.parameters[paramKey],
 								onInputValue: throttle(value => (
-									setParameter(lane.nodeKey, paramKey, value)
+									previewParameter(lane.nodeKey, paramKey, value)
 								), 1000 / 60),
 								onChangeValue: throttle(value => (
 									setParameter(lane.nodeKey, paramKey, value)
@@ -301,6 +302,10 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 
 		setParameter: (nodeKey: string, paramKey: string, value: number) => (
 			dispatch(GraphModule.actions.setParameter(nodeKey, paramKey, value))
+		),
+
+		previewParameter: (nodeKey: string, paramKey: string, value: number) => (
+			dispatch(GraphModule.actions.previewParameter(nodeKey, paramKey, value))
 		),
 
 		removeNode: (nodeKey: string) => (

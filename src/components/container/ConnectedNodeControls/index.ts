@@ -10,7 +10,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-	makeOnEdit: (nodeKey: string) => (index: number, value: number, key: string) => any;
+	makeOnInput: (nodeKey: string) => (index: number, value: number, key: string) => any;
+	makeOnChange: (nodeKey: string) => (index: number, value: number, key: string) => any;
 }
 
 interface OwnProps {
@@ -25,9 +26,13 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		makeOnEdit: (nodeKey) => (index, value, parameterKey) => (
+		makeOnInput: (nodeKey) => (index, value, parameterKey) => (
+			dispatch(GraphModule.actions.previewParameter(nodeKey, parameterKey, value))
+		),
+
+		makeOnChange: (nodeKey) => (index, value, parameterKey) => (
 			dispatch(GraphModule.actions.setParameter(nodeKey, parameterKey, value))
-		)
+		),
 	};
 }
 
@@ -37,12 +42,13 @@ function mergeProps(
 	ownProps: OwnProps
 ): NodeControlsProps {
 	const { parametersForNodeKey } = stateProps;
-	const { makeOnEdit } = dispatchProps;
+	const { makeOnInput, makeOnChange } = dispatchProps;
 	const { nodeKey } = ownProps;
 
 	return {
 		parameters: parametersForNodeKey(nodeKey),
-		onEdit: makeOnEdit(nodeKey)
+		onInput: makeOnInput(nodeKey),
+		onChange: makeOnChange(nodeKey),
 	};
 }
 

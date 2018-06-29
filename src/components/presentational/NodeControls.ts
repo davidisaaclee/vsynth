@@ -13,12 +13,13 @@ const Container = styled.div`
 
 export interface Props {
 	parameters: Array<{ key: string, name: string, value: number }>;
-	onEdit: (index: number, value: number, key: string) => any;
+	onChange: (index: number, value: number, key: string) => any;
+	onInput: (index: number, value: number, key: string) => any;
 }
 
 export default class NodeControls extends React.Component<Props, object> {
 	public render() {
-		const { parameters, onEdit } = this.props;
+		const { parameters, onInput, onChange } = this.props;
 
 		return e(Container,
 			{},
@@ -29,10 +30,10 @@ export default class NodeControls extends React.Component<Props, object> {
 						name,
 						value,
 						onInputValue: throttle((newValue: number) => (
-							onEdit(parameterIndex, newValue, key)
+							onInput(parameterIndex, newValue, key)
 						), 1000 / 60),
 						onChangeValue: throttle((newValue: number) => (
-							onEdit(parameterIndex, newValue, key)
+							onChange(parameterIndex, newValue, key)
 						), 1000 / 60),
 						style: {
 							height: 40
