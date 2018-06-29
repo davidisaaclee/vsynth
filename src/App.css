@@ -3,4 +3,5 @@ html, body {
 	background-color: black;
 
 	font-family: sans-serif;
+	touch-action: manipulation;
 }
