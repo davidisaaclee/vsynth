@@ -83,9 +83,6 @@ class App extends React.Component<Props, State> {
 						}
 					});
 
-			case 'MAIN_MENU':
-				return e(MainMenu);
-
 			case 'NODE_CONTROLS':
 				return e(NodeControls, { nodeKey: modal.nodeKey });
 		}
