@@ -1,6 +1,7 @@
 precision mediump float;
  
 uniform sampler2D inputTexture;
+uniform float inputTextureAmount;
 uniform vec2 inputTextureDimensions;
 
 uniform sampler2D rOffset;
@@ -22,8 +23,8 @@ void main() {
 			maxComponent(texture2D(bOffset, uv).rgb * bOffsetAmount)) - 0.5;
 
   gl_FragColor = vec4(
-			texture2D(inputTexture, uv + vec2(rgbOffset.r, 0.)).r,
-			texture2D(inputTexture, uv + vec2(rgbOffset.g, 0.)).g,
-			texture2D(inputTexture, uv + vec2(rgbOffset.b, 0.)).b,
+			texture2D(inputTexture, uv + vec2(rgbOffset.r, 0.)).r * inputTextureAmount,
+			texture2D(inputTexture, uv + vec2(rgbOffset.g, 0.)).g * inputTextureAmount,
+			texture2D(inputTexture, uv + vec2(rgbOffset.b, 0.)).b * inputTextureAmount,
 			texture2D(inputTexture, uv).a);
 }

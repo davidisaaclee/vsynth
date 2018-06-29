@@ -2,6 +2,7 @@ import shaderSource from '../../shaders/rgb-offset.generated';
 import { VideoModule, ShaderModule } from '../VideoModule';
 
 export const parameterKeys = {
+	input: 'input',
 	rAmount: 'rAmount',
 	gAmount: 'gAmount',
 	bAmount: 'bAmount',
@@ -17,11 +18,13 @@ export const inletKeys = {
 export const rgbOffset: VideoModule<ShaderModule> = {
 	parameters: {
 		keys: [
+			parameterKeys.input,
 			parameterKeys.rAmount,
 			parameterKeys.gAmount,
 			parameterKeys.bAmount,
 		],
 		defaultValues: {
+			[parameterKeys.input]: 1,
 			[parameterKeys.rAmount]: 0.5,
 			[parameterKeys.gAmount]: 0.5,
 			[parameterKeys.bAmount]: 0.5,
@@ -36,6 +39,7 @@ export const rgbOffset: VideoModule<ShaderModule> = {
 			inletKeys.b,
 		],
 		associatedParameters: {
+			[inletKeys.input]: [parameterKeys.input],
 			[inletKeys.r]: [parameterKeys.rAmount],
 			[inletKeys.g]: [parameterKeys.gAmount],
 			[inletKeys.b]: [parameterKeys.bAmount],
@@ -55,6 +59,10 @@ export const rgbOffset: VideoModule<ShaderModule> = {
 		}),
 
 		parametersToUniforms: values => ({
+			inputTextureAmount: {
+				type: 'f',
+				data: values[parameterKeys.input]
+			},
 			rOffsetAmount: {
 				type: 'f',
 				data: values[parameterKeys.rAmount]
