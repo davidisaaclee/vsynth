@@ -38,18 +38,23 @@ class App extends React.Component<Props, State> {
 	}
 
 	public renderModal(modal: AppModule.Modals.Modal): React.ReactNode {
-		if (modal === AppModule.Modals.PICK_MODULE) {
-			return e(ModulePicker,
-				{
-					addModule: (modType: Kit.ModuleType) => {
-						this.props.addModule(modType);
-						this.props.closeModal();
-					}
-				});
-		} else if (AppModule.Modals.isNodeControls(modal)) {
-			return e(NodeControls, { nodeKey: modal.nodeKey });
-		} else {
-			throw new Error(`Invalid modal type: ${modal}`);
+		switch (modal.type) {
+			case 'PICK_MODULE':
+				return e(ModulePicker,
+					{
+						addModule: (modType: Kit.ModuleType) => {
+							this.props.addModule(modType);
+							this.props.closeModal();
+						}
+					});
+
+			case 'MAIN_MENU':
+				return e('div',
+					{},
+					'main menu');
+
+			case 'NODE_CONTROLS':
+				return e(NodeControls, { nodeKey: modal.nodeKey });
 		}
 	}
 	
@@ -180,7 +185,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 			}
 		},
 		addBus: () => dispatch(Graph.actions.addBus()),
-		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.PICK_MODULE)),
+		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.pickModule)),
 	};
 }
 
