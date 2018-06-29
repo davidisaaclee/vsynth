@@ -32,7 +32,8 @@ uniform sampler2D phaseOffsetTexture;
 uniform float phaseOffsetTextureAmount;
 
 // wave shape: 0 = sine, 0.5 = triangle, 1 = sawtooth
-uniform float shape;
+uniform sampler2D shape;
+uniform float shapeAmount;
 
 vec2 rotate(vec2 v, float a, vec2 center) {
 	float s = sin(a);
@@ -115,8 +116,10 @@ void main() {
 		 + 1.)
 		/ 2.;
 
+	float sampledShape =
+		sampleTex(shape, textureSamplePoint, shapeAmount);
 
-	float duty = clamp(shape, 0.5, 1.);
+	float duty = clamp(sampledShape, 0.5, 1.);
 	// should mod pixelIndex by 1, but guaranteed to be within 0-1
 	float p1 = duty;
 	float p2 = 1. - p1;
@@ -133,7 +136,7 @@ void main() {
 
 
 
-	float z = mix(sine, triangle, clamp(shape, 0., 0.5) * 2.);
+	float z = mix(sine, triangle, clamp(sampledShape, 0., 0.5) * 2.);
 
 
 	float sampledHue =

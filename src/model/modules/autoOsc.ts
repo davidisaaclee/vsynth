@@ -6,6 +6,7 @@ import * as PhaseDelta from './phaseDelta';
 
 const inletKeys = {
 	hue: 'hue',
+	shape: 'shape',
 	size: 'size',
 	speed: 'speed',
 	rotation: 'rotation',
@@ -32,12 +33,14 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 			inletKeys.hue,
 			inletKeys.size,
 			inletKeys.speed,
+			inletKeys.shape,
 			inletKeys.rotation,
 		],
 		associatedParameters: {
 			[inletKeys.hue]: [paramKeys.hue],
 			[inletKeys.size]: [paramKeys.sizeAmount],
 			[inletKeys.speed]: [paramKeys.speedAmount],
+			[inletKeys.shape]: [paramKeys.shape],
 			[inletKeys.rotation]: [paramKeys.rotationAmount],
 		}
 	},
@@ -82,6 +85,10 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 					inletKey: PhaseDelta.inletKeys.speed,
 				},
 			],
+			[inletKeys.shape]: [{
+				nodeKey: nodeKeys.osc,
+				inletKey: Osc.inletKeys.shape,
+			}],
 			[inletKeys.rotation]: [{
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.rotation,
