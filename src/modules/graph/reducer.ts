@@ -48,18 +48,11 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 			};
 
 		case Constants.SET_INLET_CONNECTION:
-			return (({ nodeKey, inletKey, busIndex }) => ({
-				...state,
-				inletConnections: {
-					...state.inletConnections,
-					[nodeKey]: {
-						...(state.inletConnections[nodeKey] == null
-							? {}
-							: state.inletConnections[nodeKey]),
-						[inletKey]: busIndex
-					}
-				}
-			}))(action.payload);
+			return insertInletConnection(
+				state,
+				action.payload.nodeKey,
+				action.payload.inletKey,
+				action.payload.busIndex);
 
 		case Constants.SET_OUTLET_CONNECTION:
 			return (({ nodeKey, busIndex }) => ({
@@ -71,17 +64,28 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 			}))(action.payload);
 
 		case Constants.INSERT_NODE:
-			return {
-				...state,
-				nodes: {
-					...state.nodes,
-					[action.payload.id]: action.payload.node
-				},
-				nodeOrder: [
-					...state.nodeOrder,
-					action.payload.id
-				]
-			};
+			return ((nodeKey, node) => {
+				// HACK: Automatically connect all inlets to default bus (-1);
+				const mod = Kit.moduleForNode(node);
+				if (mod.inlets != null) {
+					state = mod.inlets.keys.reduce((state, inletKey) =>
+						insertInletConnection(
+							state,
+							nodeKey,
+							inletKey,
+							-1),
+						state);
+				}
+
+				return {
+					...state,
+					nodes: {
+						...state.nodes,
+						[nodeKey]: node
+					},
+					nodeOrder: [...state.nodeOrder, nodeKey]
+				};
+			})(action.payload.id, action.payload.node);
 
 		case Constants.SET_PARAMETER:
 			return (({ nodeKey, parameterKey, value }) => {
@@ -145,6 +149,21 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 			return state;
 	}
 };
+
+function insertInletConnection(state: State, nodeKey: string, inletKey: string, busIndex: number): State {
+	return {
+		...state,
+		inletConnections: {
+			...state.inletConnections,
+			[nodeKey]: {
+				...(state.inletConnections[nodeKey] == null
+					? {}
+					: state.inletConnections[nodeKey]),
+				[inletKey]: busIndex
+			}
+		}
+	};
+}
 
 // Typing shim :(
 // This is needed because _.pickBy is typed to return a Partial<T>, where T is

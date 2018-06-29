@@ -171,17 +171,6 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 			dispatch(Graph.actions.insertNode(
 				videoModuleSpecFromModuleType(modType),
 				nodeKey));
-
-			// HACK: Automatically connect all inlets to default bus (-1);
-			const mod = Kit.moduleForType(modType);
-			if (mod.inlets != null) {
-				mod.inlets.keys.forEach(inletKey => {
-					dispatch(Graph.actions.setInletConnection(
-						nodeKey,
-						inletKey,
-						-1));
-				});
-			}
 		},
 		addBus: () => dispatch(Graph.actions.addBus()),
 		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.pickModule)),
