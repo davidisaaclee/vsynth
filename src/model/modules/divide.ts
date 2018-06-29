@@ -1,11 +1,15 @@
 import { glsl } from '@davidisaaclee/video-graph';
 import { VideoModule, ShaderModule } from '../VideoModule';
 
+export const parameterKeys = {
+	numerator: 'numerator',
+	denominator: 'denominator',
+};
 
 export const inletKeys = {
 	numerator: 'numerator',
 	denominator: 'denominator',
-}
+};
 
 const shaderSource = glsl`
 	precision mediump float;
@@ -13,15 +17,19 @@ const shaderSource = glsl`
 	const float DIVISOR_MIN = 0.0001;
 
 	uniform vec2 inputTextureDimensions;
+
+	uniform float numeratorAmount;
 	uniform sampler2D numerator;
+
+	uniform float denominatorAmount;
 	uniform sampler2D denominator;
 
 	void main() {
 		vec2 samplePoint =
 			gl_FragCoord.xy / inputTextureDimensions;
 		gl_FragColor =
-			texture2D(numerator, samplePoint)
-			/ max(texture2D(denominator, samplePoint), DIVISOR_MIN);
+			(texture2D(numerator, samplePoint) * numeratorAmount)
+			/ max(texture2D(denominator, samplePoint) * denominatorAmount, DIVISOR_MIN);
 	}
 `;
 
@@ -29,8 +37,14 @@ const shaderSource = glsl`
 // Guards against division-by-zero by clamping values below DIVISOR_MIN.
 export const divide: VideoModule<ShaderModule> = {
 	parameters: {
-		keys: [],
-		defaultValues: {},
+		keys: [
+			parameterKeys.numerator,
+			parameterKeys.denominator,
+		],
+		defaultValues: {
+			[parameterKeys.numerator]: 1,
+			[parameterKeys.denominator]: 1,
+		},
 	},
 
 	inlets: {
@@ -38,7 +52,10 @@ export const divide: VideoModule<ShaderModule> = {
 			inletKeys.numerator,
 			inletKeys.denominator,
 		],
-		associatedParameters: {},
+		associatedParameters: {
+			[inletKeys.numerator]: [parameterKeys.numerator],
+			[inletKeys.denominator]: [parameterKeys.denominator],
+		},
 	},
 
 	details: {
@@ -53,7 +70,16 @@ export const divide: VideoModule<ShaderModule> = {
 			},
 		}),
 
-		parametersToUniforms: () => ({}),
+		parametersToUniforms: values => ({
+			'numeratorAmount': {
+				type: 'f',
+				data: values[parameterKeys.numerator]
+			},
+			'denominatorAmount': {
+				type: 'f',
+				data: values[parameterKeys.denominator]
+			},
+		}),
 
 		inletsToUniforms: {
 			[inletKeys.numerator]: 'numerator',
