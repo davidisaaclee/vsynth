@@ -12,6 +12,9 @@ import * as App from '../../../modules/app';
 import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
 import ParameterControl from '../../presentational/ParameterControl';
+import {
+	defaultConstantBusIndex, nullSendBusIndex, fps
+} from '../../../constants';
 import * as selectors from './selectors';
 import { Lane, Connection } from './types';
 import './style.css';
@@ -150,12 +153,12 @@ class BusRouter extends React.Component<Props, State> {
 					lane.inletKey,
 					(connection == null
 						? busIndex
-						: -1))
+						: defaultConstantBusIndex))
 				: () => setOutletConnection(
 					lane.nodeKey,
 					(connection == null
 						? busIndex
-						: -2));
+						: nullSendBusIndex));
 
 			return e('td',
 				{
@@ -208,10 +211,10 @@ class BusRouter extends React.Component<Props, State> {
 								value: node.parameters[paramKey],
 								onInputValue: throttle(value => (
 									previewParameter(lane.nodeKey, paramKey, value)
-								), 1000 / 60),
+								), 1000 / fps),
 								onChangeValue: throttle(value => (
 									setParameter(lane.nodeKey, paramKey, value)
-								), 1000 / 60),
+								), 1000 / fps),
 								style: {
 									height: 20,
 								}

@@ -4,6 +4,9 @@ import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVide
 import * as Kit from '../../model/Kit';
 import * as Constants from './constants';
 import * as actions from './actions';
+import {
+	defaultConstantBusIndex, nullSendBusIndex
+} from '../../constants';
 
 export interface State {
 	// The set of all nodes.
@@ -31,8 +34,8 @@ const initialState: State = {
 	nodeOrder: ['output', 'default-constant'],
 	inletConnections: {},
 	outletConnections: {
-		'default-constant': -1,
-		'output': -2,
+		'default-constant': defaultConstantBusIndex,
+		'output': nullSendBusIndex,
 	},
 	busCount: 5,
 };
@@ -65,7 +68,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 
 		case Constants.INSERT_NODE:
 			return ((nodeKey, node) => {
-				// HACK: Automatically connect all inlets to default bus (-1);
+				// Automatically connect all inlets to default constant bus
 				const mod = Kit.moduleForNode(node);
 				if (mod.inlets != null) {
 					state = mod.inlets.keys.reduce((state, inletKey) =>
@@ -73,7 +76,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 							state,
 							nodeKey,
 							inletKey,
-							-1),
+							defaultConstantBusIndex),
 						state);
 				}
 
