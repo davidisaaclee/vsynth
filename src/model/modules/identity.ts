@@ -8,7 +8,7 @@ export const identity: VideoModule<ShaderModule> = {
 	},
 
 	inlets: {
-		keys: ['input'],
+		keys: ['output'],
 		associatedParameters: {}
 	},
 
@@ -27,7 +27,7 @@ export const identity: VideoModule<ShaderModule> = {
 		parametersToUniforms: () => ({}),
 
 		inletsToUniforms: {
-			'input': 'inputTexture'
+			'output': 'inputTexture'
 		},
 	},
 };
