@@ -4,6 +4,7 @@ import * as SinglePassBlur from './singlePassBlur';
 
 export const parameterKeys = {
 	input: 'input',
+	rotation: 'rotation',
 };
 
 export const inletKeys = {
@@ -17,9 +18,13 @@ export const nodeKeys = {
 
 export const crossBlur: VideoModule<SubgraphModule> = {
 	parameters: {
-		keys: [parameterKeys.input],
+		keys: [
+			parameterKeys.input,
+			parameterKeys.rotation
+		],
 		defaultValues: {
 			[parameterKeys.input]: 1,
+			[parameterKeys.rotation]: 0,
 		}
 	},
 
@@ -41,17 +46,30 @@ export const crossBlur: VideoModule<SubgraphModule> = {
 			}],
 		},
 
-		parametersToSubParameters: params => ({
-			[nodeKeys.first]: {
-				[SinglePassBlur.inletKeys.input]: params[parameterKeys.input],
-				[SinglePassBlur.parameterKeys.dx]: 1,
-				[SinglePassBlur.parameterKeys.dy]: 0,
-			},
-			[nodeKeys.last]: {
-				[SinglePassBlur.parameterKeys.dx]: 0,
-				[SinglePassBlur.parameterKeys.dy]: 1,
-			},
-		}),
+		parametersToSubParameters: params => {
+			const theta = 2 * Math.PI * params[parameterKeys.rotation];
+			const d1 = {
+				x: Math.cos(theta),
+				y: -Math.sin(theta),
+			};
+			const d2 = {
+				x: -d1.y,
+				y: d1.x,
+			};
+			console.log(d1, d2);
+
+			return {
+				[nodeKeys.first]: {
+					[SinglePassBlur.inletKeys.input]: params[parameterKeys.input],
+					[SinglePassBlur.parameterKeys.dx]: d1.x,
+					[SinglePassBlur.parameterKeys.dy]: d1.y,
+				},
+				[nodeKeys.last]: {
+					[SinglePassBlur.parameterKeys.dx]: d2.x,
+					[SinglePassBlur.parameterKeys.dy]: d2.y,
+				},
+			};
+		},
 
 		buildSubgraph: () => {
 			let result = Graph.empty;
