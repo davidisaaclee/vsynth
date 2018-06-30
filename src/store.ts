@@ -6,11 +6,12 @@ import { reducer as rootReducer } from './modules';
 
 const devToolsKey = '__REDUX_DEVTOOLS_EXTENSION__';
 
+function clearPastStateMigration(state: any): any {
+	return {};
+}
+
 const migrations = {
-	'-1': (state: any) => {
-		// Clear persisted state.
-		return {};
-	},
+	'-1': clearPastStateMigration,
 };
 
 
