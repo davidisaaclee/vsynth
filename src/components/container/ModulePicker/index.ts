@@ -26,6 +26,10 @@ const ModuleButton = styled.button`
 	border: 2px solid white;
 	border-radius: 4px;
 	color: white;
+
+	&:hover {
+		background-color: #555;
+	}
 `;
 
 const ModuleEntry = styled.li`
