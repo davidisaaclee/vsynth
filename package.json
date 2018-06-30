@@ -52,6 +52,7 @@
     "copyfiles": "^2.0.0",
     "glsl-crosshatch-filter": "^1.0.0",
     "glsl-dither": "^1.0.1",
+    "glsl-fast-gaussian-blur": "^1.0.2",
     "glslify": "^6.1.1",
     "node-glob": "^1.2.0",
     "rimraf": "^2.6.2",

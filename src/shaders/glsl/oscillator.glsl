@@ -1,5 +1,7 @@
 precision mediump float;
 
+#pragma glslify: sampleTex = require('./sampleTex');
+
 const float TWO_PI = 6.28318530718;
 const float N_SCANLINES = 500.;
 
@@ -46,18 +48,6 @@ vec3 hsv2rgb(vec3 c) {
 	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
 	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
 	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
-float maxComponent(vec3 v) {
-	return max(v.x, max(v.y, v.z));
-}
-
-float sampleTex(sampler2D t, vec2 pt, float scale) {
-	return maxComponent(
-			texture2D(
-				t,
-				pt).rgb)
-		* scale;
 }
 
 float calculateFrequency(vec2 textureSamplePoint) {

@@ -9,6 +9,8 @@ import { phaseDelta } from './modules/phaseDelta';
 import { mixer } from './modules/mixer';
 import { divide } from './modules/divide';
 import { multiply } from './modules/multiply';
+import { singlePassBlur } from './modules/singlePassBlur';
+
 import { autoOsc } from './modules/autoOsc';
 import { ramp } from './modules/ramp';
 
@@ -19,7 +21,7 @@ export type SubgraphModuleType = 'autoOsc' | 'ramp';
 export type ShaderModuleType =
 	'oscillator' | 'identity' | 'constant' | 'addFract'
 	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide'
-	| 'multiply' | 'addClip';
+	| 'multiply' | 'addClip' | 'singlePassBlur';
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
@@ -40,6 +42,7 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	divide,
 	multiply,
 	addClip,
+	singlePassBlur,
 };
 
 export const moduleKeys: ModuleType[] = [
@@ -54,6 +57,7 @@ export const moduleKeys: ModuleType[] = [
 	'divide',
 	'addClip',
 	'ramp',
+	'singlePassBlur',
 ];
 
 
