@@ -16,12 +16,11 @@ const migrations = {
 	1: clearPastStateMigration,
 };
 
-
 const persistConfig = {
   key: 'root',
   storage,
 	version: 2,
-	migrate: createMigrate(migrations, { debug: false })
+	migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' })
 };
 
 const persistedReducer =
