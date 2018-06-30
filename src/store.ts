@@ -33,4 +33,4 @@ function configureStore(initialState?: object) {
 
 export const store = configureStore(persistedReducer);
 export const persistor = persistStore(store);
-
+// persistor.purge();
