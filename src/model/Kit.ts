@@ -61,8 +61,6 @@ export const moduleKeys: ModuleType[] = [
 	'divide',
 	'addClip',
 	'ramp',
-	'singlePassBlur',
-	'crossBlur',
 	'multipassBlur',
 ];
 
