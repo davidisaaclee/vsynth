@@ -1,6 +1,6 @@
 {
   "name": "@davidisaaclee/vsynth",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "homepage": "http://david-lee.net/vsynth",
   "dependencies": {
