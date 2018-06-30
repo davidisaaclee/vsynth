@@ -58,6 +58,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 		resetDocument: () => {
 			dispatch(Graph.actions.resetAll());
 			dispatch(App.actions.setModal(null));
+			dispatch(UndoActions.clearHistory());
 		},
 
 		undo: () => {
