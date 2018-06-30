@@ -11,15 +11,13 @@ function clearPastStateMigration(state: any): any {
 }
 
 const migrations = {
-	'-1': clearPastStateMigration,
-	0: clearPastStateMigration,
-	1: clearPastStateMigration,
+	3: clearPastStateMigration,
 };
 
 const persistConfig = {
   key: 'root',
   storage,
-	version: 2,
+	version: 3,
 	migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' })
 };
 
