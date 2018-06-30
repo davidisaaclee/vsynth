@@ -28,7 +28,13 @@ const MainMenu: React.StatelessComponent<Props> = ({
 			{},
 			e(C.Button,
 				{
-					onClick: resetDocument
+					onClick: () => {
+						const confirmed =
+							window.confirm('You are about to delete your current patch, as well as your undo history.');
+						if (confirmed) {
+							resetDocument();
+						}
+					},
 				},
 				'Reset')),
 		e(C.Item,
