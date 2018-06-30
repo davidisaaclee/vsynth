@@ -14,11 +14,12 @@ import { singlePassBlur } from './modules/singlePassBlur';
 import { autoOsc } from './modules/autoOsc';
 import { ramp } from './modules/ramp';
 import { crossBlur } from './modules/crossBlur';
+import { multipassBlur } from './modules/multipassBlur';
 
 import { VideoModule, ShaderModule, SubgraphModule } from './VideoModule';
 import { VideoNode } from './SimpleVideoGraph';
 
-export type SubgraphModuleType = 'autoOsc' | 'ramp' | 'crossBlur';
+export type SubgraphModuleType = 'autoOsc' | 'ramp' | 'crossBlur' | 'multipassBlur';
 export type ShaderModuleType =
 	'oscillator' | 'identity' | 'constant' | 'addFract'
 	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide'
@@ -29,7 +30,8 @@ export type ModuleType = ShaderModuleType | SubgraphModuleType;
 export const subgraphModules: Record<SubgraphModuleType, VideoModule<SubgraphModule>> = {
 	autoOsc,
 	ramp,
-	crossBlur
+	crossBlur,
+	multipassBlur,
 };
 
 export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> = {
@@ -61,6 +63,7 @@ export const moduleKeys: ModuleType[] = [
 	'ramp',
 	'singlePassBlur',
 	'crossBlur',
+	'multipassBlur',
 ];
 
 

@@ -56,7 +56,6 @@ export const crossBlur: VideoModule<SubgraphModule> = {
 				x: -d1.y,
 				y: d1.x,
 			};
-			console.log(d1, d2);
 
 			return {
 				[nodeKeys.first]: {
