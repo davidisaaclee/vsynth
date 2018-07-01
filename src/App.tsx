@@ -27,10 +27,12 @@ const StyledBusRouter = styled(BusRouter)`
 `;
 
 const AddButton = styled.button`
-	margin: 20px;
+	margin: 10px;
 `;
 
 const StyledMenu = styled(MainMenu)`
+	background-color: #111;
+	padding: 10px;
 	position: fixed;
 	height: 30px;
 	right: 0;
@@ -129,7 +131,7 @@ class App extends React.Component<Props, State> {
 						style: {
 							content: {
 								opacity: 1,
-								backgroundColor: 'rgba(255, 255, 255, 0)',
+								backgroundColor: '#444',
 								borderRadius: 0,
 								border: 'none',
 								outline: 'none',
