@@ -4,7 +4,7 @@ import { Outlet } from '../../../model/Outlet';
 export type Lane = { name: string }
 	& (
 		// `scale` is the value of the associated parameter
-		({ type: 'inlet', scale: { value: number } | null } & Inlet)
+		({ type: 'inlet', scale: number | null } & Inlet)
 		| ({ type: 'outlet' } & Outlet)
 	);
 

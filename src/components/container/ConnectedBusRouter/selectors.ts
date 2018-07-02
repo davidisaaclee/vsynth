@@ -19,10 +19,7 @@ export const graph =
 	sharedSelectors.graph;
 
 export const lanes: Selector<RootState, Lane[]> = createSelector(
-	[
-		sharedSelectors.orderedNodes,
-		graph
-	],
+	[sharedSelectors.orderedNodes, graph],
 	(nodeOrder: Array<{ key: string, node: VideoNode }>, graph: SimpleVideoGraph) => flatMap(
 		nodeOrder,
 		({ key: nodeKey, node }) => {
@@ -39,15 +36,12 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 				},
 				...inletKeys.map(inletKey => ({
 					type: inletType,
-					name: `${nodeKey} * ${inletKey}`,
+					name: `${nodeKey}.${inletKey}`,
 					nodeKey,
 					inletKey,
 					scale: (videoMod.inlets.associatedParameters[inletKey] == null
 						? null
-						: {
-							key: videoMod.inlets.associatedParameters[inletKey],
-							value: node.parameters[videoMod.inlets.associatedParameters[inletKey]]
-						})
+						: node.parameters[videoMod.inlets.associatedParameters[inletKey]])
 				}))
 			];
 		}).filter(lane => {

@@ -75,7 +75,7 @@ export class LaneView extends React.Component<LaneProps, any> {
 									{
 										key: `${lane.nodeKey}.${lane.inletKey}`,
 										name: lane.inletKey,
-										value: scale.value,
+										value: scale,
 										onInputValue: (value: number) => previewParameter(laneIndex, value),
 										onChangeValue: (value: number) => setParameter(laneIndex, value),
 									}));
