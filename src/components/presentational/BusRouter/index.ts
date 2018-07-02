@@ -45,6 +45,7 @@ const BusRouter: React.StatelessComponent<Props> = ({
 			{},
 			lanes.map((lane, laneIndex) => (
 				e(LaneView, {
+					key: `${lane.nodeKey}.${lane.name}`,
 					lane,
 					busCount,
 					connections: (connections
