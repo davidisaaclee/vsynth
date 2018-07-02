@@ -8,7 +8,7 @@ import { LaneHeader, LaneRow, StyledParameterControl } from './components';
 
 const e = React.createElement;
 
-interface Props {
+export interface Props {
 	graph: SimpleVideoGraph;
 	busCount: number;
 	// TODO: Could be good to make these dictionaries?

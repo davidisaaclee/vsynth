@@ -4,11 +4,22 @@ import { defaultConstantBusIndex, nullSendBusIndex } from '../../../constants';
 import { State as RootState } from '../../../modules';
 import * as GraphModule from '../../../modules/graph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
-import BusRouter from '../../presentational/BusRouter';
+import BusRouter, { Props as BusRouterProps } from '../../presentational/BusRouter';
 import * as selectors from './selectors';
 
-// TODO: It'd be nice to have type safety
-function mapStateToProps(state: RootState) {
+type StatePickedPropKeys =
+	'graph' | 'busCount' | 'connections' | 'lanes';
+type StateProps =
+	Pick<BusRouterProps, StatePickedPropKeys>;
+
+type DispatchPickedPropKeys =
+	'setInletConnection' | 'setOutletConnection'
+	| 'removeInletConnection' | 'removeOutletConnection'
+	| 'setParameter' | 'previewParameter' | 'removeNode';
+type DispatchProps =
+	Pick<BusRouterProps, DispatchPickedPropKeys>;
+
+function mapStateToProps(state: RootState): StateProps {
 	return {
 		graph: sharedSelectors.graph(state),
 		busCount: sharedSelectors.busCount(state),
@@ -17,7 +28,7 @@ function mapStateToProps(state: RootState) {
 	};
 }
 
-function mapDispatchToProps(dispatch: Dispatch) {
+function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		setInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => (
 			dispatch(GraphModule.actions.setInletConnection(nodeKey, inletKey, busIndex))
@@ -34,12 +45,6 @@ function mapDispatchToProps(dispatch: Dispatch) {
 		removeOutletConnection: (nodeKey: string, busIndex: number) => (
 			dispatch(GraphModule.actions.setOutletConnection(nodeKey, nullSendBusIndex))
 		),
-
-		/*
-		openNodeControls: (nodeKey) => (
-			dispatch(App.actions.setModal(App.Modals.nodeControls(nodeKey)))
-		),
-		*/
 
 		setParameter: (nodeKey: string, paramKey: string, value: number) => (
 			dispatch(GraphModule.actions.setParameter(nodeKey, paramKey, value))
