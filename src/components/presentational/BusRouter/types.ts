@@ -3,7 +3,8 @@ import { Outlet } from '../../../model/Outlet';
 
 export type Lane = { name: string }
 	& (
-		({ type: 'inlet' } & Inlet)
+		// `scale` is the value of the associated parameter
+		({ type: 'inlet', scale: { value: number, key: string } | null } & Inlet)
 		| ({ type: 'outlet' } & Outlet)
 	);
 
@@ -11,6 +12,4 @@ export interface Connection {
 	busIndex: number;
 	laneIndex: number;
 }
-
-
 

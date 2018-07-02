@@ -8,7 +8,7 @@ import BusRouter, { Props as BusRouterProps } from '../../presentational/BusRout
 import * as selectors from './selectors';
 
 type StatePickedPropKeys =
-	'graph' | 'busCount' | 'connections' | 'lanes';
+	'busCount' | 'connections' | 'lanes';
 type StateProps =
 	Pick<BusRouterProps, StatePickedPropKeys>;
 
@@ -21,7 +21,6 @@ type DispatchProps =
 
 function mapStateToProps(state: RootState): StateProps {
 	return {
-		graph: sharedSelectors.graph(state),
 		busCount: sharedSelectors.busCount(state),
 		connections: selectors.connections(state),
 		lanes: selectors.lanes(state),

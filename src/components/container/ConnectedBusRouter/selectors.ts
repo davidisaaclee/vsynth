@@ -25,19 +25,30 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 
 			const inletKeys = videoMod.inlets.keys;
 
+			// Typing shim: Providing a string literal for the `type` field
+			// somehow doesn't pass the typechecker.
+			const inletType: 'inlet' = 'inlet';
+			const outletType: 'outlet' = 'outlet';
+
 			return [
 				{
-					type: 'outlet',
+					type: outletType,
 					name: nodeKey,
 					nodeKey
 				},
 				...inletKeys.map(inletKey => ({
-					type: 'inlet',
+					type: inletType,
 					name: `${nodeKey} * ${inletKey}`,
 					nodeKey,
-					inletKey
+					inletKey,
+					scale: (videoMod.inlets.associatedParameters[inletKey] == null
+						? null
+						: {
+							key: videoMod.inlets.associatedParameters[inletKey],
+							value: node.parameters[videoMod.inlets.associatedParameters[inletKey]]
+						})
 				}))
-			] as Lane[];
+			];
 		}).filter(lane => {
 			// Hide the lanes for the default constant node.
 			if (lane.nodeKey === 'default-constant') {

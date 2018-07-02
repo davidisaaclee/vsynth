@@ -1,15 +1,11 @@
 import { isEqual, range } from 'lodash';
 import * as React from 'react';
-import * as Graph from '@davidisaaclee/graph';
-import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
-import * as Kit from '../../../model/Kit';
 import { Connection, Lane } from './types';
 import { LaneHeader, LaneRow, StyledParameterControl } from './components';
 
 const e = React.createElement;
 
 export interface Props {
-	graph: SimpleVideoGraph;
 	busCount: number;
 	// TODO: Could be good to make these dictionaries?
 	// idk how that optimization works
@@ -30,7 +26,7 @@ function connectionsContains(connection: Connection, connections: Connection[]) 
 }
 
 const BusRouter: React.StatelessComponent<Props> = ({
-	graph, busCount,
+	busCount,
 	lanes, connections,
 	setInletConnection, setOutletConnection,
 	removeInletConnection, removeOutletConnection,
@@ -65,19 +61,17 @@ const BusRouter: React.StatelessComponent<Props> = ({
 							]
 							: [
 								(() => {
-									const node = Graph.nodeForKey(graph, lane.nodeKey)!;
-									const mod = Kit.moduleForNode(node);
-									const associatedParameter = 
-										mod.inlets.associatedParameters[lane.inletKey];
-									return (associatedParameter == null
+									const scale = lane.scale;
+
+									return (scale == null
 										? lane.inletKey
 										: e(StyledParameterControl,
 											{
-												key: `${lane.nodeKey}.${associatedParameter}`,
+												key: `${lane.nodeKey}.${lane.inletKey}`,
 												name: lane.inletKey,
-												value: node.parameters[associatedParameter],
-												onInputValue: (value: number) => previewParameter(lane.nodeKey, associatedParameter, value),
-												onChangeValue: (value: number) => setParameter(lane.nodeKey, associatedParameter, value),
+												value: scale.value,
+												onInputValue: (value: number) => previewParameter(lane.nodeKey, scale.key, value),
+												onChangeValue: (value: number) => setParameter(lane.nodeKey, scale.key, value),
 											}));
 								})()
 							])),
