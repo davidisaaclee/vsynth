@@ -15,6 +15,8 @@ export interface VideoModule<Details extends SubgraphModule | ShaderModule> {
 
 	inlets: {
 		keys: string[],
+
+		// Maps inlet keys to associated parameter keys.
 		associatedParameters: Record<string, string[]>,
 	};
 

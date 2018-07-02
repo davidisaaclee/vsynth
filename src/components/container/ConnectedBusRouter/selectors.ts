@@ -4,7 +4,7 @@ import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, VideoNode } from '../../../model/SimpleVideoGraph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import * as Kit from '../../../model/Kit';
-import { Lane } from './types';
+import { Lane } from '../../presentational/BusRouter/types';
 
 export const busCount =
 	sharedSelectors.busCount;
