@@ -8,7 +8,7 @@ import styled from './styled-components';
 import * as Kit from './model/Kit';
 import { videoModuleSpecFromModuleType } from './model/SimpleVideoGraph';
 import Screen from './components/container/Screen';
-import BusRouter from './components/container/BusRouter';
+import BusRouter from './components/container/ConnectedBusRouter';
 import ModulePicker from './components/container/ModulePicker';
 import NodeControls from './components/container/ConnectedNodeControls';
 import MainMenu from './components/container/MainMenu';
