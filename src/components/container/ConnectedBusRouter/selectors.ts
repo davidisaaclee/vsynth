@@ -1,10 +1,16 @@
 import { get, flatMap } from 'lodash';
 import { createSelector, Selector } from 'reselect';
+import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, VideoNode } from '../../../model/SimpleVideoGraph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import * as Kit from '../../../model/Kit';
 import { Lane } from '../../presentational/BusRouter/types';
+import { LaneIndexer } from './types';
+
+// TYPING SHIM: Using string constants inline doesn't pass typechecker...
+const inletType: 'inlet' = 'inlet';
+const outletType: 'outlet' = 'outlet';
 
 export const busCount =
 	sharedSelectors.busCount;
@@ -22,13 +28,8 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 		({ key: nodeKey, node }) => {
 			const videoMod =
 				Kit.moduleForNode(node);
-
-			const inletKeys = videoMod.inlets.keys;
-
-			// Typing shim: Providing a string literal for the `type` field
-			// somehow doesn't pass the typechecker.
-			const inletType: 'inlet' = 'inlet';
-			const outletType: 'outlet' = 'outlet';
+			const inletKeys =
+				videoMod.inlets.keys;
 
 			return [
 				{
@@ -82,4 +83,40 @@ export const connections: Selector<RootState, Array<{ laneIndex: number, busInde
 			}
 		))
 	));
+
+
+export const laneIndexer: Selector<RootState, LaneIndexer> =
+	createSelector(
+		[lanes, graph],
+		(lanes, graph) => (laneIndex: number) => {
+			const lane = lanes[laneIndex];
+			if (lane.type === 'inlet') {
+				const node = Graph.nodeForKey(graph, lane.nodeKey);
+				if (node == null) {
+					throw new Error("Lane referred to node which was not in graph.");
+				}
+
+				const videoModule = Kit.moduleForNode(node);
+				const parameterKey = videoModule.inlets.associatedParameters[lane.inletKey];
+
+				return {
+					type: inletType,
+					nodeKey: lane.nodeKey,
+					inletKey: lane.inletKey,
+					...(parameterKey == null
+						? {}
+						: {
+							scale: {
+								parameterKey,
+								value: node!.parameters[parameterKey],
+							}
+						})
+				};
+			} else {
+				return {
+					type: outletType,
+					nodeKey: lane.nodeKey,
+				};
+			}
+		});
 

@@ -12,22 +12,19 @@ export interface Props {
 	lanes: Lane[];
 	connections: Connection[];
 
-	setInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => any;
-	setOutletConnection: (nodeKey: string, busIndex: number) => any;
-	removeInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => any;
-	removeOutletConnection: (nodeKey: string, busIndex: number) => any;
-	setParameter: (nodeKey: string, paramKey: string, value: number) => any;
-	previewParameter: (nodeKey: string, paramKey: string, value: number) => any;
-	removeNode: (nodeKey: string) => any;
+	setConnection: (laneIndex: number, busIndex: number) => any;
+	removeConnection: (laneIndex: number, busIndex: number) => any;
+	setParameter: (laneIndex: number, value: number) => any;
+	previewParameter: (laneIndex: number, value: number) => any;
+	removeNodeForLane: (laneIndex: number) => any;
 }
 
 const BusRouter: React.StatelessComponent<Props> = ({
 	busCount,
 	lanes, connections,
-	setInletConnection, setOutletConnection,
-	removeInletConnection, removeOutletConnection,
+	setConnection, removeConnection,
 	setParameter, previewParameter,
-	removeNode,
+	removeNodeForLane,
 }) => (
 	e('table',
 		{},
@@ -47,17 +44,16 @@ const BusRouter: React.StatelessComponent<Props> = ({
 				e(LaneView, {
 					key: `${lane.nodeKey}.${lane.name}`,
 					lane,
+					laneIndex,
 					busCount,
 					connections: (connections
 						.filter(c => c.laneIndex === laneIndex)
 						.map(c => c.busIndex)),
 					setParameter,
 					previewParameter,
-					setInletConnection,
-					setOutletConnection,
-					removeInletConnection,
-					removeOutletConnection,
-					removeNode,
+					setConnection,
+					removeConnection,
+					removeNodeForLane,
 				})
 			)))));
 

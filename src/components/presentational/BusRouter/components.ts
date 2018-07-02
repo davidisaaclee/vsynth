@@ -25,17 +25,16 @@ const StyledParameterControl = styled(ParameterControl)`
 
 interface LaneProps {
 	lane: Lane;
+	laneIndex: number;
 	busCount: number;
 	// array of bus indices
 	connections: number[];
 
-	setParameter: (nodeKey: string, paramKey: string, value: number) => any;
-	previewParameter: (nodeKey: string, paramKey: string, value: number) => any;
-	setInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => any;
-	setOutletConnection: (nodeKey: string, busIndex: number) => any;
-	removeInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => any;
-	removeOutletConnection: (nodeKey: string, busIndex: number) => any;
-	removeNode: (nodeKey: string) => any;
+	setConnection: (laneIndex: number, busIndex: number) => any;
+	removeConnection: (laneIndex: number, busIndex: number) => any;
+	setParameter: (laneIndex: number, value: number) => any;
+	previewParameter: (laneIndex: number, value: number) => any;
+	removeNodeForLane: (laneIndex: number) => any;
 }
 
 export class LaneView extends React.Component<LaneProps, any> {
@@ -50,11 +49,10 @@ export class LaneView extends React.Component<LaneProps, any> {
 
 	public render() {
 		const {
-			lane, busCount, connections,
-			setInletConnection, setOutletConnection,
-			removeInletConnection, removeOutletConnection,
+			lane, laneIndex, busCount, connections,
+			setConnection, removeConnection,
 			setParameter, previewParameter,
-			removeNode,
+			removeNodeForLane,
 		} = this.props;
 		return e(LaneRow,
 			{ key: `lane-${lane.nodeKey}.${lane.name}` },
@@ -64,7 +62,7 @@ export class LaneView extends React.Component<LaneProps, any> {
 					? [
 						lane.name,
 						e('button',
-							{ onClick: () => removeNode(lane.nodeKey) },
+							{ onClick: () => removeNodeForLane(laneIndex) },
 							'x')
 					]
 					: [
@@ -78,8 +76,8 @@ export class LaneView extends React.Component<LaneProps, any> {
 										key: `${lane.nodeKey}.${lane.inletKey}`,
 										name: lane.inletKey,
 										value: scale.value,
-										onInputValue: (value: number) => previewParameter(lane.nodeKey, scale.key, value),
-										onChangeValue: (value: number) => setParameter(lane.nodeKey, scale.key, value),
+										onInputValue: (value: number) => previewParameter(laneIndex, value),
+										onChangeValue: (value: number) => setParameter(laneIndex, value),
 									}));
 						})()
 					])),
@@ -88,14 +86,9 @@ export class LaneView extends React.Component<LaneProps, any> {
 			range(busCount).map(busIndex => {
 				const hasConnection =
 					includes(connections, busIndex);
-				const clickHandler = 
-					(hasConnection
-						? (lane.type === 'inlet'
-							? () => removeInletConnection(lane.nodeKey, lane.inletKey, busIndex)
-							: () => removeOutletConnection(lane.nodeKey, busIndex))
-						: (lane.type === 'inlet'
-							? () => setInletConnection(lane.nodeKey, lane.inletKey, busIndex)
-							: () => setOutletConnection(lane.nodeKey, busIndex)));
+				const clickHandler = hasConnection
+					? () => removeConnection(laneIndex, busIndex)
+					: () => setConnection(laneIndex, busIndex);
 
 				return e('td',
 					{

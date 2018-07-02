@@ -8,61 +8,115 @@ import * as sharedSelectors from '../../../modules/sharedSelectors';
 import BusRouter, { Props as BusRouterProps } from '../../presentational/BusRouter';
 import * as selectors from './selectors';
 import { fps } from '../../../constants';
+import { LaneIndexer } from './types';
 
 type StatePickedPropKeys =
 	'busCount' | 'connections' | 'lanes';
 type StateProps =
-	Pick<BusRouterProps, StatePickedPropKeys>;
+	Pick<BusRouterProps, StatePickedPropKeys> & {
+		laneIndexer: LaneIndexer,
+	};
 
-type DispatchPickedPropKeys =
-	'setInletConnection' | 'setOutletConnection'
-	| 'removeInletConnection' | 'removeOutletConnection'
-	| 'setParameter' | 'previewParameter' | 'removeNode';
-type DispatchProps =
-	Pick<BusRouterProps, DispatchPickedPropKeys>;
+interface DispatchProps {
+	makeSetConnection: (laneIndexer: LaneIndexer) => (laneIndex: number, busIndex: number) => any;
+	makeRemoveConnection: (laneIndexer: LaneIndexer) => (laneIndex: number, busIndex: number) => any;
+	makeSetParameter: (laneIndexer: LaneIndexer) => (laneIndex: number, value: number) => any;
+	makePreviewParameter: (laneIndexer: LaneIndexer) => (laneIndex: number, value: number) => any;
+	makeRemoveNodeForLane: (laneIndexer: LaneIndexer) => (laneIndex: number) => any;
+};
 
 function mapStateToProps(state: RootState): StateProps {
 	return {
 		busCount: sharedSelectors.busCount(state),
 		connections: selectors.connections(state),
 		lanes: selectors.lanes(state),
+		laneIndexer: selectors.laneIndexer(state),
 	};
 }
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		setInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => (
-			dispatch(GraphModule.actions.setInletConnection(nodeKey, inletKey, busIndex))
-		),
+		makeSetConnection: (laneIndexer: LaneIndexer) => (laneIndex: number, busIndex: number) => {
+			const lane = laneIndexer(laneIndex);
+			if (lane.type === 'inlet') {
+				dispatch(GraphModule.actions.setInletConnection(lane.nodeKey, lane.inletKey, busIndex));
+			}
+			if (lane.type === 'outlet') {
+				dispatch(GraphModule.actions.setOutletConnection(lane.nodeKey, busIndex));
+			}
+		},
 
-		setOutletConnection: (nodeKey: string, busIndex: number) => (
-			dispatch(GraphModule.actions.setOutletConnection(nodeKey, busIndex))
-		),
+		makeRemoveConnection: (laneIndexer: LaneIndexer) => (laneIndex: number, busIndex: number) => {
+			const lane = laneIndexer(laneIndex);
+			if (lane.type === 'inlet') {
+				dispatch(GraphModule.actions.setInletConnection(lane.nodeKey, lane.inletKey, defaultConstantBusIndex));
+			}
+			if (lane.type === 'outlet') {
+				dispatch(GraphModule.actions.setOutletConnection(lane.nodeKey, nullSendBusIndex));
+			}
+		},
 
-		removeInletConnection: (nodeKey: string, inletKey: string, busIndex: number) => (
-			dispatch(GraphModule.actions.setInletConnection(nodeKey, inletKey, defaultConstantBusIndex))
-		),
+		makeSetParameter: (laneIndexer: LaneIndexer) => (laneIndex: number, value: number) => {
+			const lane = laneIndexer(laneIndex);
+			if (lane.type !== 'inlet') {
+				throw new Error('Attempted to set parameter on non-inlet lane.');
+			}
+			if (lane.scale == null) {
+				throw new Error('Attempted to set parameter on lane with no associated parameter.');
+			}
+			dispatch(GraphModule.actions.setParameter(
+				lane.nodeKey,
+				lane.scale.parameterKey,
+				value));
+		},
 
-		removeOutletConnection: (nodeKey: string, busIndex: number) => (
-			dispatch(GraphModule.actions.setOutletConnection(nodeKey, nullSendBusIndex))
-		),
+		makePreviewParameter: (laneIndexer: LaneIndexer) => throttle((laneIndex: number, value: number) => {
+			const lane = laneIndexer(laneIndex);
+			if (lane.type !== 'inlet') {
+				throw new Error('Attempted to set parameter on non-inlet lane.');
+			}
+			if (lane.scale == null) {
+				throw new Error('Attempted to set parameter on lane with no associated parameter.');
+			}
 
-		setParameter: (nodeKey: string, paramKey: string, value: number) => (
-			dispatch(GraphModule.actions.setParameter(nodeKey, paramKey, value))
-		),
+			dispatch(GraphModule.actions.previewParameter(
+				lane.nodeKey,
+				lane.scale.parameterKey,
+				value));
+		}, 1000 / fps),
 
-		previewParameter: throttle((nodeKey: string, paramKey: string, value: number) => (
-			dispatch(GraphModule.actions.previewParameter(nodeKey, paramKey, value))
-		), 1000 / fps),
+		makeRemoveNodeForLane: (laneIndexer: LaneIndexer) => (laneIndex: number) => {
+			const lane = laneIndexer(laneIndex);
+			dispatch(GraphModule.actions.removeNode(lane.nodeKey));
+		},
+	};
+}
 
-		removeNode: (nodeKey: string) => (
-			dispatch(GraphModule.actions.removeNode(nodeKey))
-		),
+function mergeProps(stateProps: StateProps, dispatchProps: DispatchProps): BusRouterProps {
+	const {
+		laneIndexer,
+		...restStateProps
+	} = stateProps;
+
+	const {
+		makeSetConnection, makeRemoveConnection,
+		makePreviewParameter, makeSetParameter,
+		makeRemoveNodeForLane
+	} = dispatchProps;
+
+	return {
+		...restStateProps,
+		setConnection: makeSetConnection(laneIndexer),
+		removeConnection: makeRemoveConnection(laneIndexer),
+		previewParameter: makePreviewParameter(laneIndexer),
+		setParameter: makeSetParameter(laneIndexer),
+		removeNodeForLane: makeRemoveNodeForLane(laneIndexer),
 	};
 }
 
 export default connect(
 	mapStateToProps,
-	mapDispatchToProps
+	mapDispatchToProps,
+	mergeProps
 )(BusRouter);
 
