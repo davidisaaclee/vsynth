@@ -1,3 +1,4 @@
+import { throttle } from 'lodash';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { defaultConstantBusIndex, nullSendBusIndex } from '../../../constants';
@@ -6,6 +7,7 @@ import * as GraphModule from '../../../modules/graph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import BusRouter, { Props as BusRouterProps } from '../../presentational/BusRouter';
 import * as selectors from './selectors';
+import { fps } from '../../../constants';
 
 type StatePickedPropKeys =
 	'busCount' | 'connections' | 'lanes';
@@ -49,9 +51,9 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 			dispatch(GraphModule.actions.setParameter(nodeKey, paramKey, value))
 		),
 
-		previewParameter: (nodeKey: string, paramKey: string, value: number) => (
+		previewParameter: throttle((nodeKey: string, paramKey: string, value: number) => (
 			dispatch(GraphModule.actions.previewParameter(nodeKey, paramKey, value))
-		),
+		), 1000 / fps),
 
 		removeNode: (nodeKey: string) => (
 			dispatch(GraphModule.actions.removeNode(nodeKey))
