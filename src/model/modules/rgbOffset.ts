@@ -39,10 +39,10 @@ export const rgbOffset: VideoModule<ShaderModule> = {
 			inletKeys.b,
 		],
 		associatedParameters: {
-			[inletKeys.input]: [parameterKeys.input],
-			[inletKeys.r]: [parameterKeys.rAmount],
-			[inletKeys.g]: [parameterKeys.gAmount],
-			[inletKeys.b]: [parameterKeys.bAmount],
+			[inletKeys.input]: parameterKeys.input,
+			[inletKeys.r]: parameterKeys.rAmount,
+			[inletKeys.g]: parameterKeys.gAmount,
+			[inletKeys.b]: parameterKeys.bAmount,
 		}
 	},
 

@@ -48,8 +48,8 @@ export const addFract: VideoModule<ShaderModule> = {
 	inlets: {
 		keys: [inletKeys.a, inletKeys.b],
 		associatedParameters: {
-			[inletKeys.a]: [parameterKeys.a],
-			[inletKeys.b]: [parameterKeys.b],
+			[inletKeys.a]: parameterKeys.a,
+			[inletKeys.b]: parameterKeys.b,
 		},
 	},
 

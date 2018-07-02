@@ -66,9 +66,9 @@ export const mixer: VideoModule<ShaderModule> = {
 	inlets: {
 		keys: [inletKeys.mix, inletKeys.a, inletKeys.b],
 		associatedParameters: {
-			[inletKeys.mix]: [parameterKeys.mixAmount],
-			[inletKeys.a]: [parameterKeys.a],
-			[inletKeys.b]: [parameterKeys.b],
+			[inletKeys.mix]: parameterKeys.mixAmount,
+			[inletKeys.a]: parameterKeys.a,
+			[inletKeys.b]: parameterKeys.b,
 		},
 	},
 

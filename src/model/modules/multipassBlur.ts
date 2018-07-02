@@ -29,7 +29,7 @@ export const multipassBlur: VideoModule<SubgraphModule> = {
 		keys: [inletKeys.input],
 
 		associatedParameters: {
-			[inletKeys.input]: [parameterKeys.input],
+			[inletKeys.input]: parameterKeys.input,
 		}
 	},
 

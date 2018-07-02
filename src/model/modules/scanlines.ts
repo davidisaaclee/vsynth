@@ -29,8 +29,8 @@ export const scanlines: VideoModule<ShaderModule> = {
 	inlets: {
 		keys: [inletKeys.rotation, inletKeys.phaseOffset],
 		associatedParameters: {
-			[inletKeys.rotation]: [parameterKeys.rotationAmount],
-			[inletKeys.phaseOffset]: [parameterKeys.phaseOffsetAmount],
+			[inletKeys.rotation]: parameterKeys.rotationAmount,
+			[inletKeys.phaseOffset]: parameterKeys.phaseOffsetAmount,
 		},
 	},
 

@@ -53,8 +53,8 @@ export const divide: VideoModule<ShaderModule> = {
 			inletKeys.denominator,
 		],
 		associatedParameters: {
-			[inletKeys.numerator]: [parameterKeys.numerator],
-			[inletKeys.denominator]: [parameterKeys.denominator],
+			[inletKeys.numerator]: parameterKeys.numerator,
+			[inletKeys.denominator]: parameterKeys.denominator,
 		},
 	},
 

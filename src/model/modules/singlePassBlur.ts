@@ -34,9 +34,9 @@ export const singlePassBlur: VideoModule<ShaderModule> = {
 			inletKeys.dy,
 		],
 		associatedParameters: {
-			[inletKeys.input]: [parameterKeys.input],
-			[inletKeys.dx]: [parameterKeys.dx],
-			[inletKeys.dy]: [parameterKeys.dy],
+			[inletKeys.input]: parameterKeys.input,
+			[inletKeys.dx]: parameterKeys.dx,
+			[inletKeys.dy]: parameterKeys.dy,
 		},
 	},
 

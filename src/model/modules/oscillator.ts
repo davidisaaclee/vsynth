@@ -43,12 +43,12 @@ export const oscillator: VideoModule<ShaderModule> = {
 		],
 
 		associatedParameters: {
-			[inletKeys.hue]: [parameterKeys.hue],
-			[inletKeys.waveSize]: [parameterKeys.waveSizeAmount],
-			[inletKeys.speed]: [parameterKeys.speedAmount],
-			[inletKeys.shape]: [parameterKeys.shape],
-			[inletKeys.rotation]: [parameterKeys.rotationAmount],
-			[inletKeys.phaseOffset]: [parameterKeys.phaseOffsetAmount],
+			[inletKeys.hue]: parameterKeys.hue,
+			[inletKeys.waveSize]: parameterKeys.waveSizeAmount,
+			[inletKeys.speed]: parameterKeys.speedAmount,
+			[inletKeys.shape]: parameterKeys.shape,
+			[inletKeys.rotation]: parameterKeys.rotationAmount,
+			[inletKeys.phaseOffset]: parameterKeys.phaseOffsetAmount,
 		}
 	},
 

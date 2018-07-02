@@ -37,11 +37,11 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 			inletKeys.rotation,
 		],
 		associatedParameters: {
-			[inletKeys.hue]: [paramKeys.hue],
-			[inletKeys.size]: [paramKeys.sizeAmount],
-			[inletKeys.speed]: [paramKeys.speedAmount],
-			[inletKeys.shape]: [paramKeys.shape],
-			[inletKeys.rotation]: [paramKeys.rotationAmount],
+			[inletKeys.hue]: paramKeys.hue,
+			[inletKeys.size]: paramKeys.sizeAmount,
+			[inletKeys.speed]: paramKeys.speedAmount,
+			[inletKeys.shape]: paramKeys.shape,
+			[inletKeys.rotation]: paramKeys.rotationAmount,
 		}
 	},
 

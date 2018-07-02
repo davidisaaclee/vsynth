@@ -77,7 +77,7 @@ export const phaseDelta: VideoModule<ShaderModule> = {
 			inletKeys.speed
 		],
 		associatedParameters: {
-			[inletKeys.speed]: [parameterKeys.speedAmount],
+			[inletKeys.speed]: parameterKeys.speedAmount,
 		},
 	},
 

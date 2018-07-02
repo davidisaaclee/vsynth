@@ -1,4 +1,4 @@
-import { isEqual, range, defaultTo } from 'lodash';
+import { isEqual, range } from 'lodash';
 import * as React from 'react';
 import * as Graph from '@davidisaaclee/graph';
 import { SimpleVideoGraph } from '../../../model/SimpleVideoGraph';
@@ -67,19 +67,18 @@ const BusRouter: React.StatelessComponent<Props> = ({
 								(() => {
 									const node = Graph.nodeForKey(graph, lane.nodeKey)!;
 									const mod = Kit.moduleForNode(node);
-									const associatedParameters = defaultTo(
-										mod.inlets.associatedParameters[lane.inletKey],
-										[] as string[]);
-									return associatedParameters.map(paramKey => (
-										e(StyledParameterControl,
+									const associatedParameter = 
+										mod.inlets.associatedParameters[lane.inletKey];
+									return (associatedParameter == null
+										? lane.inletKey
+										: e(StyledParameterControl,
 											{
-												key: `${lane.nodeKey}.${paramKey}`,
-												name: paramKey,
-												value: node.parameters[paramKey],
-												onInputValue: (value: number) => previewParameter(lane.nodeKey, paramKey, value),
-												onChangeValue: (value: number) => setParameter(lane.nodeKey, paramKey, value),
-											})
-									));
+												key: `${lane.nodeKey}.${associatedParameter}`,
+												name: lane.inletKey,
+												value: node.parameters[associatedParameter],
+												onInputValue: (value: number) => previewParameter(lane.nodeKey, associatedParameter, value),
+												onChangeValue: (value: number) => setParameter(lane.nodeKey, associatedParameter, value),
+											}));
 								})()
 							])),
 

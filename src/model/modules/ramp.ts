@@ -29,7 +29,7 @@ export const ramp: VideoModule<SubgraphModule> = {
 		keys: [inletKeys.speed],
 
 		associatedParameters: {
-			[inletKeys.speed]: [parameterKeys.speed],
+			[inletKeys.speed]: parameterKeys.speed,
 		}
 	},
 
