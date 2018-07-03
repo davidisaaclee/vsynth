@@ -18,6 +18,9 @@ export interface State {
 
 	nodeOrder: string[];
 
+	// Temporary changes to node parameters
+	previewedParameterChanges: { [nodeKey: string]: { [parameterKey: string]: number } };
+
 	// Maps each node key to a dictionary,
 	// which maps inlet keys of that node to a bus index.
 	inletConnections: { [nodeKey: string]: { [inletKey: string]: number } };
@@ -34,8 +37,8 @@ const initialState: State = {
 		'output': videoModuleSpecFromModuleType('identity'),
 		'default-constant': videoModuleSpecFromModuleType('constant'),
 	},
-
 	nodeOrder: ['output', 'default-constant'],
+	previewedParameterChanges: {},
 	inletConnections: {},
 	outletConnections: {
 		'default-constant': defaultConstantBusIndex,
@@ -79,6 +82,19 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 			})(action.payload.id, action.payload.node);
 
 		case Constants.PREVIEW_PARAMETER:
+			return (({ nodeKey, parameterKey, value }) => {
+				return {
+					...state,
+					previewedParameterChanges: {
+						...state.previewedParameterChanges,
+						[nodeKey]: {
+							...state.previewedParameterChanges[nodeKey],
+							[parameterKey]: value
+						}
+					}
+				};
+			})(action.payload);
+
 		case Constants.SET_PARAMETER:
 			return (({ nodeKey, parameterKey, value }) => {
 				const node = {
@@ -88,20 +104,6 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 						[parameterKey]: value
 					}
 				};
-
-				// Write new uniforms from parameter change to node.
-				const videoModule = Kit.moduleForNode(node);
-
-				if (node.nodeType === 'shader') {
-					if (videoModule.details.type !== 'shader') {
-						throw new Error("Mismatched node and module types");
-					}
-
-					node.uniforms = {
-						...node.uniforms,
-						...videoModule.details.parametersToUniforms(node.parameters)
-					};
-				}
 
 				return {
 					...state,

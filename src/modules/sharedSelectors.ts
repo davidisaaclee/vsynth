@@ -1,9 +1,9 @@
-import { values, flatMap } from 'lodash';
+import { mapValues, values, flatMap } from 'lodash';
 import { createSelector, Selector } from 'reselect';
 import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from './index';
 import { SimpleVideoGraph, VideoNode } from '../model/SimpleVideoGraph';
-import { ModuleType } from '../model/Kit';
+import * as Kit from '../model/Kit';
 import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
@@ -11,10 +11,12 @@ import { combinations } from '../utility/combinations';
 const document =
 	(state: RootState) => state.graph.present;
 
+/*
 const nodes =
 	createSelector(
 		document,
 		d => d.nodes);
+ */
 
 export const busCount =
 	createSelector(
@@ -36,10 +38,43 @@ export const nodeOrder =
 		document,
 		d => d.nodeOrder);
 
+export const previewedParameterChanges =
+	createSelector(
+		document,
+		d => d.previewedParameterChanges);
+
+const nodes = createSelector(
+	[document, previewedParameterChanges],
+	(d, previewedParameterChanges) => mapValues(d.nodes, (node, nodeKey) => {
+		const retval = {
+			...node,
+			parameters: {
+				...node.parameters,
+				...previewedParameterChanges[nodeKey]
+			}
+		};
+
+		// Write uniforms to node from merged parameters.
+		// TODO: There's probably a better place for this.
+		const videoModule = Kit.moduleForNode(node);
+		if (retval.nodeType === 'shader') {
+			if (videoModule.details.type !== 'shader') {
+				throw new Error("Mismatched node and module types");
+			}
+
+			retval.uniforms = {
+				...retval.uniforms,
+				...videoModule.details.parametersToUniforms(retval.parameters)
+			};
+		}
+
+		return retval;
+	}));
+
 export const nextNodeKey =
 	createSelector(
 		document,
-		d => (modType: ModuleType) => `${modType}-${d.nodeKeySeed}`);
+		d => (modType: Kit.ModuleType) => `${modType}-${d.nodeKeySeed}`);
 
 export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoNode }>> =
 	createSelector(
