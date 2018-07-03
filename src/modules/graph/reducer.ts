@@ -139,10 +139,10 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					nodeKeyToDelete),
 				nodeOrder: (state.nodeOrder
 					.filter(nodeKey => nodeKey !== nodeKeyToDelete)),
-				inletConnections: pickBy(
+				inletConnections: omit(
 					state.inletConnections,
 					nodeKeyToDelete),
-				outletConnections: pickBy(
+				outletConnections: omit(
 					state.outletConnections,
 					nodeKeyToDelete),
 			}))(action.payload);
