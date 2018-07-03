@@ -10,6 +10,7 @@ import { mixer } from './modules/mixer';
 import { divide } from './modules/divide';
 import { multiply } from './modules/multiply';
 import { singlePassBlur } from './modules/singlePassBlur';
+import { zoomIn } from './modules/zoomIn';
 
 import { autoOsc } from './modules/autoOsc';
 import { ramp } from './modules/ramp';
@@ -23,7 +24,7 @@ export type SubgraphModuleType = 'autoOsc' | 'ramp' | 'crossBlur' | 'multipassBl
 export type ShaderModuleType =
 	'oscillator' | 'identity' | 'constant' | 'addFract'
 	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide'
-	| 'multiply' | 'addClip' | 'singlePassBlur';
+	| 'multiply' | 'addClip' | 'singlePassBlur' | 'zoomIn';
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
@@ -47,6 +48,7 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	multiply,
 	addClip,
 	singlePassBlur,
+	zoomIn,
 };
 
 export const moduleKeys: ModuleType[] = [
@@ -62,6 +64,7 @@ export const moduleKeys: ModuleType[] = [
 	'addClip',
 	'ramp',
 	'multipassBlur',
+	'zoomIn',
 ];
 
 
