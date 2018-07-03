@@ -1,4 +1,4 @@
-import { isEmpty, clone, pickBy as _pickBy, ValueKeyIteratee } from 'lodash';
+import { pickBy as _pickBy, ValueKeyIteratee } from 'lodash';
 import { ActionType } from 'typesafe-actions';
 import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVideoGraph';
 import * as Kit from '../../model/Kit';
@@ -18,9 +18,6 @@ export interface State {
 
 	nodeOrder: string[];
 
-	// Temporary changes to node parameters
-	previewedParameterChanges: { [nodeKey: string]: { [parameterKey: string]: number } };
-
 	// Maps each node key to a dictionary,
 	// which maps inlet keys of that node to a bus index.
 	inletConnections: { [nodeKey: string]: { [inletKey: string]: number } };
@@ -38,7 +35,6 @@ const initialState: State = {
 		'default-constant': videoModuleSpecFromModuleType('constant'),
 	},
 	nodeOrder: ['output', 'default-constant'],
-	previewedParameterChanges: {},
 	inletConnections: {},
 	outletConnections: {
 		'default-constant': defaultConstantBusIndex,
@@ -81,20 +77,6 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 				return state;
 			})(action.payload.id, action.payload.node);
 
-		case Constants.PREVIEW_PARAMETER:
-			return (({ nodeKey, parameterKey, value }) => {
-				return {
-					...state,
-					previewedParameterChanges: {
-						...state.previewedParameterChanges,
-						[nodeKey]: {
-							...state.previewedParameterChanges[nodeKey],
-							[parameterKey]: value
-						}
-					}
-				};
-			})(action.payload);
-
 		case Constants.SET_PARAMETER:
 			return (({ nodeKey, parameterKey, value }) => {
 				const node = {
@@ -105,23 +87,12 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				const previewedParameterChanges =
-					clone(state.previewedParameterChanges);
-				if (previewedParameterChanges[nodeKey] != null) {
-					previewedParameterChanges[nodeKey] =
-						omit(previewedParameterChanges[nodeKey], parameterKey);
-					if (isEmpty(previewedParameterChanges[nodeKey])) {
-						delete previewedParameterChanges[nodeKey];
-					}
-				}
-
 				return {
 					...state,
 					nodes: {
 						...state.nodes,
 						[nodeKey]: node
 					},
-					previewedParameterChanges
 				};
 			})(action.payload);
 

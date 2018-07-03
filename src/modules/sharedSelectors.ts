@@ -11,12 +11,8 @@ import { combinations } from '../utility/combinations';
 const document =
 	(state: RootState) => state.document.present;
 
-/*
-const nodes =
-	createSelector(
-		document,
-		d => d.nodes);
- */
+const app =
+	(state: RootState) => state.app;
 
 export const busCount =
 	createSelector(
@@ -40,8 +36,8 @@ export const nodeOrder =
 
 export const previewedParameterChanges =
 	createSelector(
-		document,
-		d => d.previewedParameterChanges);
+		app,
+		app => app.previewedParameterChanges);
 
 const nodes = createSelector(
 	[document, previewedParameterChanges],

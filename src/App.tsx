@@ -11,7 +11,6 @@ import { videoModuleSpecFromModuleType } from './model/SimpleVideoGraph';
 import Screen from './components/container/Screen';
 import BusRouter from './components/container/ConnectedBusRouter';
 import ModulePicker from './components/container/ModulePicker';
-import NodeControls from './components/container/ConnectedNodeControls';
 import MainMenu from './components/container/MainMenu';
 import * as AppModule from './modules/app';
 import * as Document from './modules/document';
@@ -90,9 +89,6 @@ class App extends React.Component<Props, State> {
 							this.props.closeModal();
 						}
 					});
-
-			case 'NODE_CONTROLS':
-				return e(NodeControls, { nodeKey: modal.nodeKey });
 		}
 	}
 	
@@ -206,7 +202,7 @@ function mapStateToProps(state: RootState): StateProps {
 	return {
 		modal: state.app.modal,
 		nextNodeKey: sharedSelectors.nextNodeKey(state),
-		isPreviewingParameterChange: !isEmpty(state.document.present.previewedParameterChanges),
+		isPreviewingParameterChange: !isEmpty(state.app.previewedParameterChanges),
 	};
 }
 

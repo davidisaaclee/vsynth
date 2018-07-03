@@ -3,7 +3,6 @@ import { createMigrate, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { ActionType } from 'typesafe-actions';
 import undoable, { StateWithHistory } from 'redux-undo';
-import * as DocumentConstants from './document/constants';
 import * as Document from './document';
 import * as App from './app';
 
@@ -45,16 +44,7 @@ type Action = ActionType<typeof Document.actions | typeof App.actions>;
 export const reducer = persistReducer(
 	persistRootConfig,
 	combineReducers<State, Action>({
-		document: persistReducer(persistDocumentConfig, undoable(Document.reducer, {
-			filter: (action) => {
-				switch (action.type) {
-					case DocumentConstants.PREVIEW_PARAMETER:
-						return false;
-					default:
-						return true;
-				}
-			}
-		})),
+		document: persistReducer(persistDocumentConfig, undoable(Document.reducer)),
 		app: App.reducer,
 	}));
 

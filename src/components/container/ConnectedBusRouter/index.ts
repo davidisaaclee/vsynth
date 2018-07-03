@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { defaultConstantBusIndex, nullSendBusIndex } from '../../../constants';
 import { State as RootState } from '../../../modules';
 import * as DocumentModule from '../../../modules/document';
+import * as AppModule from '../../../modules/app';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import BusRouter, { Props as BusRouterProps } from '../../presentational/BusRouter';
 import * as selectors from './selectors';
@@ -72,6 +73,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 				lane.nodeKey,
 				lane.scale.parameterKey,
 				value));
+			dispatch(AppModule.actions.clearPreviewedParameter());
 		},
 
 		makePreviewParameter: (laneIndexer: LaneIndexer) => throttle((laneIndex: number, value: number) => {
@@ -83,7 +85,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 				throw new Error('Attempted to set parameter on lane with no associated parameter.');
 			}
 
-			dispatch(DocumentModule.actions.previewParameter(
+			dispatch(AppModule.actions.previewParameter(
 				lane.nodeKey,
 				lane.scale.parameterKey,
 				value));
