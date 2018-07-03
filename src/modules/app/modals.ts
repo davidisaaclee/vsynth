@@ -1,5 +1,9 @@
+interface PickModuleModal {
+	type: 'PICK_MODULE';
+}
+
 export type Modal =
-	{ type: 'PICK_MODULE' };
+	PickModuleModal;
 
 export const pickModule: Modal =
 	{ type: 'PICK_MODULE' };
