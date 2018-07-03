@@ -3,6 +3,7 @@ import { VideoModule, SubgraphModule } from '../VideoModule';
 import * as Osc from './oscillator';
 import * as AddFract from './addFract';
 import * as PhaseDelta from './phaseDelta';
+import * as Scanlines from './scanlines';
 
 const inletKeys = {
 	hue: 'hue',
@@ -25,6 +26,7 @@ const nodeKeys = {
 	osc: 'osc',
 	add: 'add',
 	phase: 'phase',
+	scanlines: 'scanlines',
 };
 
 export const autoOsc: VideoModule<SubgraphModule> = {
@@ -89,12 +91,10 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.shape,
 			}],
-			/*
 			[inletKeys.rotation]: [{
-				nodeKey: nodeKeys.osc,
-				inletKey: Osc.inletKeys.rotation,
+				nodeKey: nodeKeys.scanlines,
+				inletKey: Scanlines.inletKeys.rotation,
 			}],
-			 */
 			[inletKeys.hue]: [{
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.hue,
@@ -106,13 +106,15 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				[Osc.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
 				[Osc.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
 				[Osc.parameterKeys.hue]: params[paramKeys.hue],
-				// [Osc.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
 				[Osc.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
 				[Osc.parameterKeys.shape]: params[paramKeys.shape],
 			},
 			[nodeKeys.phase]: {
 				[PhaseDelta.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
-			}
+			},
+			[nodeKeys.scanlines]: {
+				[Scanlines.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
+			},
 		}),
 
 		buildSubgraph: () => {
@@ -129,6 +131,10 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				result,
 				'phaseDelta',
 				nodeKeys.phase);
+			result = Graph.insertNode(
+				result,
+				'scanlines',
+				nodeKeys.scanlines);
 
 			result = Graph.insertEdge(
 				result,
@@ -160,6 +166,16 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 					}
 				},
 				'add -> oscillator.phaseOffset');
+			result = Graph.insertEdge(
+				result,
+				{
+					src: nodeKeys.osc,
+					dst: nodeKeys.scanlines,
+					metadata: {
+						inlet: Osc.inletKeys.input,
+					}
+				},
+				'scanlines -> oscillator.input');
 
 			return {
 				graph: result,
