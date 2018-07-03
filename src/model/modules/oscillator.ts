@@ -2,6 +2,7 @@ import { VideoModule, ShaderModule } from '../VideoModule';
 import shaderSource from '../../shaders/oscillator.generated';
 
 export const parameterKeys = {
+	input: 'input',
 	hue: 'hue',
 	shape: 'shape',
 	waveSizeAmount: 'harmonics amount',
@@ -11,6 +12,7 @@ export const parameterKeys = {
 };
 
 export const inletKeys = {
+	input: 'input',
 	hue: 'hue',
 	waveSize: 'harmonics',
 	speed: 'inharmonics',
@@ -23,6 +25,7 @@ export const oscillator: VideoModule<ShaderModule> = {
 	parameters: {
 		keys: Object.keys(parameterKeys),
 		defaultValues: {
+			[parameterKeys.input]: 1,
 			[parameterKeys.waveSizeAmount]: 1,
 			[parameterKeys.speedAmount]: 1,
 			[parameterKeys.hue]: 1,
@@ -34,6 +37,7 @@ export const oscillator: VideoModule<ShaderModule> = {
 
 	inlets: {
 		keys: [
+			inletKeys.input,
 			inletKeys.hue,
 			inletKeys.waveSize,
 			inletKeys.speed,
@@ -43,6 +47,7 @@ export const oscillator: VideoModule<ShaderModule> = {
 		],
 
 		associatedParameters: {
+			[inletKeys.input]: parameterKeys.input,
 			[inletKeys.hue]: parameterKeys.hue,
 			[inletKeys.waveSize]: parameterKeys.waveSizeAmount,
 			[inletKeys.speed]: parameterKeys.speedAmount,
@@ -65,6 +70,10 @@ export const oscillator: VideoModule<ShaderModule> = {
 		}),
 
 		parametersToUniforms: values => ({
+			inputAmount: {
+				type: 'f',
+				data: values[parameterKeys.input]
+			},
 			waveSizeAmount: {
 				type: 'f',
 				data: values[parameterKeys.waveSizeAmount]
@@ -92,6 +101,7 @@ export const oscillator: VideoModule<ShaderModule> = {
 		}),
 
 		inletsToUniforms: {
+			[inletKeys.input]: 'inputTexture',
 			[inletKeys.hue]: 'hue',
 			[inletKeys.waveSize]: 'waveSize',
 			[inletKeys.speed]: 'speed',

@@ -13,20 +13,25 @@ function clearPastStateMigration(state: any): any {
 }
 
 const migrations = {
-	3: clearPastStateMigration,
-	4: clearPastStateMigration,
+	5: clearPastStateMigration,
 };
 const persistRootConfig = {
   key: 'root',
   storage,
-	version: 4,
+	version: 5,
 	migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' }),
 	blacklist: ['graph'],
+};
+
+const graphMigrations = {
+	1: clearPastStateMigration,
 };
 
 const persistGraphConfig = {
 	key: 'graph',
 	blacklist: ['previewedParameterChanges'],
+	version: 1,
+	migrate: createMigrate(graphMigrations, { debug: process.env.NODE_ENV === 'development' }),
 	storage
 };
 

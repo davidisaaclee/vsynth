@@ -34,10 +34,6 @@
   dependencies:
     lodash "^4.17.10"
 
-"@davidisaaclee/react-table@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-table/-/react-table-1.0.0.tgz#695d5403e9308ed89f3ff634980b7f1f23341cb6"
-
 "@davidisaaclee/react-video-graph@^0.2.3":
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.2.3.tgz#4a171e8082692de6e145484354cddaf37d9aa7b2"

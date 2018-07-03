@@ -3,9 +3,12 @@ precision mediump float;
 #pragma glslify: sampleTex = require('./sampleTex');
 
 const float TWO_PI = 6.28318530718;
-const float N_SCANLINES = 500.;
 
 uniform vec2 inputTextureDimensions;
+
+// The independent variable in the periodic function
+uniform sampler2D inputTexture;
+uniform float inputAmount;
 
 uniform sampler2D hue;
 uniform float hueAmount;
@@ -23,14 +26,10 @@ uniform float speedAmount;
 
 // between 0-1, scaled to 0-2pi
 uniform sampler2D rotationTheta;
-
-// scales rotationTheta
 uniform float rotationAmount;
 
 // between 0-1, where 1 is a full period
 uniform sampler2D phaseOffsetTexture;
-
-// scales phaseOffsetFromTexture
 uniform float phaseOffsetTextureAmount;
 
 // wave shape: 0 = sine, 0.5 = triangle, 1 = sawtooth
@@ -51,7 +50,6 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 float calculateFrequency(vec2 textureSamplePoint) {
-	// TODO: Scale by amount
 	float waveSizeSample = sampleTex(
 			waveSize,
 			textureSamplePoint,
@@ -85,11 +83,8 @@ void main() {
 			textureSamplePoint,
 			phaseOffsetTextureAmount);
 
-	highp vec2 uv =
-		position / inputTextureDimensions;
-
 	float pixelIndex =
-		uv.x / N_SCANLINES + (uv.y - mod(uv.y, 1. / N_SCANLINES));
+		sampleTex(inputTexture, textureSamplePoint, inputAmount);
 
 	float frequency =
 		calculateFrequency(textureSamplePoint);
