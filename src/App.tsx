@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -44,6 +45,9 @@ const StyledMenu = styled(MainMenu)`
 interface Props {
 	modal: AppModule.Modals.Modal | null;
 
+	// Is the user currently changing a parameter?
+	isPreviewingParameterChange: boolean;
+
 	closeModal: () => any;
 	addModule: (modType: Kit.ModuleType) => any;
 	addBus: () => any;
@@ -55,6 +59,7 @@ interface Props {
 interface StateProps {
 	modal: AppModule.Modals.Modal | null;
 	nextNodeKey: (modType: Kit.ModuleType) => string;
+	isPreviewingParameterChange: boolean;
 }
 
 interface DispatchProps {
@@ -94,6 +99,7 @@ class App extends React.Component<Props, State> {
 	public render() {
 		const {
 			modal,
+			isPreviewingParameterChange,
 			openNodePicker, closeModal,
 			undo, redo,
 			addBus
@@ -130,7 +136,7 @@ class App extends React.Component<Props, State> {
 						},
 						style: {
 							content: {
-								opacity: 1,
+								opacity: isPreviewingParameterChange ? 0.2 : 1,
 								backgroundColor: 'rgba(255, 255, 255, 0)',
 								borderRadius: 0,
 								border: 'none',
@@ -200,6 +206,7 @@ function mapStateToProps(state: RootState): StateProps {
 	return {
 		modal: state.app.modal,
 		nextNodeKey: sharedSelectors.nextNodeKey(state),
+		isPreviewingParameterChange: !isEmpty(state.graph.present.previewedParameterChanges),
 	};
 }
 
@@ -224,15 +231,15 @@ function mergeProps(
 	dispatchProps: DispatchProps,
 	ownProps: OwnProps
 ): Props {
-	const { modal, nextNodeKey } = stateProps;
+	const { nextNodeKey, ...restStateProps } = stateProps;
 	const {
 		makeAddModule,
 		addBus, closeModal,
 		openNodePicker, redo, undo
 	} = dispatchProps;
 	return {
+		...restStateProps,
 		addModule: makeAddModule(nextNodeKey),
-		modal,
 		addBus,
 		closeModal,
 		openNodePicker,

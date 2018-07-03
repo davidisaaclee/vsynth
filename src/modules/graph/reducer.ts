@@ -1,4 +1,4 @@
-import { pickBy as _pickBy, ValueKeyIteratee } from 'lodash';
+import { isEmpty, clone, pickBy as _pickBy, ValueKeyIteratee } from 'lodash';
 import { ActionType } from 'typesafe-actions';
 import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVideoGraph';
 import * as Kit from '../../model/Kit';
@@ -105,12 +105,23 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
+				const previewedParameterChanges =
+					clone(state.previewedParameterChanges);
+				if (previewedParameterChanges[nodeKey] != null) {
+					previewedParameterChanges[nodeKey] =
+						omit(previewedParameterChanges[nodeKey], parameterKey);
+					if (isEmpty(previewedParameterChanges[nodeKey])) {
+						delete previewedParameterChanges[nodeKey];
+					}
+				}
+
 				return {
 					...state,
 					nodes: {
 						...state.nodes,
 						[nodeKey]: node
-					}
+					},
+					previewedParameterChanges
 				};
 			})(action.payload);
 
@@ -123,17 +134,17 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 		case Constants.REMOVE_NODE:
 			return (nodeKeyToDelete => ({
 				...state,
-				nodes: pickBy(
+				nodes: omit(
 					state.nodes,
-					(_, nodeKey) => nodeKey !== nodeKeyToDelete),
+					nodeKeyToDelete),
 				nodeOrder: (state.nodeOrder
 					.filter(nodeKey => nodeKey !== nodeKeyToDelete)),
 				inletConnections: pickBy(
 					state.inletConnections,
-					(_, nodeKey) => nodeKey !== nodeKeyToDelete),
+					nodeKeyToDelete),
 				outletConnections: pickBy(
 					state.outletConnections,
-					(_, nodeKey) => nodeKey !== nodeKeyToDelete),
+					nodeKeyToDelete),
 			}))(action.payload);
 
 		case Constants.RESET_ALL:
@@ -199,5 +210,12 @@ function pickBy<V, T extends Record<string, V>>(
 	predicate?: ValueKeyIteratee<T[keyof T]>
 ): T {
 	return _pickBy(object, predicate) as T;
+}
+
+function omit<V, T extends Record<string, V>>(
+	object: T | null | undefined,
+	keyToOmit: keyof T
+): T {
+	return pickBy(object, (value, key) => keyToOmit !== key);
 }
 

@@ -20,17 +20,17 @@ const persistRootConfig = {
   storage,
 	version: 5,
 	migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' }),
-	blacklist: ['graph'],
+	blacklist: ['graph', 'app'],
 };
 
 const graphMigrations = {
-	4: clearPastStateMigration,
+	5: clearPastStateMigration,
 };
 
 const persistGraphConfig = {
 	key: 'graph',
 	blacklist: ['previewedParameterChanges'],
-	version: 4,
+	version: 5,
 	migrate: createMigrate(graphMigrations, { debug: process.env.NODE_ENV === 'development' }),
 	storage
 };
