@@ -1,26 +1,87 @@
 import { range, includes, isEqual, pick } from 'lodash';
 import * as React from 'react';
-import styled from '../../../styled-components';
+import styled, { css } from '../../../styled-components';
 import ParameterControl from '../ParameterControl';
 import { Lane } from './types';
 
 const e = React.createElement;
 
-const LaneRow = styled.tr`
+const pinstripes = css`
+	background-color: rgba(255, 255, 255, 0.5);
+	&:nth-child(even) {
+		background-color: rgba(255, 255, 255, 0.75);
+	}
+`;
+
+export const RouterTable = styled.table`
+	user-select: none;
+`;
+
+const Cell = styled.td<{ type: 'inlet' | 'outlet' }>`
+	width: 30px;
+	white-space: prewrap;
+
+	&:focus {
+		outline: 1px solid white;
+	}
+
+	${({ type }) => type === 'inlet' && pinstripes}
+`;
+
+const CellCheckmark = styled.div<{ type: 'inlet' | 'outlet' }>`
+	display: block;
+	width: 10px;
+	height: 10px;
+
+	margin: 0 auto;
+
+	${({ type }) => css`
+		background-color: ${type === 'inlet' ? 'black' : 'white'};
+	`}
+`;
+
+const LaneRow = styled.tr<{ type: 'inlet' | 'outlet' }>`
 	height: 30px;
+
+	${({ type }) => css`
+		background-color: ${type === 'inlet'
+				? 'rgba(255, 255, 255, 0.5)' 
+				: 'rgba(0, 0, 0, 0.75)'};
+		color: ${type === 'inlet' ? 'black' : 'white'};
+	`}
 `;
 
 const LaneHeader = styled.th`
 	position: relative;
 
+	text-align: right;
 	padding: 5px;
 	width: 80px;
 
-	text-align: right;
+	font-size: 12px;
+`;
+
+const LaneHeaderText = styled.span`
+	margin: 0 1em;
+`;
+
+const RemoveNodeButton = styled.button`
+	box-sizing: border-box;
+	border: 1px solid white;
+
+	background: none;
+	color: white;
+	white-space: nowrap;
 `;
 
 const StyledParameterControl = styled(ParameterControl)`
 	height: 20px;
+`;
+
+export const BusHeader = styled.th`
+	min-width: 30px;
+
+	${pinstripes}
 `;
 
 interface LaneProps {
@@ -55,13 +116,16 @@ export class LaneView extends React.Component<LaneProps, any> {
 			removeNodeForLane,
 		} = this.props;
 		return e(LaneRow,
-			{ key: `lane-${lane.nodeKey}.${lane.name}` },
+			{
+				key: `lane-${lane.nodeKey}.${lane.name}`,
+				type: lane.type
+			},
 			// Lane header
 			e(LaneHeader, {},
 				...(lane.type === 'outlet'
 					? [
-						lane.name,
-						e('button',
+						e(LaneHeaderText, {}, lane.name),
+						e(RemoveNodeButton,
 							{ onClick: () => removeNodeForLane(laneIndex) },
 							'x')
 					]
@@ -90,12 +154,13 @@ export class LaneView extends React.Component<LaneProps, any> {
 					? () => removeConnection(laneIndex, busIndex)
 					: () => setConnection(laneIndex, busIndex);
 
-				return e('td',
+				return e(Cell,
 					{
 						key: `${lane.nodeKey}.bus-${busIndex}`,
+						type: lane.type,
 						onClick: clickHandler
 					},
-					hasConnection ? 'x' : 'o');
+					hasConnection ? e(CellCheckmark, { type: lane.type }) : ' ');
 			}));
 	}
 }

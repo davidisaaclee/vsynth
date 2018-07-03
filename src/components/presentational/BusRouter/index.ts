@@ -1,7 +1,7 @@
 import { range } from 'lodash';
 import * as React from 'react';
 import { Connection, Lane } from './types';
-import { LaneView } from './components';
+import { LaneView, BusHeader, RouterTable } from './components';
 
 const e = React.createElement;
 
@@ -26,7 +26,7 @@ const BusRouter: React.StatelessComponent<Props> = ({
 	setParameter, previewParameter,
 	removeNodeForLane,
 }) => (
-	e('table',
+	e(RouterTable,
 		{},
 		e('thead',
 			{},
@@ -34,13 +34,14 @@ const BusRouter: React.StatelessComponent<Props> = ({
 				{},
 				// Cross-axis header
 				e('th', {}, null),
-				range(busCount).map(busIndex => (
+				range(busCount).map(busIndex =>
 					// Bus header
-					e('th', { key: `bus-header-${busIndex}` }, busIndex)
-				)))),
+					e(BusHeader,
+						{ key: `bus-header-${busIndex}` },
+						busIndex)))),
 		e('tbody',
 			{},
-			lanes.map((lane, laneIndex) => (
+			lanes.map((lane, laneIndex) =>
 				e(LaneView, {
 					key: `${lane.nodeKey}.${lane.name}`,
 					lane,
@@ -54,7 +55,6 @@ const BusRouter: React.StatelessComponent<Props> = ({
 					setConnection,
 					removeConnection,
 					removeNodeForLane,
-				})
-			)))));
+				})))));
 
 export default BusRouter;
