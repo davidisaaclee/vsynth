@@ -6,6 +6,8 @@ import { LaneView, BusHeader, RouterTable } from './components';
 const e = React.createElement;
 
 export interface Props {
+	className?: string;
+
 	busCount: number;
 	// TODO: Could be good to make these dictionaries?
 	// idk how that optimization works
@@ -20,14 +22,14 @@ export interface Props {
 }
 
 const BusRouter: React.StatelessComponent<Props> = ({
-	busCount,
+	className, busCount,
 	lanes, connections,
 	setConnection, removeConnection,
 	setParameter, previewParameter,
 	removeNodeForLane,
 }) => (
 	e(RouterTable,
-		{},
+		{ className },
 		e('thead',
 			{},
 			e('tr',

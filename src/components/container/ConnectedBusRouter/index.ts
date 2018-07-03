@@ -25,6 +25,10 @@ interface DispatchProps {
 	makeRemoveNodeForLane: (laneIndexer: LaneIndexer) => (laneIndex: number) => any;
 };
 
+interface OwnProps {
+	className?: string;
+}
+
 function mapStateToProps(state: RootState): StateProps {
 	return {
 		busCount: sharedSelectors.busCount(state),
@@ -92,7 +96,11 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	};
 }
 
-function mergeProps(stateProps: StateProps, dispatchProps: DispatchProps): BusRouterProps {
+function mergeProps(
+	stateProps: StateProps,
+	dispatchProps: DispatchProps,
+	ownProps: OwnProps
+): BusRouterProps {
 	const {
 		laneIndexer,
 		...restStateProps
@@ -111,6 +119,7 @@ function mergeProps(stateProps: StateProps, dispatchProps: DispatchProps): BusRo
 		previewParameter: makePreviewParameter(laneIndexer),
 		setParameter: makeSetParameter(laneIndexer),
 		removeNodeForLane: makeRemoveNodeForLane(laneIndexer),
+		...ownProps,
 	};
 }
 
