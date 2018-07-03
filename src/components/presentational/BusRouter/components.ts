@@ -3,6 +3,7 @@ import * as React from 'react';
 import styled, { css } from '../../../styled-components';
 import ParameterControl from '../ParameterControl';
 import { Lane } from './types';
+import { isEnterKeyEvent, isSpaceKeyEvent } from '../../../utility/keys';
 
 const e = React.createElement;
 
@@ -150,7 +151,7 @@ export class LaneView extends React.Component<LaneProps, any> {
 			range(busCount).map(busIndex => {
 				const hasConnection =
 					includes(connections, busIndex);
-				const clickHandler = hasConnection
+				const toggleCell = hasConnection
 					? () => removeConnection(laneIndex, busIndex)
 					: () => setConnection(laneIndex, busIndex);
 
@@ -158,7 +159,14 @@ export class LaneView extends React.Component<LaneProps, any> {
 					{
 						key: `${lane.nodeKey}.bus-${busIndex}`,
 						type: lane.type,
-						onClick: clickHandler
+						tabIndex: 0,
+						onClick: toggleCell,
+						onKeyDown: (evt: React.KeyboardEvent<HTMLElement>) => {
+							if (isEnterKeyEvent(evt) || isSpaceKeyEvent(evt)) {
+								toggleCell();
+								evt.preventDefault();
+							}
+						}
 					},
 					hasConnection ? e(CellCheckmark, { type: lane.type }) : ' ');
 			}));
