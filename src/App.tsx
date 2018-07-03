@@ -131,7 +131,7 @@ class App extends React.Component<Props, State> {
 						style: {
 							content: {
 								opacity: 1,
-								backgroundColor: '#444',
+								backgroundColor: 'rgba(255, 255, 255, 0)',
 								borderRadius: 0,
 								border: 'none',
 								outline: 'none',
