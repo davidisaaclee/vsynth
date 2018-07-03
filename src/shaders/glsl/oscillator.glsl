@@ -62,7 +62,7 @@ float calculateFrequency(vec2 textureSamplePoint) {
 			textureSamplePoint,
 			speedAmount);
 
-	return ceil(waveSizeSample * waveSizeSample * 100.)
+	return ceil(waveSizeSample * 20.)
 		+ 2. * (speedSample - 0.5);
 }
 
