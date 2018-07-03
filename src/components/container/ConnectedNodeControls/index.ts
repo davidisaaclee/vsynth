@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { State as RootState } from '../../../modules';
 import NodeControls, { Props as NodeControlsProps } from '../../presentational/NodeControls';
-import * as GraphModule from '../../../modules/graph';
+import * as DocumentModule from '../../../modules/document';
 import * as selectors from './selectors';
 
 interface StateProps {
@@ -27,11 +27,11 @@ function mapStateToProps(state: RootState): StateProps {
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		makeOnInput: (nodeKey) => (index, value, parameterKey) => (
-			dispatch(GraphModule.actions.previewParameter(nodeKey, parameterKey, value))
+			dispatch(DocumentModule.actions.previewParameter(nodeKey, parameterKey, value))
 		),
 
 		makeOnChange: (nodeKey) => (index, value, parameterKey) => (
-			dispatch(GraphModule.actions.setParameter(nodeKey, parameterKey, value))
+			dispatch(DocumentModule.actions.setParameter(nodeKey, parameterKey, value))
 		),
 	};
 }

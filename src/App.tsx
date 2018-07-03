@@ -14,7 +14,7 @@ import ModulePicker from './components/container/ModulePicker';
 import NodeControls from './components/container/ConnectedNodeControls';
 import MainMenu from './components/container/MainMenu';
 import * as AppModule from './modules/app';
-import * as Graph from './modules/graph';
+import * as Document from './modules/document';
 import * as sharedSelectors from './modules/sharedSelectors';
 import './App.css';
 import { State as RootState } from './modules';
@@ -206,19 +206,19 @@ function mapStateToProps(state: RootState): StateProps {
 	return {
 		modal: state.app.modal,
 		nextNodeKey: sharedSelectors.nextNodeKey(state),
-		isPreviewingParameterChange: !isEmpty(state.graph.present.previewedParameterChanges),
+		isPreviewingParameterChange: !isEmpty(state.document.present.previewedParameterChanges),
 	};
 }
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		makeAddModule: makeNodeKey => modType => (
-			dispatch(Graph.actions.insertNode(
+			dispatch(Document.actions.insertNode(
 				videoModuleSpecFromModuleType(modType),
 				makeNodeKey(modType)))
 		),
 		closeModal: () => dispatch(AppModule.actions.setModal(null)),
-		addBus: () => dispatch(Graph.actions.addBus()),
+		addBus: () => dispatch(Document.actions.addBus()),
 		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.pickModule)),
 		undo: () => dispatch(UndoActions.undo()),
 		redo: () => dispatch(UndoActions.redo()),

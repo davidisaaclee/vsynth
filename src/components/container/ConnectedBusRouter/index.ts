@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { defaultConstantBusIndex, nullSendBusIndex } from '../../../constants';
 import { State as RootState } from '../../../modules';
-import * as GraphModule from '../../../modules/graph';
+import * as DocumentModule from '../../../modules/document';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import BusRouter, { Props as BusRouterProps } from '../../presentational/BusRouter';
 import * as selectors from './selectors';
@@ -43,20 +43,20 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 		makeSetConnection: (laneIndexer: LaneIndexer) => (laneIndex: number, busIndex: number) => {
 			const lane = laneIndexer(laneIndex);
 			if (lane.type === 'inlet') {
-				dispatch(GraphModule.actions.setInletConnection(lane.nodeKey, lane.inletKey, busIndex));
+				dispatch(DocumentModule.actions.setInletConnection(lane.nodeKey, lane.inletKey, busIndex));
 			}
 			if (lane.type === 'outlet') {
-				dispatch(GraphModule.actions.setOutletConnection(lane.nodeKey, busIndex));
+				dispatch(DocumentModule.actions.setOutletConnection(lane.nodeKey, busIndex));
 			}
 		},
 
 		makeRemoveConnection: (laneIndexer: LaneIndexer) => (laneIndex: number, busIndex: number) => {
 			const lane = laneIndexer(laneIndex);
 			if (lane.type === 'inlet') {
-				dispatch(GraphModule.actions.setInletConnection(lane.nodeKey, lane.inletKey, defaultConstantBusIndex));
+				dispatch(DocumentModule.actions.setInletConnection(lane.nodeKey, lane.inletKey, defaultConstantBusIndex));
 			}
 			if (lane.type === 'outlet') {
-				dispatch(GraphModule.actions.setOutletConnection(lane.nodeKey, nullSendBusIndex));
+				dispatch(DocumentModule.actions.setOutletConnection(lane.nodeKey, nullSendBusIndex));
 			}
 		},
 
@@ -68,7 +68,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 			if (lane.scale == null) {
 				throw new Error('Attempted to set parameter on lane with no associated parameter.');
 			}
-			dispatch(GraphModule.actions.setParameter(
+			dispatch(DocumentModule.actions.setParameter(
 				lane.nodeKey,
 				lane.scale.parameterKey,
 				value));
@@ -83,7 +83,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 				throw new Error('Attempted to set parameter on lane with no associated parameter.');
 			}
 
-			dispatch(GraphModule.actions.previewParameter(
+			dispatch(DocumentModule.actions.previewParameter(
 				lane.nodeKey,
 				lane.scale.parameterKey,
 				value));
@@ -91,7 +91,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 
 		makeRemoveNodeForLane: (laneIndexer: LaneIndexer) => (laneIndex: number) => {
 			const lane = laneIndexer(laneIndex);
-			dispatch(GraphModule.actions.removeNode(lane.nodeKey));
+			dispatch(DocumentModule.actions.removeNode(lane.nodeKey));
 		},
 	};
 }

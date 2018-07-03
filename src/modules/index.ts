@@ -3,8 +3,8 @@ import { createMigrate, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { ActionType } from 'typesafe-actions';
 import undoable, { StateWithHistory } from 'redux-undo';
-import * as GraphConstants from './graph/constants';
-import * as Graph from './graph';
+import * as DocumentConstants from './document/constants';
+import * as Document from './document';
 import * as App from './app';
 
 
@@ -20,35 +20,35 @@ const persistRootConfig = {
   storage,
 	version: 5,
 	migrate: createMigrate(migrations, { debug: process.env.NODE_ENV === 'development' }),
-	blacklist: ['graph', 'app'],
+	blacklist: ['document', 'app'],
 };
 
-const graphMigrations = {
+const documentMigrations = {
 	5: clearPastStateMigration,
 };
 
-const persistGraphConfig = {
-	key: 'graph',
+const persistDocumentConfig = {
+	key: 'document',
 	blacklist: ['previewedParameterChanges'],
 	version: 5,
-	migrate: createMigrate(graphMigrations, { debug: process.env.NODE_ENV === 'development' }),
+	migrate: createMigrate(documentMigrations, { debug: process.env.NODE_ENV === 'development' }),
 	storage
 };
 
 export interface State {
-	graph: StateWithHistory<Graph.State>;
+	document: StateWithHistory<Document.State>;
 	app: App.State;
 };
 
-type Action = ActionType<typeof Graph.actions | typeof App.actions>;
+type Action = ActionType<typeof Document.actions | typeof App.actions>;
 
 export const reducer = persistReducer(
 	persistRootConfig,
 	combineReducers<State, Action>({
-		graph: persistReducer(persistGraphConfig, undoable(Graph.reducer, {
+		document: persistReducer(persistDocumentConfig, undoable(Document.reducer, {
 			filter: (action) => {
 				switch (action.type) {
-					case GraphConstants.PREVIEW_PARAMETER:
+					case DocumentConstants.PREVIEW_PARAMETER:
 						return false;
 					default:
 						return true;

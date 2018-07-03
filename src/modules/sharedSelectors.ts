@@ -9,7 +9,7 @@ import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
 
 const document =
-	(state: RootState) => state.graph.present;
+	(state: RootState) => state.document.present;
 
 /*
 const nodes =
@@ -137,11 +137,11 @@ export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 	) => {
 		let result = Graph.empty;
 		result = nodes.reduce(
-			(graph, { key, node }) => Graph.insertNode(graph, node, key),
+			(document, { key, node }) => Graph.insertNode(document, node, key),
 			result);
 		result = inletOutletLinks.reduce(
-			(graph, { inlet, outlet }) => Graph.insertEdge(
-				graph,
+			(document, { inlet, outlet }) => Graph.insertEdge(
+				document,
 				{
 					src: inlet.nodeKey,
 					dst: outlet.nodeKey,

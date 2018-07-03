@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { ActionCreators as UndoActions } from 'redux-undo';
-import * as Graph from '../../../modules/graph';
+import * as Document from '../../../modules/document';
 import * as App from '../../../modules/app';
 import * as C from './components';
 
@@ -56,7 +56,7 @@ const MainMenu: React.StatelessComponent<Props> = ({
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		resetDocument: () => {
-			dispatch(Graph.actions.resetAll());
+			dispatch(Document.actions.resetAll());
 			dispatch(App.actions.setModal(null));
 			dispatch(UndoActions.clearHistory());
 		},
