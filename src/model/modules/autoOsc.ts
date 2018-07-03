@@ -89,10 +89,12 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.shape,
 			}],
+			/*
 			[inletKeys.rotation]: [{
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.rotation,
 			}],
+			 */
 			[inletKeys.hue]: [{
 				nodeKey: nodeKeys.osc,
 				inletKey: Osc.inletKeys.hue,
@@ -104,7 +106,7 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				[Osc.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
 				[Osc.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
 				[Osc.parameterKeys.hue]: params[paramKeys.hue],
-				[Osc.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
+				// [Osc.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
 				[Osc.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
 				[Osc.parameterKeys.shape]: params[paramKeys.shape],
 			},

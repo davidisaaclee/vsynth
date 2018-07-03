@@ -24,13 +24,13 @@ const persistRootConfig = {
 };
 
 const graphMigrations = {
-	1: clearPastStateMigration,
+	2: clearPastStateMigration,
 };
 
 const persistGraphConfig = {
 	key: 'graph',
 	blacklist: ['previewedParameterChanges'],
-	version: 1,
+	version: 2,
 	migrate: createMigrate(graphMigrations, { debug: process.env.NODE_ENV === 'development' }),
 	storage
 };

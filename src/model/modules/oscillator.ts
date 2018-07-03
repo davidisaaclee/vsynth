@@ -7,7 +7,6 @@ export const parameterKeys = {
 	shape: 'shape',
 	waveSizeAmount: 'harmonics amount',
 	speedAmount: 'inharmonics amount',
-	rotationAmount: 'rotation amount',
 	phaseOffsetAmount: 'phase offset amount',
 };
 
@@ -30,7 +29,6 @@ export const oscillator: VideoModule<ShaderModule> = {
 			[parameterKeys.speedAmount]: 1,
 			[parameterKeys.hue]: 1,
 			[parameterKeys.shape]: 0,
-			[parameterKeys.rotationAmount]: 0,
 			[parameterKeys.phaseOffsetAmount]: 0,
 		}
 	},
@@ -42,7 +40,6 @@ export const oscillator: VideoModule<ShaderModule> = {
 			inletKeys.waveSize,
 			inletKeys.speed,
 			inletKeys.shape,
-			inletKeys.rotation,
 			inletKeys.phaseOffset,
 		],
 
@@ -52,7 +49,6 @@ export const oscillator: VideoModule<ShaderModule> = {
 			[inletKeys.waveSize]: parameterKeys.waveSizeAmount,
 			[inletKeys.speed]: parameterKeys.speedAmount,
 			[inletKeys.shape]: parameterKeys.shape,
-			[inletKeys.rotation]: parameterKeys.rotationAmount,
 			[inletKeys.phaseOffset]: parameterKeys.phaseOffsetAmount,
 		}
 	},
@@ -86,10 +82,6 @@ export const oscillator: VideoModule<ShaderModule> = {
 				type: 'f',
 				data: values[parameterKeys.shape]
 			},
-			rotationAmount: {
-				type: 'f',
-				data: values[parameterKeys.rotationAmount]
-			},
 			phaseOffsetTextureAmount: {
 				type: 'f',
 				data: values[parameterKeys.phaseOffsetAmount]
@@ -106,7 +98,6 @@ export const oscillator: VideoModule<ShaderModule> = {
 			[inletKeys.waveSize]: 'waveSize',
 			[inletKeys.speed]: 'speed',
 			[inletKeys.shape]: 'shape',
-			[inletKeys.rotation]: 'rotationTheta',
 			[inletKeys.phaseOffset]: 'phaseOffsetTexture',
 		},
 	}

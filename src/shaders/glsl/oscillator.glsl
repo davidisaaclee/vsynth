@@ -24,10 +24,6 @@ uniform float waveSizeAmount;
 uniform sampler2D speed;
 uniform float speedAmount;
 
-// between 0-1, scaled to 0-2pi
-uniform sampler2D rotationTheta;
-uniform float rotationAmount;
-
 // between 0-1, where 1 is a full period
 uniform sampler2D phaseOffsetTexture;
 uniform float phaseOffsetTextureAmount;
@@ -35,13 +31,6 @@ uniform float phaseOffsetTextureAmount;
 // wave shape: 0 = sine, 0.5 = triangle, 1 = sawtooth
 uniform sampler2D shape;
 uniform float shapeAmount;
-
-vec2 rotate(vec2 v, float a, vec2 center) {
-	float s = sin(a);
-	float c = cos(a);
-	mat2 m = mat2(c, -s, s, c);
-	return center + m * (v - center);
-}
 
 vec3 hsv2rgb(vec3 c) {
 	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -68,15 +57,7 @@ void main() {
 	vec2 textureSamplePoint =
 		gl_FragCoord.xy / inputTextureDimensions;
 
-	float theta = sampleTex(
-			rotationTheta,
-			textureSamplePoint,
-			rotationAmount) * TWO_PI;
-
-	vec2 position = rotate(
-			gl_FragCoord.xy,
-			theta,
-			inputTextureDimensions * 0.5);
+	vec2 position = gl_FragCoord.xy;
 
 	float phaseOffsetFromTexture = sampleTex(
 			phaseOffsetTexture,
