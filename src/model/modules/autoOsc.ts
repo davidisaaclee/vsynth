@@ -1,8 +1,7 @@
 import * as Graph from '@davidisaaclee/graph';
 import { VideoModule, SubgraphModule } from '../VideoModule';
 import * as Osc from './oscillator';
-import * as AddFract from './addFract';
-import * as PhaseDelta from './phaseDelta';
+import * as Ramp from './ramp';
 import * as Scanlines from './scanlines';
 
 const inletKeys = {
@@ -24,8 +23,7 @@ const paramKeys = {
 
 const nodeKeys = {
 	osc: 'osc',
-	add: 'add',
-	phase: 'phase',
+	ramp: 'ramp',
 	scanlines: 'scanlines',
 };
 
@@ -83,8 +81,8 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 					inletKey: Osc.inletKeys.speed,
 				},
 				{
-					nodeKey: nodeKeys.phase,
-					inletKey: PhaseDelta.inletKeys.speed,
+					nodeKey: nodeKeys.ramp,
+					inletKey: Ramp.inletKeys.speed,
 				},
 			],
 			[inletKeys.shape]: [{
@@ -103,17 +101,20 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 
 		parametersToSubParameters: params => ({
 			[nodeKeys.osc]: {
+				[Osc.parameterKeys.input]: 1,
 				[Osc.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
 				[Osc.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
 				[Osc.parameterKeys.hue]: params[paramKeys.hue],
 				[Osc.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
 				[Osc.parameterKeys.shape]: params[paramKeys.shape],
 			},
-			[nodeKeys.phase]: {
-				[PhaseDelta.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
+			[nodeKeys.ramp]: {
+				[Ramp.parameterKeys.speed]: params[paramKeys.speedAmount] - 0.5,
 			},
 			[nodeKeys.scanlines]: {
 				[Scanlines.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
+				[Scanlines.parameterKeys.ditherAmount]: 0,
+				[Scanlines.parameterKeys.phaseOffsetAmount]: 1,
 			},
 		}),
 
@@ -125,12 +126,8 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				nodeKeys.osc);
 			result = Graph.insertNode(
 				result,
-				'addFract',
-				nodeKeys.add);
-			result = Graph.insertNode(
-				result,
-				'phaseDelta',
-				nodeKeys.phase);
+				'ramp',
+				nodeKeys.ramp);
 			result = Graph.insertNode(
 				result,
 				'scanlines',
@@ -139,38 +136,18 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 			result = Graph.insertEdge(
 				result,
 				{
-					src: nodeKeys.add,
-					dst: nodeKeys.phase,
+					dst: nodeKeys.ramp,
+					src: nodeKeys.scanlines,
 					metadata: {
-						inlet: AddFract.inletKeys.a,
+						inlet: Scanlines.inletKeys.phaseOffset,
 					}
 				},
-				'phaseDelta -> add.a');
+				'ramp -> scanlines.phaseOffset');
 			result = Graph.insertEdge(
 				result,
 				{
-					src: nodeKeys.add,
-					dst: nodeKeys.add,
-					metadata: {
-						inlet: AddFract.inletKeys.b,
-					}
-				},
-				'add -> add.b');
-			result = Graph.insertEdge(
-				result,
-				{
-					src: nodeKeys.osc,
-					dst: nodeKeys.add,
-					metadata: {
-						inlet: Osc.inletKeys.phaseOffset,
-					}
-				},
-				'add -> oscillator.phaseOffset');
-			result = Graph.insertEdge(
-				result,
-				{
-					src: nodeKeys.osc,
 					dst: nodeKeys.scanlines,
+					src: nodeKeys.osc,
 					metadata: {
 						inlet: Osc.inletKeys.input,
 					}
