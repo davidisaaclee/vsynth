@@ -1,0 +1,1 @@
+{"version":3,"sources":["App.css"],"names":[],"mappings":"AAAA,UACC,SACA,sBAEA,uBACA,8BACI,yBAA2B","file":"static/css/main.95cb45a7.css","sourcesContent":["html, body {\n\tmargin: 0;\n\tbackground-color: black;\n\n\tfont-family: sans-serif;\n\t-ms-touch-action: manipulation;\n\t    touch-action: manipulation;\n}\n\n\n\n// WEBPACK FOOTER //\n// ./src/App.css"],"sourceRoot":""}
