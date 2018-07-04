@@ -34,15 +34,15 @@
   dependencies:
     lodash "^4.17.10"
 
-"@davidisaaclee/react-video-graph@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.2.4.tgz#dbf9fc6d277735320e6093ef6f7a95ae62e2b32c"
+"@davidisaaclee/react-video-graph@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.2.5.tgz#e7157f41048694ced782b14e7723c277476718e1"
   dependencies:
-    "@davidisaaclee/video-graph" "^0.2.0"
+    "@davidisaaclee/video-graph" "^0.3.0"
 
-"@davidisaaclee/video-graph@^0.2.0", "@davidisaaclee/video-graph@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/video-graph/-/video-graph-0.2.2.tgz#904e8dc7524baee8dc0e3141e3079a3a4fdd15ca"
+"@davidisaaclee/video-graph@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/video-graph/-/video-graph-0.3.0.tgz#a0895bc059926fa61b782e305a95e98386ae9851"
   dependencies:
     "@davidisaaclee/graph" "^0.1.0"
     gl-matrix "^2.6.1"
