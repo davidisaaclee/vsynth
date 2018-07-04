@@ -155,8 +155,19 @@ class ParameterControl extends React.Component<Props, State> {
 						const relativePosition =
 							relativePositionFromMouseEvent(evt);
 
+						// 1 when in slider; increasing when outside of and moving away from slider
+						const precisionFactor = (() => {
+							if (relativePosition.y >= 0 && relativePosition.y <= 1) {
+								return 1;
+							} else if (relativePosition.y > 1) {
+								return relativePosition.y;
+							} else {
+								return Math.abs(relativePosition.y) + 1;
+							}
+						})();
+
 						const delta =
-							relativePosition.x - cursorState.relativePosition.x;
+							(relativePosition.x - cursorState.relativePosition.x) / precisionFactor;
 						onInputValue(clamp(value + delta, 0, 1));
 
 						this.setState({
