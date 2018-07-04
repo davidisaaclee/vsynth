@@ -3,7 +3,6 @@ import { glsl } from '@davidisaaclee/video-graph';
 export default glsl`
 	precision mediump float;
 
-	const float N_SCANLINES = 500.;
 	const float TWO_PI = 6.28318530718;
 
 	uniform float ditherAmount;
@@ -39,6 +38,8 @@ export default glsl`
 	}
 
 	void main() {
+		float N_SCANLINES = inputTextureDimensions.y;
+
 		vec2 textureSamplePoint =
 			gl_FragCoord.xy / inputTextureDimensions;
 
