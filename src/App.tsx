@@ -8,16 +8,18 @@ const e = React.createElement;
 
 const App: React.StatelessComponent<object> = () => (
 	e(Router,
-		{},
+		{
+			basename: process.env.PUBLIC_URL,
+		},
 		e(Switch, {},
 			e(Route,
 				{
-					path: process.env.PUBLIC_URL + '/docs',
+					path: '/docs',
 					component: Documentation
 				}),
 			e(Route,
 				{
-					path: process.env.PUBLIC_URL + '/',
+					path: '/',
 					component: Editor
 				}),
 		)));
