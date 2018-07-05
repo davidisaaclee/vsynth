@@ -12,12 +12,12 @@ const App: React.StatelessComponent<object> = () => (
 		e(Switch, {},
 			e(Route,
 				{
-					path: '/docs',
+					path: process.env.PUBLIC_URL + '/docs',
 					component: Documentation
 				}),
 			e(Route,
 				{
-					path: '/',
+					path: process.env.PUBLIC_URL + '/',
 					component: Editor
 				}),
 		)));
