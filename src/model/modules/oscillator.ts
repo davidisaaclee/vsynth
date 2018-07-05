@@ -21,6 +21,8 @@ export const inletKeys = {
 };
 
 export const oscillator: VideoModule<ShaderModule> = {
+	description: "Applies a periodic function to its input.",
+
 	parameters: {
 		keys: Object.keys(parameterKeys),
 		defaultValues: {

@@ -16,6 +16,7 @@ export const inletKeys = {
 };
 
 export const rgbOffset: VideoModule<ShaderModule> = {
+	description: 'Adds horizontal offsets to the red, green, and blue channels.',
 	parameters: {
 		keys: [
 			parameterKeys.input,

@@ -18,6 +18,8 @@ export const nodeKeys = {
 
 // Generates a uniform texture of a linearly ramping value.
 export const ramp: VideoModule<SubgraphModule> = {
+	description: 'Outputs a repeating linear ramping value.',
+
 	parameters: {
 		keys: [parameterKeys.speed],
 		defaultValues: {

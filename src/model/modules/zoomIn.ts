@@ -8,6 +8,7 @@ export const inletKeys = {
 };
 
 export const zoomIn = mkShaderModule({
+	description: 'Increase scale of input towards its center.',
 	shaderSource,
 	inlets: [
 		{

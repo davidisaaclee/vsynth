@@ -9,6 +9,8 @@ export const inletKeys = {
 };
 
 export const hsv = mkShaderModule({
+	description: "Adjusts hue, saturation, and value.",
+
 	shaderSource,
 
 	inlets: [

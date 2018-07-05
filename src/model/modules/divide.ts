@@ -36,6 +36,8 @@ const shaderSource = glsl`
 // Takes the component-wise quotient of two textures.
 // Guards against division-by-zero by clamping values below DIVISOR_MIN.
 export const divide: VideoModule<ShaderModule> = {
+	description: "Divides the numerator by the denominator.",
+
 	parameters: {
 		keys: [
 			parameterKeys.numerator,

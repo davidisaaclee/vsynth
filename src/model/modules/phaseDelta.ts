@@ -63,6 +63,8 @@ const shaderSource = glsl`
 
 // Calculates the phase offset delta for an oscillator, given a frequency.
 export const phaseDelta: VideoModule<ShaderModule> = {
+	description: 'Outputs the phase delta per frame of a periodic function with the specified speed.',
+
 	parameters: {
 		keys: [
 			parameterKeys.speedAmount,

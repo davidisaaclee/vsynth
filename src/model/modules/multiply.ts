@@ -34,6 +34,8 @@ const shaderSource = glsl`
 
 // Multiplies two textures together, and takes the fractional component of the result.
 export const multiply: VideoModule<ShaderModule> = {
+	description: 'Outputs the product of its two inputs.',
+
 	parameters: {
 		keys: [
 			parameterKeys.a,

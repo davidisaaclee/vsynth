@@ -15,6 +15,7 @@ interface InletConfig {
 }
 
 interface ShaderConfig {
+	description: string;
 	shaderSource: string;
 	inlets: InletConfig[];
 	defaultUniforms: (gl: WebGLRenderingContext) => Record<string, UniformValue>;
@@ -23,10 +24,12 @@ interface ShaderConfig {
 export default function mkShaderModule(shaderConfig: ShaderConfig): VideoModule<ShaderModule> {
 	const {
 		inlets, defaultUniforms,
-		shaderSource,
+		shaderSource, description,
 	} = shaderConfig;
 
 	return {
+		description,
+
 		parameters: {
 			keys: inlets.map(i => i.key),
 			defaultValues: (inlets

@@ -16,6 +16,8 @@ export const nodeKeys = {
 };
 
 export const multipassBlur: VideoModule<SubgraphModule> = {
+	description: 'Applies a 10-pass Gaussian blur to its input. (Slow!)',
+
 	parameters: {
 		keys: [
 			parameterKeys.input,

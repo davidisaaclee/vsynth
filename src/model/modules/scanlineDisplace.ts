@@ -7,6 +7,8 @@ export const inletKeys = {
 };
 
 export const scanlineDisplace: VideoModule<ShaderModule> = {
+	description: 'Displaces each pixel by adding the horizontal displace factor and wrapping around the screen.',
+
 	parameters: {
 		keys: [
 			inletKeys.input,

@@ -28,6 +28,8 @@ const nodeKeys = {
 };
 
 export const autoOsc: VideoModule<SubgraphModule> = {
+	description: "A classic video synthesis oscillator.",
+
 	inlets: {
 		keys: [
 			inletKeys.hue,
