@@ -31,7 +31,6 @@ const AddButton = styled.button`
 `;
 
 const StyledMenu = styled(MainMenu)`
-	background-color: #111;
 	padding: 10px;
 	position: fixed;
 	height: 30px;
