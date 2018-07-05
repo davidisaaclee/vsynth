@@ -59,22 +59,19 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 };
 
 export const moduleKeys: ModuleType[] = [
-	'periodic',
-	'multiply',
-	'addFract',
-	'phaseDelta',
 	'oscillator',
+	'periodic',
 	'mixer',
-	'scanlines',
-	'rgbOffset',
-	'divide',
-	'addClip',
 	'ramp',
-	'multipassBlur',
-	'zoomIn',
-	'scanlineDisplace',
+	'addFract',
+	'addClip',
+	'multiply',
+	'divide',
 	'modulo',
 	'hsv',
+	'scanlines',
+	'zoomIn',
+	'rgbOffset',
 ];
 
 
