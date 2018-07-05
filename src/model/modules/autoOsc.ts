@@ -1,6 +1,8 @@
 import * as Graph from '@davidisaaclee/graph';
 import { VideoModule, SubgraphModule } from '../VideoModule';
-import * as Osc from './oscillator';
+import { InletSpecification} from '../SimpleVideoGraph';
+import { ModuleType } from '../Kit';
+import * as Periodic from './periodic';
 import * as Ramp from './ramp';
 import * as Scanlines from './scanlines';
 
@@ -22,7 +24,7 @@ const paramKeys = {
 };
 
 const nodeKeys = {
-	osc: 'osc',
+	periodic: 'periodic',
 	ramp: 'ramp',
 	scanlines: 'scanlines',
 };
@@ -73,14 +75,14 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 		inletsToSubInlets: {
 			[inletKeys.size]: [
 				{
-					nodeKey: nodeKeys.osc,
-					inletKey: Osc.inletKeys.waveSize,
+					nodeKey: nodeKeys.periodic,
+					inletKey: Periodic.inletKeys.waveSize,
 				}
 			],
 			[inletKeys.speed]: [
 				{
-					nodeKey: nodeKeys.osc,
-					inletKey: Osc.inletKeys.speed,
+					nodeKey: nodeKeys.periodic,
+					inletKey: Periodic.inletKeys.speed,
 				},
 				{
 					nodeKey: nodeKeys.ramp,
@@ -88,27 +90,27 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				},
 			],
 			[inletKeys.shape]: [{
-				nodeKey: nodeKeys.osc,
-				inletKey: Osc.inletKeys.shape,
+				nodeKey: nodeKeys.periodic,
+				inletKey: Periodic.inletKeys.shape,
 			}],
 			[inletKeys.rotation]: [{
 				nodeKey: nodeKeys.scanlines,
 				inletKey: Scanlines.inletKeys.rotation,
 			}],
 			[inletKeys.hue]: [{
-				nodeKey: nodeKeys.osc,
-				inletKey: Osc.inletKeys.hue,
+				nodeKey: nodeKeys.periodic,
+				inletKey: Periodic.inletKeys.hue,
 			}]
 		},
 
 		parametersToSubParameters: params => ({
-			[nodeKeys.osc]: {
-				[Osc.parameterKeys.input]: 1,
-				[Osc.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
-				[Osc.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
-				[Osc.parameterKeys.hue]: params[paramKeys.hue],
-				[Osc.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
-				[Osc.parameterKeys.shape]: params[paramKeys.shape],
+			[nodeKeys.periodic]: {
+				[Periodic.parameterKeys.input]: 1,
+				[Periodic.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
+				[Periodic.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
+				[Periodic.parameterKeys.hue]: params[paramKeys.hue],
+				[Periodic.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
+				[Periodic.parameterKeys.shape]: params[paramKeys.shape],
 			},
 			[nodeKeys.ramp]: {
 				[Ramp.parameterKeys.speed]: params[paramKeys.speedAmount] - 0.5,
@@ -121,11 +123,11 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 		}),
 
 		buildSubgraph: () => {
-			let result = Graph.empty;
+			let result: Graph.Graph<ModuleType, InletSpecification> = Graph.empty;
 			result = Graph.insertNode(
 				result,
-				'oscillator',
-				nodeKeys.osc);
+				'periodic',
+				nodeKeys.periodic);
 			result = Graph.insertNode(
 				result,
 				'ramp',
@@ -149,16 +151,16 @@ export const autoOsc: VideoModule<SubgraphModule> = {
 				result,
 				{
 					dst: nodeKeys.scanlines,
-					src: nodeKeys.osc,
+					src: nodeKeys.periodic,
 					metadata: {
-						inlet: Osc.inletKeys.input,
+						inlet: Periodic.inletKeys.input,
 					}
 				},
 				'scanlines -> oscillator.input');
 
 			return {
 				graph: result,
-				outputNodeKey: nodeKeys.osc
+				outputNodeKey: nodeKeys.periodic
 			};
 		}
 	},

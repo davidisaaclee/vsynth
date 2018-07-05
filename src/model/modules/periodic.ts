@@ -20,7 +20,7 @@ export const inletKeys = {
 	phaseOffset: 'phase offset',
 };
 
-export const oscillator: VideoModule<ShaderModule> = {
+export const periodic: VideoModule<ShaderModule> = {
 	description: "Applies a periodic function to its input.",
 
 	parameters: {

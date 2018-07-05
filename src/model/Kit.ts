@@ -1,6 +1,6 @@
 import { rgbOffset } from './modules/rgbOffset';
 import { scanlines } from './modules/scanlines';
-import { oscillator } from './modules/oscillator';
+import { periodic } from './modules/periodic';
 import { identity } from './modules/identity';
 import { constant } from './modules/constant';
 import { addFract } from './modules/addFract';
@@ -25,7 +25,7 @@ import { VideoNode } from './SimpleVideoGraph';
 
 export type SubgraphModuleType = 'autoOsc' | 'ramp' | 'crossBlur' | 'multipassBlur';
 export type ShaderModuleType =
-	'oscillator' | 'identity' | 'constant' | 'addFract'
+	'periodic' | 'identity' | 'constant' | 'addFract'
 	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide'
 	| 'multiply' | 'addClip' | 'singlePassBlur' | 'zoomIn'
 	| 'scanlineDisplace' | 'modulo' | 'hsv';
@@ -40,7 +40,7 @@ export const subgraphModules: Record<SubgraphModuleType, VideoModule<SubgraphMod
 };
 
 export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> = {
-	oscillator,
+	periodic,
 	identity,
 	constant,
 	addFract,
@@ -59,7 +59,7 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 };
 
 export const moduleKeys: ModuleType[] = [
-	'oscillator',
+	'periodic',
 	'multiply',
 	'addFract',
 	'phaseDelta',
