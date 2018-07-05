@@ -2,6 +2,8 @@ import * as React from 'react';
 import styled from '../../../styled-components';
 import * as Kit from '../../../model/Kit';
 
+import { deviceQueries } from '../../../utility/mediaQueries';
+
 const e = React.createElement;
 
 const ModuleList = styled.ul`
@@ -11,6 +13,10 @@ const ModuleList = styled.ul`
 	display: grid;
 
 	grid-template-columns: 50% 50%;
+
+	${deviceQueries.mobile`
+		grid-template-columns: 100%;
+	`}
 `;
 
 const ModuleButton = styled.button`
