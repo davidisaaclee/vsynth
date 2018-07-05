@@ -39,7 +39,7 @@ const StyledMenu = styled(MainMenu)`
 	margin: 20px;
 `;
 
-interface Props {
+export interface Props {
 	modal: AppModule.Modals.Modal | null;
 
 	// Is the user currently changing a parameter?
@@ -68,7 +68,7 @@ interface DispatchProps {
 	redo: () => any;
 }
 
-interface State {
+export interface State {
 	isShowingRouter: boolean;
 }
 
