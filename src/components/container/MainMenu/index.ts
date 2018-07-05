@@ -12,6 +12,7 @@ interface DispatchProps {
 	resetDocument: () => any;
 	undo: () => any;
 	redo: () => any;
+	openHelp: () => any;
 }
 
 type OwnProps = React.HTMLAttributes<HTMLUListElement>;
@@ -19,11 +20,16 @@ type OwnProps = React.HTMLAttributes<HTMLUListElement>;
 type Props = DispatchProps & OwnProps;
 
 const MainMenu: React.StatelessComponent<Props> = ({
-	resetDocument, undo, redo,
+	resetDocument, undo, redo, openHelp,
 	...restProps
 }) => (
 	e(C.List,
 		restProps,
+		e(C.Item,
+			{},
+			e(C.Button,
+				{ onClick: openHelp, },
+				'Help')),
 		e(C.Item,
 			{},
 			e(C.Button,
@@ -40,16 +46,12 @@ const MainMenu: React.StatelessComponent<Props> = ({
 		e(C.Item,
 			{},
 			e(C.Button,
-				{
-					onClick: undo
-				},
+				{ onClick: undo },
 				'Undo')),
 		e(C.Item,
 			{},
 			e(C.Button,
-				{
-					onClick: redo
-				},
+				{ onClick: redo },
 				'Redo')))
 );
 
@@ -67,6 +69,10 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 
 		redo: () => {
 			dispatch(UndoActions.redo());
+		},
+
+		openHelp: () => {
+			dispatch(App.actions.setModal(null));
 		},
 	};
 }
