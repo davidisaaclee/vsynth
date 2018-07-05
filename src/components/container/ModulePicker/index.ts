@@ -43,6 +43,14 @@ const ModuleEntry = styled.li`
 	margin: 10px;
 `;
 
+const ModuleTitle = styled.h1`
+	font-size: 14pt;
+`;
+
+const ModuleDescription = styled.h2`
+	font-size: 10pt;
+`;
+
 interface Props {
 	addModule: (modType: Kit.ModuleType) => any;
 }
@@ -54,10 +62,11 @@ const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
 			e(ModuleEntry,
 				{},
 				e(ModuleButton,
-					{
-						onClick: () => addModule(key)
-					},
-					key))));
+					{ onClick: () => addModule(key) },
+					e(ModuleTitle, {}, key),
+					e(ModuleDescription,
+						{},
+						Kit.moduleForType(key)!.description)))));
 
 export default ModulePicker;
 
