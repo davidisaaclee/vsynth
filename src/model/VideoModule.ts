@@ -8,6 +8,9 @@ import { ModuleType } from './Kit';
  * Configurations of nodes to be instantiated in a VideoGraph.
  */
 export interface VideoModule<Details extends SubgraphModule | ShaderModule> {
+	// A human-readable description of what this module does.
+	description?: string,
+
 	parameters: {
 		keys: string[],
 		defaultValues: Record<string, number>,
