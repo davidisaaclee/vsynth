@@ -9,7 +9,7 @@ import { ModuleType } from './Kit';
  */
 export interface VideoModule<Details extends SubgraphModule | ShaderModule> {
 	// A human-readable description of what this module does.
-	description?: string,
+	description: string,
 
 	parameters: {
 		keys: string[],
