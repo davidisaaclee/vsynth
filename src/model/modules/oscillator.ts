@@ -29,7 +29,7 @@ const nodeKeys = {
 	scanlines: 'scanlines',
 };
 
-export const autoOsc: VideoModule<SubgraphModule> = {
+export const oscillator: VideoModule<SubgraphModule> = {
 	description: "A classic video synthesis oscillator.",
 
 	inlets: {

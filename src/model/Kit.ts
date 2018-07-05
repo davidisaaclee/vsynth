@@ -15,7 +15,7 @@ import { scanlineDisplace } from './modules/scanlineDisplace';
 import { modulo } from './modules/modulo';
 import { hsv } from './modules/hsv';
 
-import { autoOsc } from './modules/autoOsc';
+import { oscillator } from './modules/oscillator';
 import { ramp } from './modules/ramp';
 import { crossBlur } from './modules/crossBlur';
 import { multipassBlur } from './modules/multipassBlur';
@@ -23,7 +23,7 @@ import { multipassBlur } from './modules/multipassBlur';
 import { VideoModule, ShaderModule, SubgraphModule } from './VideoModule';
 import { VideoNode } from './SimpleVideoGraph';
 
-export type SubgraphModuleType = 'autoOsc' | 'ramp' | 'crossBlur' | 'multipassBlur';
+export type SubgraphModuleType = 'oscillator' | 'ramp' | 'crossBlur' | 'multipassBlur';
 export type ShaderModuleType =
 	'periodic' | 'identity' | 'constant' | 'addFract'
 	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide'
@@ -33,7 +33,7 @@ export type ShaderModuleType =
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
 export const subgraphModules: Record<SubgraphModuleType, VideoModule<SubgraphModule>> = {
-	autoOsc,
+	oscillator,
 	ramp,
 	crossBlur,
 	multipassBlur,
@@ -63,7 +63,7 @@ export const moduleKeys: ModuleType[] = [
 	'multiply',
 	'addFract',
 	'phaseDelta',
-	'autoOsc',
+	'oscillator',
 	'mixer',
 	'scanlines',
 	'rgbOffset',
