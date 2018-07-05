@@ -13,6 +13,7 @@ import { singlePassBlur } from './modules/singlePassBlur';
 import { zoomIn } from './modules/zoomIn';
 import { scanlineDisplace } from './modules/scanlineDisplace';
 import { modulo } from './modules/modulo';
+import { hsv } from './modules/hsv';
 
 import { autoOsc } from './modules/autoOsc';
 import { ramp } from './modules/ramp';
@@ -27,7 +28,7 @@ export type ShaderModuleType =
 	'oscillator' | 'identity' | 'constant' | 'addFract'
 	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide'
 	| 'multiply' | 'addClip' | 'singlePassBlur' | 'zoomIn'
-	| 'scanlineDisplace' | 'modulo';
+	| 'scanlineDisplace' | 'modulo' | 'hsv';
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
@@ -54,6 +55,7 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	zoomIn,
 	scanlineDisplace,
 	modulo,
+	hsv,
 };
 
 export const moduleKeys: ModuleType[] = [
@@ -72,6 +74,7 @@ export const moduleKeys: ModuleType[] = [
 	'zoomIn',
 	'scanlineDisplace',
 	'modulo',
+	'hsv',
 ];
 
 
