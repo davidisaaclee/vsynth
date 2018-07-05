@@ -1,11 +1,16 @@
-import { merge } from 'lodash';
+import { merge, defaultTo } from 'lodash';
 import { UniformValue } from '@davidisaaclee/video-graph';
 import { VideoModule, ShaderModule } from '../model/VideoModule';
 
 interface InletConfig {
 	key: string;
-	textureUniform: string;
-	scalingUniform: string;
+
+	// defaults to `${key}Texture`
+	textureUniform?: string;
+
+	// defaults to `${key}Amount`
+	scalingUniform?: string;
+
 	defaultScaleValue: number;
 }
 
@@ -20,6 +25,7 @@ export default function mkShaderModule(shaderConfig: ShaderConfig): VideoModule<
 		inlets, defaultUniforms,
 		shaderSource,
 	} = shaderConfig;
+
 	return {
 		parameters: {
 			keys: inlets.map(i => i.key),
@@ -41,14 +47,14 @@ export default function mkShaderModule(shaderConfig: ShaderConfig): VideoModule<
 			defaultUniforms,
 			parametersToUniforms: values => (inlets
 				.map(i => ({
-					[i.scalingUniform]: {
+					[defaultTo(i.scalingUniform, `${i.key}Amount`)]: {
 						type: 'f',
 						data: values[i.key]
 					}
 				}))
 				.reduce(merge, {})),
 			inletsToUniforms: (inlets
-				.map(i => ({ [i.key]: i.textureUniform }))
+				.map(i => ({ [i.key]: defaultTo(i.textureUniform, `${i.key}Texture`) }))
 				.reduce(merge, {}))
 		}
 	};
