@@ -26,7 +26,7 @@ const ModuleButton = styled.button`
 	width: 100%;
 	height: 100%;
 	margin: 0;
-	padding: 20px 0;
+	padding: 20px;
 
 	background-color: black;
 	border: 2px solid white;
