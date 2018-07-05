@@ -5,3 +5,8 @@ html, body {
 	font-family: sans-serif;
 	touch-action: manipulation;
 }
+
+a[target='_blank']::after {
+	content: ' \2750';
+}
+
