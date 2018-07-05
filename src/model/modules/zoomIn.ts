@@ -1,58 +1,33 @@
-import { VideoModule, ShaderModule } from '../VideoModule';
+// import { VideoModule, ShaderModule } from '../VideoModule';
 import shaderSource from '../../shaders/zoomIn.generated';
+import mkShaderModule from '../../utility/mkShaderModule';
 
 export const inletKeys = {
 	input: 'input',
 	scale: 'scale',
 };
 
-export const zoomIn: VideoModule<ShaderModule> = {
-	parameters: {
-		keys: [
-			inletKeys.scale,
-			inletKeys.input,
-		],
-		defaultValues: {
-			[inletKeys.input]: 1,
-			[inletKeys.scale]: 0,
+export const zoomIn = mkShaderModule({
+	shaderSource,
+	inlets: [
+		{
+			key: 'input',
+			defaultScaleValue: 1,
+			scalingUniform: 'inputAmount',
+			textureUniform: 'inputTexture',
 		},
-	},
-
-	inlets: {
-		keys: [inletKeys.input, inletKeys.scale],
-		associatedParameters: {
-			[inletKeys.input]: inletKeys.input,
-			[inletKeys.scale]: inletKeys.scale,
-		},
-	},
-
-	details: {
-		type: 'shader',
-
-		shaderSource,
-
-		defaultUniforms: (gl: WebGLRenderingContext) => ({
-			'inputTextureDimensions': {
-				type: '2f',
-				data: [gl.canvas.width, gl.canvas.height]
-			},
-		}),
-
-		parametersToUniforms: (values) => ({
-			'inputAmount': {
-				type: 'f',
-				data: values[inletKeys.input],
-			},
-			'scaleAmount': {
-				type: 'f',
-				data: values[inletKeys.scale],
-			},
-		}),
-
-		inletsToUniforms: {
-			[inletKeys.input]: 'inputTexture',
-			[inletKeys.scale]: 'scaleTexture',
+		{
+			key: 'scale',
+			defaultScaleValue: 0,
+			scalingUniform: 'scaleAmount',
+			textureUniform: 'scaleTexture',
 		}
-	}
-};
+	],
+	defaultUniforms: (gl: WebGLRenderingContext) => ({
+		'inputTextureDimensions': {
+			type: '2f',
+			data: [gl.canvas.width, gl.canvas.height]
+		},
+	}),
+});
 
