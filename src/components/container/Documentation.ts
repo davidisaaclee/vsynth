@@ -87,6 +87,17 @@ Great question. Here's a 5 minute screencast which will walk you through creatin
 				})))
 	},
 	{
+		key: 'feedback',
+		title: "Something's not working!",
+		body: e(Markdown, {
+				source: `
+If you encounter a bug, or if you want to request a feature, or if you just want to say hi, please drop a line on [this Google Form](https://docs.google.com/forms/d/e/1FAIpQLSdKup212FRe47iflRs-N7RBwRC3F1EYBm3ocN7Skf6LNB6BJw/viewform?usp=sf_link).
+
+If you'd like to help me out, [here is the Github repo for vsynth](https://github.com/davidisaaclee/vsynth).
+				`
+			})
+	},
+	{
 		key: 'what else',
 		title: 'Is there anything else like this?',
 		body: e(Markdown, {
