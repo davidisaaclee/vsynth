@@ -3,7 +3,7 @@
  * for use in a Redux store.
  */
 
-import { entries, flatMap } from 'lodash';
+import { entries, flatMap, isEqual, isEqualWith, after } from 'lodash';
 import * as Graph from '@davidisaaclee/graph';
 import {
 	VideoGraph, 
@@ -305,5 +305,27 @@ function uniformValuesToSpec(
 		retval[identifier] = { identifier, value: valuesDict[identifier] };
 	}
 	return retval;
+}
+
+function areNodesEqual(leftNode: VideoNode, rightNode: VideoNode): boolean {
+	return isEqual(leftNode, rightNode);
+}
+
+function areEdgesEqual(leftEdge: InletSpecification, rightEdge: InletSpecification): boolean {
+	return isEqual(leftEdge, rightEdge);
+}
+
+export function areGraphsEqual(leftGraph: SimpleVideoGraph, rightGraph: SimpleVideoGraph): boolean {
+	// this business with `after` is to get `isEqualWith` to work how I'd expect it to work.
+	// see this issue: https://github.com/lodash/lodash/issues/2490
+	return isEqualWith(
+		Graph.allNodes(leftGraph),
+		Graph.allNodes(rightGraph),
+		after(2, areNodesEqual))
+		&& isEqualWith(
+			Graph.allEdges(leftGraph),
+			Graph.allEdges(rightGraph),
+			after(2, areEdgesEqual));
+
 }
 
