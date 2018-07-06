@@ -1,4 +1,3 @@
-import { throttle } from 'lodash';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { defaultConstantBusIndex, nullSendBusIndex } from '../../../constants';
@@ -8,7 +7,6 @@ import * as AppModule from '../../../modules/app';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import BusRouter, { Props as BusRouterProps } from '../../presentational/BusRouter';
 import * as selectors from './selectors';
-import { fps } from '../../../constants';
 import { LaneIndexer } from './types';
 
 type StatePickedPropKeys =
@@ -76,7 +74,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 			dispatch(AppModule.actions.clearPreviewedParameter());
 		},
 
-		makePreviewParameter: (laneIndexer: LaneIndexer) => throttle((laneIndex: number, value: number) => {
+		makePreviewParameter: (laneIndexer: LaneIndexer) => (laneIndex: number, value: number) => {
 			const lane = laneIndexer(laneIndex);
 			if (lane.type !== 'inlet') {
 				throw new Error('Attempted to set parameter on non-inlet lane.');
@@ -89,7 +87,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 				lane.nodeKey,
 				lane.scale.parameterKey,
 				value));
-		}, 1000 / fps),
+		},
 
 		makeRemoveNodeForLane: (laneIndexer: LaneIndexer) => (laneIndex: number) => {
 			const lane = laneIndexer(laneIndex);
