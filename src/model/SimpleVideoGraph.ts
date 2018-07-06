@@ -3,7 +3,10 @@
  * for use in a Redux store.
  */
 
-import { entries, flatMap, isEqual, isEqualWith, after } from 'lodash';
+import {
+	entries, flatMap, isEqual, isEqualWith,
+	after, memoize,
+} from 'lodash';
 import * as Graph from '@davidisaaclee/graph';
 import {
 	VideoGraph, 
@@ -237,15 +240,14 @@ function transformAllGraphKeys<N, E>(
 		transformKey);
 }
 
-export function videoGraphFromSimpleVideoGraph(
-	graph: SimpleVideoGraph,
+
+function _videoGraphFromFlattenedVideoGraph(
+	flattenedGraph: SimpleVideoGraph,
 	// moduleKey :: ModuleType
 	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
 	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {
-	const flattenedGraph = flattenSimpleVideoGraph(graph);
-
 	const result = entries(Graph.allNodes(flattenedGraph)).reduce((result, [nodeKey, node]) => {
 		const runtimeModule = runtime[node.type];
 		const videoModule = Kit.moduleForNode(node);
@@ -295,6 +297,23 @@ export function videoGraphFromSimpleVideoGraph(
 			}
 		}, edgeKey);
 	}, result);
+}
+
+const videoGraphFromFlattenedVideoGraph =
+	memoize(_videoGraphFromFlattenedVideoGraph);
+
+export function videoGraphFromSimpleVideoGraph(
+	graph: SimpleVideoGraph,
+	// moduleKey :: ModuleType
+	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
+	frameIndex: number,
+	gl: WebGLRenderingContext
+): VideoGraph {
+	return videoGraphFromFlattenedVideoGraph(
+		flattenSimpleVideoGraph(graph),
+		runtime,
+		frameIndex,
+		gl);
 }
 
 function uniformValuesToSpec(
