@@ -31,7 +31,7 @@ const MainMenu: React.StatelessComponent<Props> = ({
 					target: '_blank',
 					href: 'docs',
 				},
-				'Documentation')),
+				'Docs')),
 		e(C.Item,
 			{},
 			e(C.Button,
