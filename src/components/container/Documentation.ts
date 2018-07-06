@@ -23,6 +23,7 @@ const Container = styled.div`
 `;
 
 const MainTitle = styled.h1`
+	text-align: center;
 `;
 
 const Section = styled.section`
