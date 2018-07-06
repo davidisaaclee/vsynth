@@ -47,12 +47,15 @@ const sections = [
 Great question. Here's a 5 minute screencast which will walk you through creating a simple patch.
 				`
 			}),
-			e('video', {
-				width: 696,
-				height: 540,
-				controls: true,
-				src: './assets/screencast.mp4',
-			})),
+
+	e('iframe',
+		{
+			src: "https://player.vimeo.com/video/278616817",
+			width: "640",
+			height: "466",
+			frameborder: "0",
+			allowFullscreen: true
+		})),
 	},
 	{
 		key: 'what else',
