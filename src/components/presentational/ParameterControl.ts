@@ -62,6 +62,27 @@ const Fill = styled.span.attrs<FillProps>({
 	background-color: #ededed;
 `;
 
+type Command = "increment" | "decrement";
+
+function commandFromKeyCode(keyCode: number): Command | null {
+	switch (keyCode) {
+		case 37:
+			return 'decrement';
+
+		case 38:
+			return 'increment';
+
+		case 39:
+			return 'increment';
+
+		case 40:
+			return 'decrement';
+
+		default:
+			return null;
+	}
+}
+
 interface OwnProps {
 	name: string;
 	value: number;
@@ -99,91 +120,76 @@ class ParameterControl extends React.Component<Props, State> {
 			e(ControlContainer,
 				{
 					tabIndex: 0,
-
-					onKeyDown: (evt: React.KeyboardEvent<HTMLSpanElement>) => {
-						type Command = "increment" | "decrement";
-
-						function commandFromKeyCode(keyCode: number): Command | null {
-							switch (keyCode) {
-								case 37:
-									return 'decrement';
-
-								case 38:
-									return 'increment';
-
-								case 39:
-									return 'increment';
-
-								case 40:
-									return 'decrement';
-
-								default:
-									return null;
-							}
-						}
-
-						const deltaMagnitude = 0.01;
-
-						switch (commandFromKeyCode(evt.keyCode)) {
-							case 'increment':
-								onChangeValue(value + deltaMagnitude);
-								return;
-
-							case 'decrement':
-								onChangeValue(value - deltaMagnitude);
-								return;
-						}
-					},
-
-					onPointerDown: (evt: React.PointerEvent<HTMLSpanElement>) => {
-						evt.currentTarget.setPointerCapture(evt.pointerId);
-
-						const relativePosition =
-							relativePositionFromMouseEvent(evt);
-						this.setState({
-							cursorState: { relativePosition }
-						});
-					},
-
-					onPointerMove: (evt: React.PointerEvent<HTMLSpanElement>) => {
-						const cursorState =
-							this.state.cursorState;
-						if (cursorState == null) {
-							return;
-						}
-
-						const relativePosition =
-							relativePositionFromMouseEvent(evt);
-
-						// 1 when in slider; increasing when outside of and moving away from slider
-						const precisionFactor = (() => {
-							if (relativePosition.y >= 0 && relativePosition.y <= 1) {
-								return 1;
-							} else if (relativePosition.y > 1) {
-								return relativePosition.y;
-							} else {
-								return Math.abs(relativePosition.y) + 1;
-							}
-						})();
-
-						const delta =
-							(relativePosition.x - cursorState.relativePosition.x) / precisionFactor;
-						onInputValue(clamp(value + delta, 0, 1));
-
-						this.setState({
-							cursorState: { relativePosition }
-						});
-					},
-
-					onPointerUp: (evt: React.PointerEvent<HTMLSpanElement>) => {
-						onChangeValue(value);
-						this.setState({ cursorState: null });
-					}
+					onKeyDown: this.onKeyDown,
+					onPointerDown: this.onPointerDown,
+					onPointerMove: this.onPointerMove,
+					onPointerUp: this.onPointerUp
 				},
 				e(Fill,
-					{
-						value
-					})));
+					{ value })));
+	}
+
+	private onKeyDown = (evt: React.KeyboardEvent<HTMLSpanElement>) => {
+		const { onChangeValue, value } = this.props;
+		const deltaMagnitude = 0.01;
+
+		switch (commandFromKeyCode(evt.keyCode)) {
+			case 'increment':
+				onChangeValue(value + deltaMagnitude);
+				return;
+
+			case 'decrement':
+				onChangeValue(value - deltaMagnitude);
+				return;
+		}
+	}
+
+	private onPointerDown = (evt: React.PointerEvent<HTMLSpanElement>) => {
+		evt.currentTarget.setPointerCapture(evt.pointerId);
+
+		const relativePosition =
+			relativePositionFromMouseEvent(evt);
+		this.setState({
+			cursorState: { relativePosition }
+		});
+	}
+
+	private onPointerMove = (evt: React.PointerEvent<HTMLSpanElement>) => {
+		const { onInputValue, value } = this.props;
+
+		const cursorState =
+			this.state.cursorState;
+		if (cursorState == null) {
+			return;
+		}
+
+		const relativePosition =
+			relativePositionFromMouseEvent(evt);
+
+		// 1 when in slider; increasing when outside of and moving away from slider
+		const precisionFactor = (() => {
+			if (relativePosition.y >= 0 && relativePosition.y <= 1) {
+				return 1;
+			} else if (relativePosition.y > 1) {
+				return relativePosition.y;
+			} else {
+				return Math.abs(relativePosition.y) + 1;
+			}
+		})();
+
+		const delta =
+			(relativePosition.x - cursorState.relativePosition.x) / precisionFactor;
+		onInputValue(clamp(value + delta, 0, 1));
+
+		this.setState({
+			cursorState: { relativePosition }
+		});
+	}
+
+	private onPointerUp = (evt: React.PointerEvent<HTMLSpanElement>) => {
+		const { onChangeValue, value } = this.props;
+		onChangeValue(value);
+		this.setState({ cursorState: null });
 	}
 
 }

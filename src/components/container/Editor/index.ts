@@ -89,7 +89,7 @@ class Editor extends React.Component<Props, State> {
 					});
 		}
 	}
-	
+
 	public render() {
 		const {
 			modal,
@@ -118,16 +118,12 @@ class Editor extends React.Component<Props, State> {
 			e('div', {},
 				e(Screen,
 					{
-						onClick: () => {
-							this.setState({ isShowingRouter: true });
-						}
+						onClick: this.showMatrix
 					}),
 				e(Modal,
 					{
 						isOpen: isShowingRouter,
-						onRequestClose: () => {
-							this.setState({ isShowingRouter: false });
-						},
+						onRequestClose: this.hideMatrix,
 						style: {
 							content: {
 								opacity: isPreviewingParameterChange ? 0.2 : 1,
@@ -193,6 +189,14 @@ class Editor extends React.Component<Props, State> {
 					modal == null
 					? null
 					: this.renderModal(modal))));
+	}
+
+	private showMatrix = () => {
+		this.setState({ isShowingRouter: true });
+	}
+
+	private hideMatrix = () => {
+		this.setState({ isShowingRouter: false });
 	}
 }
 

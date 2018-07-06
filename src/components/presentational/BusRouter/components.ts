@@ -113,8 +113,6 @@ export class LaneView extends React.Component<LaneProps, any> {
 		const {
 			lane, laneIndex, busCount, connections,
 			setConnection, removeConnection,
-			setParameter, previewParameter,
-			removeNodeForLane,
 		} = this.props;
 		return e(LaneRow,
 			{
@@ -127,24 +125,20 @@ export class LaneView extends React.Component<LaneProps, any> {
 					? [
 						e(LaneHeaderText, {}, lane.name),
 						e(RemoveNodeButton,
-							{ onClick: () => removeNodeForLane(laneIndex) },
+							{ onClick: this.removeNode },
 							'x')
 					]
 					: [
-						(() => {
-							const scale = lane.scale;
-
-							return (scale == null
-								? lane.inletKey
-								: e(StyledParameterControl,
-									{
-										key: `${lane.nodeKey}.${lane.inletKey}`,
-										name: lane.inletKey,
-										value: scale,
-										onInputValue: (value: number) => previewParameter(laneIndex, value),
-										onChangeValue: (value: number) => setParameter(laneIndex, value),
-									}));
-						})()
+						(lane.scale == null
+							? lane.inletKey
+							: e(StyledParameterControl,
+								{
+									key: `${lane.nodeKey}.${lane.inletKey}`,
+									name: lane.inletKey,
+									value: lane.scale,
+									onInputValue: this.onInputValue,
+									onChangeValue: this.onChangeValue,
+								}))
 					])),
 
 			// Connection cells
@@ -171,5 +165,11 @@ export class LaneView extends React.Component<LaneProps, any> {
 					hasConnection ? e(CellCheckmark, { type: lane.type }) : ' ');
 			}));
 	}
+
+	private removeNode = () => this.props.removeNodeForLane(this.props.laneIndex)
+
+	private onInputValue = (value: number) => this.props.previewParameter(this.props.laneIndex, value)
+
+	private onChangeValue = (value: number) => this.props.setParameter(this.props.laneIndex, value)
 }
 

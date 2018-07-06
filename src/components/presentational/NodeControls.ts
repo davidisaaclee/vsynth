@@ -40,5 +40,6 @@ export default class NodeControls extends React.Component<Props, object> {
 						}
 					})));
 	}
+
 }
 

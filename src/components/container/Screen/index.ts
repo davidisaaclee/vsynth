@@ -77,11 +77,7 @@ class Screen extends React.Component<Props, State> {
 						)),
 					outputNodeKey,
 					runtimeUniforms: {},
-					glRef: (gl: WebGLRenderingContext) => {
-						if (this.gl == null && gl != null) {
-							this.setup(gl);
-						}
-					},
+					glRef: this.onGLRef,
 					style: {
 						width: '100vw',
 						height: '100vh',
@@ -111,6 +107,12 @@ class Screen extends React.Component<Props, State> {
 		}
 
 		window.requestAnimationFrame(this.frame);
+	}
+
+	private onGLRef = (gl: WebGLRenderingContext) => {
+		if (this.gl == null && gl != null) {
+			this.setup(gl);
+		}
 	}
 }
 
