@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
 import styled from '../../styled-components';
+import { deviceQueries } from '../../utility/mediaQueries';
+import ReactPlayer from 'react-player';
 
 const e = React.createElement;
 
@@ -29,6 +31,27 @@ const Markdown = styled(ReactMarkdown).attrs({
 })`
 `;
 
+const VideoPlayer = styled(ReactPlayer)`
+	position: absolute;
+	top: 0;
+	left: 0;
+`;
+
+const VideoAspectRatio = styled.div`
+	--width: 80%;
+	--aspect-ratio: .72815;
+
+	${deviceQueries.mobile`
+		--width: 100%;
+	`}
+
+	position: relative;
+	width: var(--width);
+	margin: 0 auto;
+
+	padding-top: calc(var(--width) * var(--aspect-ratio));
+`;
+
 const sections = [
 	{
 		key: 'what',
@@ -47,15 +70,13 @@ const sections = [
 Great question. Here's a 5 minute screencast which will walk you through creating a simple patch.
 				`
 			}),
-
-	e('iframe',
-		{
-			src: "https://player.vimeo.com/video/278616817",
-			width: "640",
-			height: "466",
-			frameborder: "0",
-			allowFullscreen: true
-		})),
+			e(VideoAspectRatio,
+				{},
+				e(VideoPlayer, {
+					url: "https://player.vimeo.com/video/278616817",
+					width: "100%",
+					height: "100%",
+				})))
 	},
 	{
 		key: 'what else',

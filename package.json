@@ -16,6 +16,7 @@
     "react-hotkeys": "^1.1.4",
     "react-markdown": "^3.3.4",
     "react-modal": "^3.4.5",
+    "react-player": "^1.6.4",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts-ts": "2.16.0",
