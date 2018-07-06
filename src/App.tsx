@@ -6,6 +6,8 @@ import './App.css';
 
 const e = React.createElement;
 
+console.log(process.env.PUBLIC_URL);
+
 const App: React.StatelessComponent<object> = () => (
 	e(Router,
 		{
