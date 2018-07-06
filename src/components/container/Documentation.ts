@@ -27,6 +27,7 @@ const MainTitle = styled.h1`
 `;
 
 const Section = styled.section`
+	font-size: 12pt;
 `;
 
 const Title = styled.h2`
