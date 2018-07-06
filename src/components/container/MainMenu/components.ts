@@ -1,4 +1,4 @@
-import styled from '../../../styled-components';
+import styled, { css } from '../../../styled-components';
 
 export const List = styled.ul`
 	height: 100%;
@@ -15,15 +15,21 @@ export const List = styled.ul`
 export const Item = styled.li`
 	list-style-type: none;
 	margin: 0 10px;
-`
 
-export const Button = styled.button`
-	font-size: 11px;
+	white-space: nowrap;
+`;
+
+
+const buttonSharedStyle = css`
+	display: inline-block;
+	box-sizing: border-box;
 
 	border: 2px solid white;
 	outline: 1px solid black;
-	padding: 1em;
+	padding: 0.5em;
 
+	font-size: 11px;
+	text-align: center;
 	background-color: rgba(255, 255, 255, 0.7);
 	color: black;
 
@@ -32,21 +38,11 @@ export const Button = styled.button`
 	}
 `;
 
+export const Button = styled.button`
+	${buttonSharedStyle}
+`;
+
 export const Link = styled.a`
-	display: inline-block;
-	box-sizing: border-box;
-
-	border: 2px solid white;
-	outline: 1px solid black;
-	padding: 1em;
-
-	text-align: center;
-	font-size: 11px;
-	background-color: rgba(255, 255, 255, 0.7);
-	color: black;
-
-	&:hover {
-		background-color: rgba(255, 255, 255, 1);
-	}
+	${buttonSharedStyle}
 `;
 
