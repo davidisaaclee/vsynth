@@ -9,7 +9,9 @@ const e = React.createElement;
 const App: React.StatelessComponent<object> = () => (
 	e(Router,
 		{
-			basename: process.env.PUBLIC_URL,
+			basename: (process.env.PUBLIC_URL === '.'
+				? undefined
+				: process.env.PUBLIC_URL!.substr(`${window.location.protocol}//${window.location.host}`.length)),
 		},
 		e(Switch, {},
 			e(Route,
