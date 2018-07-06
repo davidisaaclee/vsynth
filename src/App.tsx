@@ -6,15 +6,9 @@ import './App.css';
 
 const e = React.createElement;
 
-console.log(process.env.PUBLIC_URL);
-
 const App: React.StatelessComponent<object> = () => (
 	e(Router,
-		{
-			basename: (process.env.PUBLIC_URL === '.'
-				? undefined
-				: process.env.PUBLIC_URL!.substr(`${window.location.protocol}//${window.location.host}`.length)),
-		},
+		{ basename: process.env.PUBLIC_URL, },
 		e(Switch, {},
 			e(Route,
 				{
