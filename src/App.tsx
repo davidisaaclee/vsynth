@@ -8,7 +8,7 @@ const e = React.createElement;
 
 const App: React.StatelessComponent<object> = () => (
 	e(Router,
-		{ basename: process.env.PUBLIC_URL, },
+		{},
 		e(Switch, {},
 			e(Route,
 				{
