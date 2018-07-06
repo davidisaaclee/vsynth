@@ -7,8 +7,15 @@ import ReactPlayer from 'react-player';
 const e = React.createElement;
 
 const Container = styled.div`
+	max-width: 600px;
+	margin: 0 auto;
+
+	${deviceQueries.mobile`
+		max-width: unset;
+		margin: 1em;
+	`}
+
 	color: white;
-	margin: 1em;
 
 	a {
 		color: lightblue;
