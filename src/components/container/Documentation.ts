@@ -98,6 +98,19 @@ If you'd like to help me out, [here is the Github repo for vsynth](https://githu
 			})
 	},
 	{
+		key: 'pro-tips',
+		title: "Any protips?",
+		body: e(Markdown, {
+				source: `
+- __Your progress is saved when you navigate away from vsynth.__ Feel free to leave and come back later.
+- __iOS users: Add vsynth to your homescreen to enable fullscreen play.__ After opening vsynth in Safari, tap the share icon in the middle of the toolbar at the bottom of the screen. Scroll through the grey icons, and tap on the action labeled \`Add to Home Screen\`.
+- __To make fine adjustments to a slider, first drag down on the slider, then move the cursor left or right.__ As you increase the vertical distance between your cursor and the slider, your adjustments will become more precise.
+- __Mac users: Use QuickTime Player to capture your video patches.__ You can record a portion of the screen using QuickTime Player, which comes installed on all Macs. Find QuickTime Player on your computer; open it; and click on \`File > New Screen Recording\` to begin recording your patch.
+- __iOS users: Use screen recording to capture your video patches.__ Follow [these instructions](https://support.apple.com/en-us/ht207935) to enable screen recording.
+				`
+			})
+	},
+	{
 		key: 'what else',
 		title: 'Is there anything else like this?',
 		body: e(Markdown, {
