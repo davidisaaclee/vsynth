@@ -35,7 +35,7 @@ const sections = [
 		title: 'What is this?',
 		body: e(Markdown, {
 			source: `
-[vsynth](../) is a modular video synthesizer for the web browser. You can use it to program unique visual effects.
+[vsynth](http://david-lee.net/vsynth) is a modular video synthesizer for the web browser. You can use it to program unique visual effects.
 		`}),
 	},
 	{
