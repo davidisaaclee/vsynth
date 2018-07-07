@@ -142,7 +142,7 @@ function flattenInlet(
 }
 
 // Converts each subgraph node to a set of connected shader nodes.
-function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: number): SimpleVideoGraph {
+function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): SimpleVideoGraph {
 	let result = Graph.empty;
 
 	// Flatten and insert all nodes.
@@ -246,7 +246,7 @@ function transformAllGraphKeys<N, E>(
 
 function _videoGraphFromFlattenedVideoGraph(
 	flattenedGraph: SimpleVideoGraph,
-	editHash: number,
+	editHash: string,
 	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
 	gl: WebGLRenderingContext
 ): VideoGraph {
@@ -306,7 +306,7 @@ const videoGraphFromFlattenedVideoGraph =
 
 export function videoGraphFromSimpleVideoGraph(
 	graph: SimpleVideoGraph,
-	editHash: number,
+	editHash: string,
 	// moduleKey :: ModuleType
 	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
 	gl: WebGLRenderingContext

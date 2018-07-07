@@ -17,7 +17,7 @@ const e = React.createElement;
 interface StateProps {
 	graph: SimpleVideoGraph;
 	outputNodeKey: string | null;
-	editHash: number;
+	editHash: string;
 }
 
 interface DispatchProps {
