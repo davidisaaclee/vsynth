@@ -10,6 +10,7 @@
     "@types/lodash": "^4.14.109",
     "@types/react-redux": "^6.0.1",
     "classnames": "^2.2.6",
+    "gl-shader-extract": "^1.1.2",
     "lodash": "^4.17.10",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
