@@ -272,11 +272,11 @@ function _videoGraphFromFlattenedVideoGraph(
 		}
 
 		return Graph.insertNode(result, {
-			program: runtimeModule.program,
+			...runtimeModule,
 			uniforms: {
 				...uniformValuesToSpec(videoModule.details.defaultUniforms(gl)),
 				...uniformValuesToSpec(node.uniforms),
-			}
+			},
 		}, nodeKey);
 	}, Graph.empty());
 

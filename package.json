@@ -5,8 +5,8 @@
   "homepage": "http://david-lee.net/vsynth",
   "dependencies": {
     "@davidisaaclee/graph": "^1.0.1",
-    "@davidisaaclee/react-video-graph": "^0.2.6",
-    "@davidisaaclee/video-graph": "^0.4.0",
+    "@davidisaaclee/react-video-graph": "^0.2.7",
+    "@davidisaaclee/video-graph": "^0.5.0",
     "@types/lodash": "^4.14.109",
     "@types/react-redux": "^6.0.1",
     "classnames": "^2.2.6",
