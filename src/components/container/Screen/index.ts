@@ -65,6 +65,7 @@ class Screen extends React.Component<Props, State> {
 			restProps,
 			e(VideoGraphView,
 				{
+					realToCSSPixelRatio: 1,
 					cacheBufferSize: 2,
 					graph: ((this.gl == null || this.modulesRuntime == null)
 						? emptyGraph()
