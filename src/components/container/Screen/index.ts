@@ -69,7 +69,7 @@ class Screen extends React.Component<Props, State> {
 				{
 					cacheBufferSize: 2,
 					graph: ((this.gl == null || this.modulesRuntime == null)
-						? emptyGraph
+						? emptyGraph()
 						: videoGraphFromSimpleVideoGraph(
 							graph,
 							editHash,

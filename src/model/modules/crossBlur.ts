@@ -73,17 +73,17 @@ export const crossBlur: VideoModule<SubgraphModule> = {
 		},
 
 		buildSubgraph: () => {
-			let result = Graph.empty;
-			result = Graph.insertNode(
+			const result = Graph.empty();
+			Graph.insertNode(
 				result,
 				'singlePassBlur',
 				nodeKeys.first);
-			result = Graph.insertNode(
+			Graph.insertNode(
 				result,
 				'singlePassBlur',
 				nodeKeys.last);
 
-			result = Graph.insertEdge(
+			Graph.insertEdge(
 				result,
 				{
 					dst: nodeKeys.first,

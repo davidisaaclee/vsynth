@@ -52,7 +52,7 @@ export const ramp: VideoModule<SubgraphModule> = {
 		}),
 
 		buildSubgraph: () => {
-			let result = Graph.empty;
+			let result = Graph.empty();
 			result = Graph.insertNode(
 				result,
 				'addFract',

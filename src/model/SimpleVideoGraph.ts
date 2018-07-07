@@ -70,14 +70,21 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 		const { graph: graphSpec, outputNodeKey } =
 			mod.details.buildSubgraph();
 
+		// Type assertion to widen node type of `graphSpec` to both VideoNode and ModuleType.
+		// This enables reusing the `graphSpec` "box" in `mapNodes`.
+		const typeWidenedGraphSpec: Graph.Graph<VideoNode | Kit.ModuleType, InletSpecification> = graphSpec;
+		const outputSubgraph = typeWidenedGraphSpec as SimpleVideoGraph;
+
 		// Convert from specification (via module types) to real nodes.
-		const subgraph =
-			Graph.mapNodes(graphSpec, videoModuleSpecFromModuleType);
+		Graph.mapNodes(
+			graphSpec,
+			outputSubgraph,
+			videoModuleSpecFromModuleType);
 
 		return {
 			nodeType: 'subgraph',
 			type: moduleType as Kit.SubgraphModuleType,
-			subgraph,
+			subgraph: outputSubgraph,
 			outputNodeKey,
 			parameters
 		};
@@ -143,7 +150,7 @@ function flattenInlet(
 
 // Converts each subgraph node to a set of connected shader nodes.
 function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): SimpleVideoGraph {
-	let result = Graph.empty;
+	let result = Graph.empty();
 
 	// Flatten and insert all nodes.
 	result = entries(Graph.allNodes(graph)).reduce((acc, [nodeKey, node]) => {
@@ -276,9 +283,9 @@ function _videoGraphFromFlattenedVideoGraph(
 				...uniformValuesToSpec(node.uniforms),
 			}
 		}, nodeKey);
-	}, Graph.empty);
+	}, Graph.empty());
 
-	return entries(Graph.allEdges(flattenedGraph)).reduce((result, [edgeKey, edge]) => {
+	const retval = entries(Graph.allEdges(flattenedGraph)).reduce((result, [edgeKey, edge]) => {
 		const { src: inletNodeKey, dst: outletNodeKey, metadata: inletSpec } = edge;
 		const inletNode = Graph.nodeForKey(flattenedGraph, inletNodeKey)!;
 		const videoModule = Kit.moduleForNode(inletNode);
@@ -299,6 +306,8 @@ function _videoGraphFromFlattenedVideoGraph(
 			}
 		}, edgeKey);
 	}, result);
+
+	return retval;
 }
 
 const videoGraphFromFlattenedVideoGraph =
@@ -311,11 +320,12 @@ export function videoGraphFromSimpleVideoGraph(
 	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
 	gl: WebGLRenderingContext
 ): VideoGraph {
-	return videoGraphFromFlattenedVideoGraph(
-		flattenSimpleVideoGraph(graph, editHash),
+	const retval = videoGraphFromFlattenedVideoGraph(
+		flattenSimpleVideoGraph(Graph.clone(graph), editHash),
 		editHash,
 		runtime,
 		gl);
+	return retval;
 }
 
 function uniformValuesToSpec(

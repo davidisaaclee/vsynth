@@ -136,7 +136,7 @@ export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 		nodes: Array<{ key: string, node: VideoNode}>,
 		inletOutletLinks: Array<{ inlet: Inlet, outlet: Outlet }>
 	) => {
-		let result = Graph.empty;
+		let result = Graph.empty();
 		result = nodes.reduce(
 			(document, { key, node }) => Graph.insertNode(document, node, key),
 			result);

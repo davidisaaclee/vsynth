@@ -123,7 +123,7 @@ export const oscillator: VideoModule<SubgraphModule> = {
 		}),
 
 		buildSubgraph: () => {
-			let result: Graph.Graph<ModuleType, InletSpecification> = Graph.empty;
+			let result: Graph.Graph<ModuleType, InletSpecification> = Graph.empty();
 			result = Graph.insertNode(
 				result,
 				'periodic',

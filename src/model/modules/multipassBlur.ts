@@ -59,7 +59,7 @@ export const multipassBlur: VideoModule<SubgraphModule> = {
 		},
 
 		buildSubgraph: () => {
-			let result = Graph.empty;
+			let result = Graph.empty();
 			for (let i = 0; i < N_PASSES; i++) {
 				result = Graph.insertNode(
 					result,
