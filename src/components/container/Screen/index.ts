@@ -9,7 +9,6 @@ import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, RuntimeModule, videoGraphFromSimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import * as Kit from '../../../model/Kit';
 import { VideoModule, ShaderModule } from '../../../model/VideoModule';
-import * as k from '../../../constants';
 import * as selectors from './selectors';
 
 const e = React.createElement;
@@ -101,10 +100,11 @@ class Screen extends React.Component<Props, State> {
 			return;
 		}
 
-		const frameIndex = Math.floor(k.fps * (Date.now() - this.state.animationStartTime) / 1000);
-		if (this.state.frameIndex !== frameIndex) {
-			this.setState({ frameIndex });
-		}
+		// TODO: This is decoupling the real framerate from Constants.fps (using whatever
+		// is provided by requestAnimationFrame).
+		this.setState(prevState => ({
+			frameIndex: prevState.frameIndex + 1
+		}));
 
 		window.requestAnimationFrame(this.frame);
 	}
