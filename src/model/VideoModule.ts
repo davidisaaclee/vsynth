@@ -4,10 +4,12 @@ import { Inlet } from './Inlet';
 import { InletSpecification } from './SimpleVideoGraph';
 import { ModuleType } from './Kit';
 
+export type VideoModuleDetails = SubgraphModule | ShaderModule;
+
 /*
  * Configurations of nodes to be instantiated in a VideoGraph.
  */
-export interface VideoModule<Details extends SubgraphModule | ShaderModule> {
+export interface VideoModule<Details extends VideoModuleDetails> {
 	// A human-readable description of what this module does.
 	description: string,
 

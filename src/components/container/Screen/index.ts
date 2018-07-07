@@ -4,12 +4,10 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import VideoGraphView from '@davidisaaclee/react-video-graph';
 import { empty as emptyGraph } from '@davidisaaclee/graph';
-import { createProgramWithFragmentShader } from '@davidisaaclee/video-graph';
 import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, videoGraphFromSimpleVideoGraph } from '../../../model/SimpleVideoGraph';
-import { RuntimeModule } from '../../../model/RuntimeModule';
+import { RuntimeModule, runtimeModuleFromShaderModule } from '../../../model/RuntimeModule';
 import * as Kit from '../../../model/Kit';
-import { VideoModule, ShaderModule } from '../../../model/VideoModule';
 import * as selectors from './selectors';
 
 const e = React.createElement;
@@ -90,9 +88,7 @@ class Screen extends React.Component<Props, State> {
 		this.gl = gl;
 		this.modulesRuntime = mapValues(
 			Kit.shaderModules,
-			(mod: VideoModule<ShaderModule>): RuntimeModule => ({
-				program: createProgramWithFragmentShader(gl, mod.details.shaderSource)
-			})) as Record<Kit.ShaderModuleType, RuntimeModule>;
+			shaderModule => runtimeModuleFromShaderModule(gl, shaderModule)) as Record<Kit.ShaderModuleType, RuntimeModule>;
 		this.forceUpdate();
 	}
 
