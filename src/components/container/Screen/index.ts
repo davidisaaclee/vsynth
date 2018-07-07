@@ -17,6 +17,7 @@ const e = React.createElement;
 interface StateProps {
 	graph: SimpleVideoGraph;
 	outputNodeKey: string | null;
+	editHash: number;
 }
 
 interface DispatchProps {
@@ -58,7 +59,7 @@ class Screen extends React.Component<Props, State> {
 
   public render() {
 		const {
-			graph, outputNodeKey,
+			graph, outputNodeKey, editHash,
 			...restProps
 		} = this.props;
 
@@ -71,10 +72,9 @@ class Screen extends React.Component<Props, State> {
 						? emptyGraph
 						: videoGraphFromSimpleVideoGraph(
 							graph,
+							editHash,
 							this.modulesRuntime,
-							this.state.frameIndex,
-							this.gl
-						)),
+							this.gl)),
 					outputNodeKey,
 					runtimeUniforms: {},
 					glRef: this.onGLRef,
@@ -120,6 +120,7 @@ function mapStateToProps(state: RootState): StateProps {
 	return {
 		graph: selectors.graph(state),
 		outputNodeKey: selectors.outputNodeKey(state),
+		editHash: selectors.editHash(state),
 	};
 }
 

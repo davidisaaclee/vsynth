@@ -39,6 +39,11 @@ export const previewedParameterChanges =
 		app,
 		app => app.previewedParameterChanges);
 
+export const editHash =
+	createSelector(
+		document,
+		document => document.editHash);
+
 const nodes = createSelector(
 	[document, previewedParameterChanges],
 	(d, previewedParameterChanges) => mapValues(d.nodes, (node, nodeKey) => {

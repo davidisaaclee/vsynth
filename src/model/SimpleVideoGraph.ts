@@ -142,7 +142,7 @@ function flattenInlet(
 }
 
 // Converts each subgraph node to a set of connected shader nodes.
-function flattenSimpleVideoGraph(graph: SimpleVideoGraph): SimpleVideoGraph {
+function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: number): SimpleVideoGraph {
 	let result = Graph.empty;
 
 	// Flatten and insert all nodes.
@@ -190,7 +190,7 @@ function flattenSimpleVideoGraph(graph: SimpleVideoGraph): SimpleVideoGraph {
 
 			// Recursively flatten the subgraph.
 			const flattenedSubgraph =
-				flattenSimpleVideoGraph(subgraphWithUpdatedParameters);
+				_flattenSimpleVideoGraph(subgraphWithUpdatedParameters, editHash);
 
 			// Namespace the resulting flattened graph under this subgraph node's key,
 			// and merge it into the accumulating graph.
@@ -229,6 +229,9 @@ function flattenSimpleVideoGraph(graph: SimpleVideoGraph): SimpleVideoGraph {
 	return result;
 }
 
+const flattenSimpleVideoGraph =
+	memoize(_flattenSimpleVideoGraph, (_, editHash) => editHash);
+
 function transformAllGraphKeys<N, E>(
 	graph: Graph.Graph<N, E>,
 	transformKey: (key: string) => string
@@ -243,9 +246,8 @@ function transformAllGraphKeys<N, E>(
 
 function _videoGraphFromFlattenedVideoGraph(
 	flattenedGraph: SimpleVideoGraph,
-	// moduleKey :: ModuleType
+	editHash: number,
 	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
-	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {
 	const result = entries(Graph.allNodes(flattenedGraph)).reduce((result, [nodeKey, node]) => {
@@ -300,19 +302,19 @@ function _videoGraphFromFlattenedVideoGraph(
 }
 
 const videoGraphFromFlattenedVideoGraph =
-	memoize(_videoGraphFromFlattenedVideoGraph);
+	memoize(_videoGraphFromFlattenedVideoGraph, (_, editHash) => editHash);
 
 export function videoGraphFromSimpleVideoGraph(
 	graph: SimpleVideoGraph,
+	editHash: number,
 	// moduleKey :: ModuleType
 	runtime: Record<Kit.ShaderModuleType, RuntimeModule>,
-	frameIndex: number,
 	gl: WebGLRenderingContext
 ): VideoGraph {
 	return videoGraphFromFlattenedVideoGraph(
-		flattenSimpleVideoGraph(graph),
+		flattenSimpleVideoGraph(graph, editHash),
+		editHash,
 		runtime,
-		frameIndex,
 		gl);
 }
 

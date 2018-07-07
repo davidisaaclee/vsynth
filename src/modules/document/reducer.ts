@@ -9,6 +9,11 @@ import {
 } from '../../constants';
 
 export interface State {
+	// A key which is unique to each unique State.
+	// This is used to quickly figure out whether the document has changed, without
+	// performing a deep equality check on the graph.
+	editHash: number,
+
 	// A seed used to generate the next node key.
 	nodeKeySeed: number,
 
@@ -29,6 +34,7 @@ export interface State {
 };
 
 const initialState: State = {
+	editHash: 0,
 	nodeKeySeed: 0,
 	nodes: {
 		'output': videoModuleSpecFromModuleType('identity'),
@@ -45,35 +51,35 @@ const initialState: State = {
 
 type RootAction = ActionType<typeof actions>;
 
+function incrementEditHash(state: State): State {
+	state.editHash += 1;
+	return state;
+}
+
 export const reducer = (state: State = initialState, action: RootAction) => {
 	switch (action.type) {
-		case Constants.SET_MASTER_OUTPUT:
-			return {
-				...state,
-				outputNodeKey: action.payload,
-			};
-
 		case Constants.SET_INLET_CONNECTION:
-			return insertInletConnection(
+			return incrementEditHash(insertInletConnection(
 				state,
 				action.payload.nodeKey,
 				action.payload.inletKey,
-				action.payload.busIndex);
+				action.payload.busIndex));
 
 		case Constants.SET_OUTLET_CONNECTION:
-			return (({ nodeKey, busIndex }) => ({
+			return (({ nodeKey, busIndex }) => (incrementEditHash({
 				...state,
 				outletConnections: {
 					...state.outletConnections,
 					[nodeKey]: busIndex
 				}
-			}))(action.payload);
+			})))(action.payload);
 
 		case Constants.INSERT_NODE:
 			return ((nodeKey, node) => {
 				state = connectAllInlets(state, node, nodeKey, defaultConstantBusIndex);
 				state = insertNode(state, node, nodeKey);
 				state = incrementNodeKeySeed(state);
+				state = incrementEditHash(state);
 				return state;
 			})(action.payload.id, action.payload.node);
 
@@ -87,23 +93,23 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 					}
 				};
 
-				return {
+				return incrementEditHash({
 					...state,
 					nodes: {
 						...state.nodes,
 						[nodeKey]: node
 					},
-				};
+				});
 			})(action.payload);
 
 		case Constants.ADD_BUS:
-			return {
+			return incrementEditHash({
 				...state,
 				busCount: state.busCount + 1
-			};
+			});
 
 		case Constants.REMOVE_NODE:
-			return (nodeKeyToDelete => ({
+			return (nodeKeyToDelete => incrementEditHash({
 				...state,
 				nodes: omit(
 					state.nodes,
@@ -119,7 +125,7 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 			}))(action.payload);
 
 		case Constants.RESET_ALL:
-			return initialState;
+			return incrementEditHash({ ...initialState });
 
 		default:
 			return state;
