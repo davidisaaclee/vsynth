@@ -16,6 +16,7 @@ import {
 import * as Kit from './Kit';
 import { Outlet } from './Outlet';
 import { Inlet } from './Inlet';
+import { RuntimeModule } from './RuntimeModule';
 
 export interface InletSpecification {
 	inlet: string;
@@ -90,12 +91,6 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 		};
 	}
 
-}
-
-// Holds all the necessary information to use a specific video module
-// with a specific WebGL runtime.
-export interface RuntimeModule {
-	program: WebGLProgram;
 }
 
 function namespaceNodeKey(parentNodeKey: string, childNodeKey: string): string {
