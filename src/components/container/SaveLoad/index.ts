@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { State as RootState } from '../../../modules';
 import * as Document from '../../../modules/document';
+import { documentDecoder } from '../../../model/Coding';
 import * as C from './components';
 import * as selectors from './selectors';
 
@@ -58,7 +59,7 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		load: (fileText: string) => {
 			try {
-				const document = JSON.parse(fileText);
+				const document = documentDecoder.runWithException(JSON.parse(fileText));
 				dispatch(Document.actions.loadDocument(document));
 			} catch (e) {
 				console.error(e);

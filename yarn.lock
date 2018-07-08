@@ -47,6 +47,10 @@
     "@davidisaaclee/graph" "^0.1.0"
     gl-matrix "^2.6.1"
 
+"@mojotech/json-type-validation@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@mojotech/json-type-validation/-/json-type-validation-2.0.0.tgz#1855184aac79692e9951873ef1e23c3da74822e5"
+
 "@types/classnames@^2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-2.2.4.tgz#d3ee9ebf714aa34006707b8f4a58fd46b642305a"
