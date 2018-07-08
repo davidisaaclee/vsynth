@@ -70,6 +70,7 @@ class SaveLoad extends React.Component<Props, State> {
 							}));
 						}
 					})),
+			e(C.Examples, { load }),
 			e(C.SaveButton,
 				{
 					onClick: (evt: React.MouseEvent<HTMLButtonElement>) => {
@@ -84,8 +85,7 @@ class SaveLoad extends React.Component<Props, State> {
 						load(fileText);
 					}
 				},
-				'Load from file'),
-			e(C.Examples, { load }));
+				'Load from file'));
 	}
 
 	private textareaRef = (textarea: HTMLTextAreaElement | null) => {
