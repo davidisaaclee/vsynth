@@ -12,6 +12,7 @@ const inletKeys = {
 	size: 'size',
 	speed: 'speed',
 	rotation: 'rotation',
+	phaseOffset: 'phaseOffset',
 };
 
 const paramKeys = {
@@ -41,6 +42,7 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			inletKeys.speed,
 			inletKeys.shape,
 			inletKeys.rotation,
+			inletKeys.phaseOffset,
 		],
 		associatedParameters: {
 			[inletKeys.hue]: paramKeys.hue,
@@ -48,6 +50,7 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			[inletKeys.speed]: paramKeys.speedAmount,
 			[inletKeys.shape]: paramKeys.shape,
 			[inletKeys.rotation]: paramKeys.rotationAmount,
+			[inletKeys.phaseOffset]: paramKeys.phaseOffsetAmount,
 		}
 	},
 
@@ -58,7 +61,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			paramKeys.speedAmount,
 			paramKeys.shape,
 			paramKeys.rotationAmount,
-			// TODO: phaseOffsetAmount should be hidden...
 			paramKeys.phaseOffsetAmount,
 		],
 		defaultValues: {
@@ -67,7 +69,7 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			[paramKeys.shape]: 0,
 			[paramKeys.hue]: 1,
 			[paramKeys.rotationAmount]: 0,
-			[paramKeys.phaseOffsetAmount]: 1,
+			[paramKeys.phaseOffsetAmount]: 0,
 		}
 	},
 
@@ -102,7 +104,11 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			[inletKeys.hue]: [{
 				nodeKey: nodeKeys.periodic,
 				inletKey: Periodic.inletKeys.hue,
-			}]
+			}],
+			[inletKeys.phaseOffset]: [{
+				nodeKey: nodeKeys.periodic,
+				inletKey: Periodic.inletKeys.phaseOffset,
+			}],
 		},
 
 		parametersToSubParameters: params => ({
