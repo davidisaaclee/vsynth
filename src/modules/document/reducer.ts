@@ -127,6 +127,9 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 		case Constants.RESET_ALL:
 			return incrementEditHash({ ...initialState });
 
+		case Constants.LOAD_DOCUMENT:
+			return action.payload;
+
 		default:
 			return state;
 	}

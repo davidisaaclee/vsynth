@@ -8,7 +8,7 @@ import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
 
-const document =
+export const document =
 	(state: RootState) => state.document.present;
 
 const app =

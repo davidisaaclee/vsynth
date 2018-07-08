@@ -1,10 +1,17 @@
-interface PickModuleModal {
+interface PickModule {
 	type: 'PICK_MODULE';
 }
 
-export type Modal =
-	PickModuleModal;
+interface SaveLoad {
+	type: 'SAVE_LOAD';
+}
 
-export const pickModule: Modal =
+export type Modal =
+	PickModule | SaveLoad;
+
+export const pickModule: PickModule =
 	{ type: 'PICK_MODULE' };
+
+export const saveLoad: SaveLoad =
+	{ type: 'SAVE_LOAD' };
 

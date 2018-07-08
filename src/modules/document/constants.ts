@@ -6,4 +6,5 @@ export const SET_PARAMETER = 'SET_PARAMETER';
 export const ADD_BUS = 'ADD_BUS';
 export const REMOVE_NODE = 'REMOVE_NODE';
 export const RESET_ALL = 'RESET_ALL';
+export const LOAD_DOCUMENT = 'LOAD_DOCUMENT';
 

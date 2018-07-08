@@ -11,6 +11,7 @@ import { videoModuleSpecFromModuleType } from '../../../model/SimpleVideoGraph';
 import Screen from '../Screen';
 import BusRouter from '../ConnectedBusRouter';
 import ModulePicker from '../ModulePicker';
+import SaveLoad from '../SaveLoad';
 import MainMenu from '../MainMenu';
 import * as AppModule from '../../../modules/app';
 import * as Document from '../../../modules/document';
@@ -87,6 +88,8 @@ class Editor extends React.Component<Props, State> {
 							this.props.closeModal();
 						}
 					});
+			case 'SAVE_LOAD':
+				return e(SaveLoad);
 		}
 	}
 

@@ -1,6 +1,7 @@
 import { action } from 'typesafe-actions';
 import * as Constants from './constants';
 import { VideoNode } from '../../model/SimpleVideoGraph';
+import { State as Document } from './reducer';
 
 export const setMasterOutput = (nodeKey: string) =>
 	action(Constants.SET_MASTER_OUTPUT, nodeKey);
@@ -25,4 +26,7 @@ export const removeNode = (nodeKey: string) =>
 
 export const resetAll = () =>
 	action(Constants.RESET_ALL);
+
+export const loadDocument = (doc: Document) =>
+	action(Constants.LOAD_DOCUMENT, doc);
 
