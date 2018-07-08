@@ -1,6 +1,6 @@
 {
   "version": 0,
-  "editHash": 87,
+  "editHash": 89,
   "nodeKeySeed": 4,
   "nodes": {
     "output": {
@@ -37,7 +37,7 @@
         "shape": 1,
         "hue": 0.7854048295454545,
         "rotationAmount": 0.3676491477272727,
-        "phaseOffsetAmount": 1
+        "phaseOffsetAmount": 0
       },
       "details": {
         "nodeType": "subgraph",
@@ -51,7 +51,7 @@
                 "inharmonics amount": 0.5012811618790641,
                 "hue": 0.7854048295454545,
                 "shape": 1,
-                "phase offset amount": 1
+                "phase offset amount": 0
               },
               "details": {
                 "nodeType": "shader",
@@ -75,7 +75,7 @@
                   },
                   "phaseOffsetTextureAmount": {
                     "type": "f",
-                    "data": 1
+                    "data": 0
                   },
                   "hueAmount": {
                     "type": "f",
@@ -177,15 +177,15 @@
           },
           "_edges": {
             "ramp -> scanlines.phaseOffset": {
-              "dst": "ramp",
               "src": "scanlines",
+              "dst": "ramp",
               "metadata": {
                 "inlet": "phaseOffset"
               }
             },
             "scanlines -> oscillator.input": {
-              "dst": "scanlines",
               "src": "periodic",
+              "dst": "scanlines",
               "metadata": {
                 "inlet": "input"
               }
@@ -202,7 +202,7 @@
         "shape": 1,
         "hue": 1,
         "rotationAmount": 0.290625,
-        "phaseOffsetAmount": 1
+        "phaseOffsetAmount": 0
       },
       "details": {
         "nodeType": "subgraph",
@@ -216,7 +216,7 @@
                 "inharmonics amount": 0.49473800287675196,
                 "hue": 1,
                 "shape": 1,
-                "phase offset amount": 1
+                "phase offset amount": 0
               },
               "details": {
                 "nodeType": "shader",
@@ -240,7 +240,7 @@
                   },
                   "phaseOffsetTextureAmount": {
                     "type": "f",
-                    "data": 1
+                    "data": 0
                   },
                   "hueAmount": {
                     "type": "f",
@@ -342,15 +342,15 @@
           },
           "_edges": {
             "ramp -> scanlines.phaseOffset": {
-              "dst": "ramp",
               "src": "scanlines",
+              "dst": "ramp",
               "metadata": {
                 "inlet": "phaseOffset"
               }
             },
             "scanlines -> oscillator.input": {
-              "dst": "scanlines",
               "src": "periodic",
+              "dst": "scanlines",
               "metadata": {
                 "inlet": "input"
               }
