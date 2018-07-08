@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled, { css } from '../../../styled-components';
+import { Example, defaultExamples } from './examples';
 
 const e = React.createElement;
 
@@ -116,4 +117,40 @@ export const SavingUnsupportedWarning = styled.div`
 
 	text-align: center;
 `;
+
+
+const ExampleContainer = styled.div`
+`;
+
+interface ExampleThumbnailProps {
+	example: Example;
+	onClick: () => any;
+}
+
+const ExampleThumbnail: React.StatelessComponent<ExampleThumbnailProps> = ({
+	example, onClick
+}) => (
+	e('div',
+		{},
+		e('button',
+			{ onClick },
+			example.name)));
+
+interface ExamplesProps {
+	load: (fileText: string) => any;
+}
+
+export const Examples: React.StatelessComponent<ExamplesProps> = ({ load }) => (
+	e(ExampleContainer,
+		{},
+		e('h1', {}, 'Load an example patch'),
+		e('ul',
+			{},
+			defaultExamples.map(example => 
+				e(ExampleThumbnail,
+					{
+						key: example.name,
+						example,
+						onClick: () => load(example.file),
+					})))));
 

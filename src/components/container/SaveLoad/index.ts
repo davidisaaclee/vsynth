@@ -84,7 +84,8 @@ class SaveLoad extends React.Component<Props, State> {
 						load(fileText);
 					}
 				},
-				'Load from file'));
+				'Load from file'),
+			e(C.Examples, { load }));
 	}
 
 	private textareaRef = (textarea: HTMLTextAreaElement | null) => {
