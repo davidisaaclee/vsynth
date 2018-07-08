@@ -35,8 +35,8 @@
     lodash "^4.17.10"
 
 "@davidisaaclee/react-video-graph@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.3.1.tgz#6326e3d07fc23e62273b1018e17cd074f8df2d26"
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-video-graph/-/react-video-graph-0.3.2.tgz#8210f7963a732493a749fdf321ee49bfb5bea360"
   dependencies:
     "@davidisaaclee/video-graph" "^0.6.0"
 
