@@ -1,4 +1,5 @@
 import simple from './simple.json';
+import trails from './trails.json';
 import lightShell from './lightshell.json';
 import coloredShell from './coloredshell.json';
 import shingles from './shingles.json';
@@ -16,6 +17,10 @@ export const defaultExamples: Example[] = [
 	{
 		name: 'shingles',
 		file: JSON.stringify(shingles),
+	},
+	{
+		name: 'trails',
+		file: JSON.stringify(trails),
 	},
 	{
 		name: 'lightshell',
