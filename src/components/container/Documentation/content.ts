@@ -41,6 +41,27 @@ If you'd like to help me out, [here is the Github repo for vsynth](https://githu
 			})
 	},
 	{
+		key: 'save-load',
+		title: "How do I share my patches?",
+		body: e(C.Markdown, {
+				source: `
+You can save your patches as a \`.vsynth\` file to send to your loved ones.
+
+_To save a file..._
+
+1. Click on the \`File\` button in the lower right corner of the patching screen.
+2. Click on the \`Save to computer\` button.
+3. Check your downloads folder for a file named \`patch.vsynth\`. This is your patch file. (You can rename it to anything you'd like, as long as it ends with \`.vsynth\`.)
+
+_To load a file..._
+
+1. Click on the \`File\` button in the lower right corner of the screen.
+2. Click on the \`Load from file\` button.
+3. Choose your \`.vsynth\` file in the file picker window.
+				`
+			})
+	},
+	{
 		key: 'pro-tips',
 		title: "Any protips?",
 		body: e(C.Markdown, {
