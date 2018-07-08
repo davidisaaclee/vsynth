@@ -11,7 +11,8 @@ export interface State {
 }
 
 const initialState: State = {
-	modal: null,
+	modal: Modals.saveLoad,
+	// modal: null,
 	previewedParameterChanges: {},
 };
 

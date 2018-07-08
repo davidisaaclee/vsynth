@@ -7,7 +7,7 @@ const e = React.createElement;
 export const Container = styled.div`
 	display: flex;
 	flex-flow: column nowrap;
-	justify-content: center;
+	justify-content: space-around;
 	height: 100%;
 `;
 
@@ -41,7 +41,6 @@ export const CopyButton = styled.button`
 export const SaveButton = styled.button`
 	${sharedButtonStyles}
 	padding: 20px;
-	margin-top: 20px;
 
 	font-size: 16pt;
 `;
@@ -49,7 +48,6 @@ export const SaveButton = styled.button`
 const LoadButtonLabel = styled.label`
 	${sharedButtonStyles}
 	padding: 20px;
-	margin-top: 20px;
 
 	text-align: center;
 	font-size: 16pt;
@@ -120,21 +118,65 @@ export const SavingUnsupportedWarning = styled.div`
 
 
 const ExampleContainer = styled.div`
+	background-color: #333;
+	border-radius: 3px;
+
+	padding: 20px;
+`;
+
+const ExampleList = styled.ul`
+	padding: 0;
+	margin: 0;
+
+	overflow: auto;
+	white-space: nowrap;
+
+	& > * {
+		margin: 0 20px;
+
+		&:first-child {
+			margin-left: 0;
+		}
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+`;
+
+const ExampleHeader = styled.h1`
+	font-size: 16pt;
+	color: white;
+	text-align: center;
+	margin: 0;
+	margin-bottom: 20px;
 `;
 
 interface ExampleThumbnailProps {
+	className?: string;
 	example: Example;
 	onClick: () => any;
 }
 
-const ExampleThumbnail: React.StatelessComponent<ExampleThumbnailProps> = ({
-	example, onClick
+const UnstyledExampleThumbnail: React.StatelessComponent<ExampleThumbnailProps> = ({
+	example, onClick, className
 }) => (
-	e('div',
-		{},
+	e('li',
+		{ className },
 		e('button',
 			{ onClick },
 			example.name)));
+
+const ExampleThumbnail = styled(UnstyledExampleThumbnail)`
+	display: inline-block;
+	list-style-type: none;
+
+	& > button {
+		${sharedButtonStyles}
+
+		width: 100px;
+		height: 100px;
+	}
+`;
 
 interface ExamplesProps {
 	load: (fileText: string) => any;
@@ -143,8 +185,10 @@ interface ExamplesProps {
 export const Examples: React.StatelessComponent<ExamplesProps> = ({ load }) => (
 	e(ExampleContainer,
 		{},
-		e('h1', {}, 'Load an example patch'),
-		e('ul',
+		e(ExampleHeader,
+			{},
+			'Load an example patch'),
+		e(ExampleList,
 			{},
 			defaultExamples.map(example => 
 				e(ExampleThumbnail,
