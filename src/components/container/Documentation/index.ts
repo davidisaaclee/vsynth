@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactMarkdown from 'react-markdown';
-import styled from '../../styled-components';
-import { deviceQueries } from '../../utility/mediaQueries';
 import ReactPlayer from 'react-player';
+import styled from '../../../styled-components';
+import { deviceQueries } from '../../../utility/mediaQueries';
 
 const e = React.createElement;
 
