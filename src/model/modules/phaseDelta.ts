@@ -54,8 +54,7 @@ const shaderSource = glsl`
 		float frequency =
 			calculateFrequency(textureSamplePoint);
 
-		float period = 1. / frequency;
-		float phaseDelta = mod(frameDelta / period, 1.);
+		float phaseDelta = mod(frameDelta * frequency, 1.);
 
 		gl_FragColor = vec4(vec3(phaseDelta), 1.);
 	}
