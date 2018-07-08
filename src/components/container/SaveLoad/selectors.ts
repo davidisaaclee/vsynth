@@ -4,5 +4,5 @@ import * as sharedSelectors from '../../../modules/sharedSelectors';
 
 export const currentDocumentFile = createSelector(
 	sharedSelectors.document,
-	doc => JSON.stringify(encodeDocument(doc)));
+	doc => JSON.stringify(encodeDocument(doc), null, 2));
 
