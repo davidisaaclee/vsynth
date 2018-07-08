@@ -34,7 +34,7 @@ const shaderSource = glsl`
 
 // Adds two textures together, and takes the fractional component of the result.
 export const addFract: VideoModule<ShaderModule> = {
-	name: 'add wrap',
+	name: '+%',
 	description: "Sums two inputs, and returns the fractional component of the sum.",
 
 	parameters: {

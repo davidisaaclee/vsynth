@@ -34,7 +34,7 @@ const shaderSource = glsl`
 
 // Adds two textures together, and clamps the result within [0, 1].
 export const addClip: VideoModule<ShaderModule> = {
-	name: 'add clip',
+	name: '+',
 	description: "Sums two inputs, then clips the result between 0 and 1.",
 
 	parameters: {
