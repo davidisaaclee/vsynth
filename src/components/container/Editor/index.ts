@@ -27,7 +27,16 @@ const StyledBusRouter = styled(BusRouter)`
 `;
 
 const AddButton = styled.button`
-	margin: 10px;
+	padding: 10px;
+
+	border: 1px solid white;
+
+	background-color: black;
+	color: white;
+
+	&:hover, &:active {
+		background-color: #555;
+	}
 `;
 
 const StyledMenu = styled(MainMenu)`
