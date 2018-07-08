@@ -36,32 +36,39 @@ class SaveLoad extends React.Component<Props, State> {
 
 		return e(C.Container,
 			{},
-			e(C.Toolbar,
-				{
-					onClickLoad: () => {
-						load(fileText);
-					},
-					onClickCopy: () => {
-						if (this.textareaElement == null) {
-							return;
-						}
+			e(C.TextContainer,
+				{},
+				e(C.CopyButton,
+					{
+						onClick: () => {
+							if (this.textareaElement == null) {
+								return;
+							}
 
-						this.textareaElement.select();
-						document.execCommand('copy');
+							this.textareaElement.select();
+							document.execCommand('copy');
+						},
 					},
-				}),
-			e(C.FileText,
+					'Copy'),
+				e(C.FileText,
+					{
+						innerRef: this.textareaRef,
+						text: fileText,
+						onChange: (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+							const fileText = evt.currentTarget.value;
+							this.setState(prevState => ({
+								...prevState,
+								fileText
+							}));
+						}
+					})),
+			e(C.LoadButton,
 				{
-					innerRef: this.textareaRef,
-					text: fileText,
-					onChange: (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-						const fileText = evt.currentTarget.value;
-						this.setState(prevState => ({
-							...prevState,
-							fileText
-						}));
+					onClick: () => {
+						load(fileText);
 					}
-				}));
+				},
+				'Load'));
 	}
 
 	private textareaRef = (textarea: HTMLTextAreaElement | null) => {

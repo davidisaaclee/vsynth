@@ -1,7 +1,4 @@
-import * as React from 'react';
-import styled from '../../../styled-components';
-
-const e = React.createElement;
+import styled, { css } from '../../../styled-components';
 
 export const Container = styled.div`
 	display: flex;
@@ -9,20 +6,39 @@ export const Container = styled.div`
 	height: 100%;
 `;
 
-interface ToolbarProps {
-	onClickCopy: () => any;
-	onClickLoad: () => any;
-}
+export const TextContainer = styled.div`
+	display: flex;
+	flex: 1;
+	margin-bottom: 20px;
 
-export const Toolbar: React.StatelessComponent<ToolbarProps> = ({ onClickLoad, onClickCopy }) => (
-	e('div',
-		{},
-		e('button',
-			{ onClick: onClickCopy },
-			'Copy'),
-		e('button',
-			{ onClick: onClickLoad },
-			'Load')));
+	position: relative;
+`;
+
+const sharedButtonStyles = css`
+	border: 1px solid white;
+
+	background-color: black;
+	color: white;
+
+	&:hover, &:active {
+		background-color: #555;
+	}
+`;
+
+export const CopyButton = styled.button`
+	${sharedButtonStyles}
+	position: absolute;
+	padding: 10px;
+
+	right: 1em;
+	top: 1em;
+`;
+
+export const LoadButton = styled.button`
+	${sharedButtonStyles}
+	padding: 20px;
+	font-size: 16pt;
+`;
 
 interface FileTextProps {
 	text: string;
@@ -30,12 +46,14 @@ interface FileTextProps {
 export const FileText = styled.textarea.attrs<FileTextProps>({
 	value: (props: FileTextProps) => props.text,
 })`
-	flex-grow: 1;
+	flex: 1;
+	padding: 1em;
 
 	font-family: monospace;
 	background-color: #333;
 	color: #777;
 	border: none;
+	resize: none;
 
 	&:focus {
 		color: #fff;
