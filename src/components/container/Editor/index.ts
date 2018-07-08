@@ -31,13 +31,11 @@ const AddButton = styled.button`
 `;
 
 const StyledMenu = styled(MainMenu)`
-	padding: 10px;
 	position: fixed;
-	height: 30px;
 	right: 0;
 	bottom: 0;
 	
-	margin: 20px;
+	margin: 20px 0;
 `;
 
 export interface Props {

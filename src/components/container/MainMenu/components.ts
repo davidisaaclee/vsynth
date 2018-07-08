@@ -1,15 +1,13 @@
 import styled, { css } from '../../../styled-components';
 
 export const List = styled.ul`
-	height: 100%;
-
 	display: flex;
 	padding: 0;
 	margin: 0;
 
-	flex-flow: row nowrap;
+	flex-flow: row wrap;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: center;
 `;
 
 export const Item = styled.li`

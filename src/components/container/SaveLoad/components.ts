@@ -32,6 +32,7 @@ export const CopyButton = styled.button`
 
 	right: 1em;
 	top: 1em;
+	z-index: 1;
 `;
 
 export const LoadButton = styled.button`
