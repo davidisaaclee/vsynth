@@ -50,6 +50,7 @@ export const inletKeys = {
 };
 
 export const mixer: VideoModule<ShaderModule> = {
+	name: 'mixer',
 	description: 'Fade between two inputs.',
 	parameters: {
 		keys: [

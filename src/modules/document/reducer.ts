@@ -37,8 +37,8 @@ const initialState: State = {
 	editHash: 0,
 	nodeKeySeed: 0,
 	nodes: {
-		'output': videoModuleSpecFromModuleType('identity'),
-		'default-constant': videoModuleSpecFromModuleType('constant'),
+		'output': videoModuleSpecFromModuleType(Kit.ShaderModuleType.identity),
+		'default-constant': videoModuleSpecFromModuleType(Kit.ShaderModuleType.constant),
 	},
 	nodeOrder: ['output', 'default-constant'],
 	inletConnections: {},

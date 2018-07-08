@@ -15,6 +15,7 @@ interface InletConfig {
 }
 
 interface ShaderConfig {
+	name: string;
 	description: string;
 	shaderSource: string;
 	inlets: InletConfig[];
@@ -23,11 +24,11 @@ interface ShaderConfig {
 
 export default function mkShaderModule(shaderConfig: ShaderConfig): VideoModule<ShaderModule> {
 	const {
-		inlets, defaultUniforms,
-		shaderSource, description,
+		name, inlets, defaultUniforms, shaderSource, description,
 	} = shaderConfig;
 
 	return {
+		name,
 		description,
 
 		parameters: {

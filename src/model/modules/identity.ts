@@ -2,6 +2,7 @@ import { VideoModule, ShaderModule } from '../VideoModule';
 import identityShader from '../../shaders/identity';
 
 export const identity: VideoModule<ShaderModule> = {
+	name: 'identity',
 	description: 'Outputs its input.',
 	parameters: {
 		keys: [],

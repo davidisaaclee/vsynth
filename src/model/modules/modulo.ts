@@ -7,6 +7,8 @@ export const inletKeys = {
 };
 
 export const modulo: VideoModule<ShaderModule> = {
+	name: '%',
+
 	description: 'Outputs the result of the dividend mod the divisor.',
 
 	parameters: {

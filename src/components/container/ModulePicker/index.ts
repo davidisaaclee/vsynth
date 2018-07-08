@@ -58,15 +58,18 @@ interface Props {
 const ModulePicker: React.StatelessComponent<Props> = ({ addModule }) =>
 	e(ModuleList,
 		{},
-		...Kit.moduleKeys.map(key =>
-			e(ModuleEntry,
+		...Kit.moduleKeys.map(key => {
+			const mod = Kit.moduleForType(key)!;
+
+			return e(ModuleEntry,
 				{},
 				e(ModuleButton,
 					{ onClick: () => addModule(key) },
-					e(ModuleTitle, {}, key),
+					e(ModuleTitle, {}, mod.name),
 					e(ModuleDescription,
 						{},
-						Kit.moduleForType(key)!.description)))));
+						mod.description)))
+		}));
 
 export default ModulePicker;
 

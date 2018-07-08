@@ -1,5 +1,7 @@
 import * as Graph from '@davidisaaclee/graph';
+import { InletSpecification } from '../SimpleVideoGraph';
 import { VideoModule, SubgraphModule } from '../VideoModule';
+import { ModuleType, ShaderModuleType } from '../Kit';
 import * as PhaseDelta from './phaseDelta';
 import * as AddFract from './addFract';
 
@@ -18,6 +20,8 @@ export const nodeKeys = {
 
 // Generates a uniform texture of a linearly ramping value.
 export const ramp: VideoModule<SubgraphModule> = {
+	name: 'ramp',
+
 	description: 'Outputs a repeating linear ramping value.',
 
 	parameters: {
@@ -52,14 +56,14 @@ export const ramp: VideoModule<SubgraphModule> = {
 		}),
 
 		buildSubgraph: () => {
-			let result = Graph.empty();
+			let result: Graph.Graph<ModuleType, InletSpecification> = Graph.empty();
 			result = Graph.insertNode(
 				result,
-				'addFract',
+				ShaderModuleType.addFract,
 				nodeKeys.addFract);
 			result = Graph.insertNode(
 				result,
-				'phaseDelta',
+				ShaderModuleType.phaseDelta,
 				nodeKeys.phaseDelta);
 
 			result = Graph.insertEdge(

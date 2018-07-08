@@ -213,11 +213,13 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
-		makeAddModule: makeNodeKey => modType => (
+		makeAddModule: makeNodeKey => modType => {
+			console.log(modType);
+			console.log(makeNodeKey(modType));
 			dispatch(Document.actions.insertNode(
 				videoModuleSpecFromModuleType(modType),
-				makeNodeKey(modType)))
-		),
+				makeNodeKey(modType)));
+		},
 		closeModal: () => dispatch(AppModule.actions.setModal(null)),
 		addBus: () => dispatch(Document.actions.addBus()),
 		openNodePicker: () => dispatch(AppModule.actions.setModal(AppModule.Modals.pickModule)),

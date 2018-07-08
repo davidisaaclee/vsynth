@@ -1,7 +1,7 @@
 import * as Graph from '@davidisaaclee/graph';
 import { VideoModule, SubgraphModule } from '../VideoModule';
 import { InletSpecification} from '../SimpleVideoGraph';
-import { ModuleType } from '../Kit';
+import { SubgraphModuleType, ShaderModuleType, ModuleType } from '../Kit';
 import * as Periodic from './periodic';
 import * as Ramp from './ramp';
 import * as Scanlines from './scanlines';
@@ -30,6 +30,8 @@ const nodeKeys = {
 };
 
 export const oscillator: VideoModule<SubgraphModule> = {
+	name: 'oscillator',
+
 	description: "A classic video synthesis oscillator.",
 
 	inlets: {
@@ -126,15 +128,15 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			let result: Graph.Graph<ModuleType, InletSpecification> = Graph.empty();
 			result = Graph.insertNode(
 				result,
-				'periodic',
+				ShaderModuleType.periodic,
 				nodeKeys.periodic);
 			result = Graph.insertNode(
 				result,
-				'ramp',
+				SubgraphModuleType.ramp,
 				nodeKeys.ramp);
 			result = Graph.insertNode(
 				result,
-				'scanlines',
+				ShaderModuleType.scanlines,
 				nodeKeys.scanlines);
 
 			result = Graph.insertEdge(

@@ -1,5 +1,7 @@
 import * as Graph from '@davidisaaclee/graph';
+import { InletSpecification } from '../SimpleVideoGraph';
 import { VideoModule, SubgraphModule } from '../VideoModule';
+import { ModuleType, SubgraphModuleType } from '../Kit';
 import * as CrossBlur from './crossBlur';
 
 export const parameterKeys = {
@@ -16,6 +18,8 @@ export const nodeKeys = {
 };
 
 export const multipassBlur: VideoModule<SubgraphModule> = {
+	name: 'blur',
+
 	description: 'Applies a 10-pass Gaussian blur to its input. (Slow!)',
 
 	parameters: {
@@ -59,11 +63,11 @@ export const multipassBlur: VideoModule<SubgraphModule> = {
 		},
 
 		buildSubgraph: () => {
-			let result = Graph.empty();
+			let result: Graph.Graph<ModuleType, InletSpecification> = Graph.empty();
 			for (let i = 0; i < N_PASSES; i++) {
 				result = Graph.insertNode(
 					result,
-					'crossBlur',
+					SubgraphModuleType.crossBlur,
 					nodeKeys.nth(i));
 			}
 			for (let i = 1; i < N_PASSES; i++) {

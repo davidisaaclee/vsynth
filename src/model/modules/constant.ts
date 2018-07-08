@@ -6,6 +6,7 @@ const parameterKeys = {
 };
 
 export const constant: VideoModule<ShaderModule> = {
+	name: 'constant',
 	description: "Outputs a constant value.",
 
 	parameters: {

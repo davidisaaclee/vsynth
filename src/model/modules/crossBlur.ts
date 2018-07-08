@@ -17,6 +17,7 @@ export const nodeKeys = {
 };
 
 export const crossBlur: VideoModule<SubgraphModule> = {
+	name: 'crossblur',
 	description: "Applies a Gaussian blur in two perpendicular directions.",
 
 	parameters: {

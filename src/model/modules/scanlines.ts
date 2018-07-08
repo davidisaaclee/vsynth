@@ -13,6 +13,8 @@ export const inletKeys = {
 };
 
 export const scanlines: VideoModule<ShaderModule> = {
+	name: 'scanlines',
+
 	description: 'Outputs a gradient, where each pixel value represents the amount of time it would take for a scanline to reach it.',
 	parameters: {
 		keys: [

@@ -23,55 +23,74 @@ import { multipassBlur } from './modules/multipassBlur';
 import { VideoModule, ShaderModule, SubgraphModule } from './VideoModule';
 import { VideoNode } from './SimpleVideoGraph';
 
-export type SubgraphModuleType = 'oscillator' | 'ramp' | 'crossBlur' | 'multipassBlur';
-export type ShaderModuleType =
-	'periodic' | 'identity' | 'constant' | 'addFract'
-	| 'phaseDelta' | 'mixer' | 'scanlines' | 'rgbOffset' | 'divide'
-	| 'multiply' | 'addClip' | 'singlePassBlur' | 'zoomIn'
-	| 'scanlineDisplace' | 'modulo' | 'hsv';
+export enum SubgraphModuleType {
+	oscillator = "oscillator",
+	ramp = "ramp",
+	crossBlur = "crossBlur",
+	multipassBlur = "multipassBlur",
+}
+
+export enum ShaderModuleType {
+	periodic = "periodic",
+	identity = "identity",
+	constant = "constant",
+	addFract = "addFract",
+	phaseDelta = "phaseDelta",
+	mixer = "mixer",
+	scanlines = "scanlines",
+	rgbOffset = "rgbOffset",
+	divide = "divide",
+	multiply = "multiply",
+	addClip = "addClip",
+	singlePassBlur = "singlePassBlur",
+	zoomIn = "zoomIn",
+	scanlineDisplace = "scanlineDisplace",
+	modulo = "modulo",
+	hsv = "hsv",
+}
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
 
 export const subgraphModules: Record<SubgraphModuleType, VideoModule<SubgraphModule>> = {
-	oscillator,
-	ramp,
-	crossBlur,
-	multipassBlur,
+	[SubgraphModuleType.oscillator]: oscillator,
+	[SubgraphModuleType.ramp]: ramp,
+	[SubgraphModuleType.crossBlur]: crossBlur,
+	[SubgraphModuleType.multipassBlur]: multipassBlur,
 };
 
 export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> = {
-	periodic,
-	identity,
-	constant,
-	addFract,
-	phaseDelta,
-	mixer,
-	scanlines,
-	rgbOffset,
-	divide,
-	multiply,
-	addClip,
-	singlePassBlur,
-	zoomIn,
-	scanlineDisplace,
-	modulo,
-	hsv,
+	[ShaderModuleType.periodic]: periodic,
+	[ShaderModuleType.identity]: identity,
+	[ShaderModuleType.constant]: constant,
+	[ShaderModuleType.addFract]: addFract,
+	[ShaderModuleType.phaseDelta]: phaseDelta,
+	[ShaderModuleType.mixer]: mixer,
+	[ShaderModuleType.scanlines]: scanlines,
+	[ShaderModuleType.rgbOffset]: rgbOffset,
+	[ShaderModuleType.divide]: divide,
+	[ShaderModuleType.multiply]: multiply,
+	[ShaderModuleType.addClip]: addClip,
+	[ShaderModuleType.singlePassBlur]: singlePassBlur,
+	[ShaderModuleType.zoomIn]: zoomIn,
+	[ShaderModuleType.scanlineDisplace]: scanlineDisplace,
+	[ShaderModuleType.modulo]: modulo,
+	[ShaderModuleType.hsv]: hsv,
 };
 
 export const moduleKeys: ModuleType[] = [
-	'oscillator',
-	'periodic',
-	'mixer',
-	'ramp',
-	'addFract',
-	'addClip',
-	'multiply',
-	'divide',
-	'modulo',
-	'hsv',
-	'scanlines',
-	'zoomIn',
-	'rgbOffset',
+	SubgraphModuleType.oscillator,
+	ShaderModuleType.periodic,
+	ShaderModuleType.mixer,
+	SubgraphModuleType.ramp,
+	ShaderModuleType.addFract,
+	ShaderModuleType.addClip,
+	ShaderModuleType.multiply,
+	ShaderModuleType.divide,
+	ShaderModuleType.modulo,
+	ShaderModuleType.hsv,
+	ShaderModuleType.scanlines,
+	ShaderModuleType.zoomIn,
+	ShaderModuleType.rgbOffset,
 ];
 
 

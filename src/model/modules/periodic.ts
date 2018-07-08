@@ -21,6 +21,8 @@ export const inletKeys = {
 };
 
 export const periodic: VideoModule<ShaderModule> = {
+	name: 'periodic',
+
 	description: "Applies a periodic function to its input.",
 
 	parameters: {

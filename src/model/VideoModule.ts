@@ -10,8 +10,11 @@ export type VideoModuleDetails = SubgraphModule | ShaderModule;
  * Configurations of nodes to be instantiated in a VideoGraph.
  */
 export interface VideoModule<Details extends VideoModuleDetails> {
+	// A short, human-readable name for this module.
+	name: string;
+
 	// A human-readable description of what this module does.
-	description: string,
+	description: string;
 
 	parameters: {
 		keys: string[],

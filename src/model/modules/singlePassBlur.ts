@@ -14,6 +14,8 @@ export const inletKeys = {
 };
 
 export const singlePassBlur: VideoModule<ShaderModule> = {
+	name: 'singlepass blur',
+
 	description: 'Applies a Gaussian blur to its input in one direction.',
 
 	parameters: {
