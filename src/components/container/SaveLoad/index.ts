@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { State as RootState } from '../../../modules';
 import * as Document from '../../../modules/document';
 import { documentDecoder } from '../../../model/Coding';
+import { downloadBlob } from '../../../utility/downloadBlob';
 import * as C from './components';
 import * as selectors from './selectors';
 
@@ -37,7 +38,11 @@ class SaveLoad extends React.Component<Props, State> {
 		return e(C.Container,
 			{},
 			e(C.TextContainer,
-				{},
+				{
+					style: {
+						display: 'none',
+					},
+				},
 				e(C.CopyButton,
 					{
 						onClick: () => {
@@ -62,13 +67,21 @@ class SaveLoad extends React.Component<Props, State> {
 							}));
 						}
 					})),
+			e(C.SaveButton,
+				{
+					onClick: (evt: React.MouseEvent<HTMLButtonElement>) => {
+						const blob = new Blob([fileText], { type: 'text/json' });
+						downloadBlob(blob, 'patch.vsynth');
+					}
+				},
+				'Save to computer'),
 			e(C.LoadButton,
 				{
-					onClick: () => {
+					onLoadFile: (fileText: string) => {
 						load(fileText);
 					}
 				},
-				'Load'));
+				'Load from file'));
 	}
 
 	private textareaRef = (textarea: HTMLTextAreaElement | null) => {
