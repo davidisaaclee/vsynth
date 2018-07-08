@@ -1,8 +1,10 @@
 // Encodes/decodes a document into a shareable text string.
 
 import {
-	Decoder, object, number, array, dict, string, constant, oneOf, anyJson, lazy, union,
+	Decoder, object, number, array, dict, string,
+	constant, oneOf, anyJson, lazy, union, succeed,
 } from '@mojotech/json-type-validation';
+import * as uuid from 'uuid';
 import { UniformValue } from '@davidisaaclee/video-graph';
 import { State as Document } from '../modules/document';
 import { SubgraphNode, ShaderNode, VideoNode, SimpleVideoGraph } from '../model/SimpleVideoGraph';
@@ -73,7 +75,7 @@ const videoNodeDecoder: Decoder<VideoNode> = object({
 export const documentDecoder: Decoder<Document> = oneOf(
 	object({
 		version: constant(0),
-		editHash: number(),
+		editHash: lazy(() => succeed(uuid())),
 		nodeKeySeed: number(),
 		nodes: dict(videoNodeDecoder),
 		nodeOrder: array(string()),

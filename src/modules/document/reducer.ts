@@ -1,5 +1,6 @@
 import { pickBy as _pickBy, ValueKeyIteratee } from 'lodash';
 import { ActionType } from 'typesafe-actions';
+import * as uuid from 'uuid';
 import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVideoGraph';
 import * as Kit from '../../model/Kit';
 import * as Constants from './constants';
@@ -12,7 +13,7 @@ export interface State {
 	// A key which is unique to each unique State.
 	// This is used to quickly figure out whether the document has changed, without
 	// performing a deep equality check on the graph.
-	editHash: number,
+	editHash: string,
 
 	// A seed used to generate the next node key.
 	nodeKeySeed: number,
@@ -34,7 +35,7 @@ export interface State {
 };
 
 const initialState: State = {
-	editHash: 0,
+	editHash: uuid(),
 	nodeKeySeed: 0,
 	nodes: {
 		'output': videoModuleSpecFromModuleType(Kit.ShaderModuleType.identity),
@@ -52,7 +53,7 @@ const initialState: State = {
 type RootAction = ActionType<typeof actions>;
 
 function incrementEditHash(state: State): State {
-	state.editHash += 1;
+	state.editHash = uuid();
 	return state;
 }
 
