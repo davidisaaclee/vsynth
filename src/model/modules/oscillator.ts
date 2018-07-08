@@ -7,7 +7,6 @@ import * as Ramp from './ramp';
 import * as Scanlines from './scanlines';
 
 const inletKeys = {
-	hue: 'hue',
 	shape: 'shape',
 	size: 'size',
 	speed: 'speed',
@@ -18,7 +17,6 @@ const inletKeys = {
 const paramKeys = {
 	sizeAmount: 'sizeAmount',
 	speedAmount: 'speedAmount',
-	hue: 'hue',
 	rotationAmount: 'rotationAmount',
 	phaseOffsetAmount: 'phaseOffsetAmount',
 	shape: 'shape',
@@ -37,7 +35,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 
 	inlets: {
 		keys: [
-			inletKeys.hue,
 			inletKeys.size,
 			inletKeys.speed,
 			inletKeys.shape,
@@ -45,7 +42,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			inletKeys.phaseOffset,
 		],
 		associatedParameters: {
-			[inletKeys.hue]: paramKeys.hue,
 			[inletKeys.size]: paramKeys.sizeAmount,
 			[inletKeys.speed]: paramKeys.speedAmount,
 			[inletKeys.shape]: paramKeys.shape,
@@ -56,7 +52,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 
 	parameters: {
 		keys: [
-			paramKeys.hue,
 			paramKeys.sizeAmount,
 			paramKeys.speedAmount,
 			paramKeys.shape,
@@ -67,7 +62,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			[paramKeys.sizeAmount]: 0.5,
 			[paramKeys.speedAmount]: 0.5,
 			[paramKeys.shape]: 0,
-			[paramKeys.hue]: 1,
 			[paramKeys.rotationAmount]: 0,
 			[paramKeys.phaseOffsetAmount]: 0,
 		}
@@ -101,10 +95,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 				nodeKey: nodeKeys.scanlines,
 				inletKey: Scanlines.inletKeys.rotation,
 			}],
-			[inletKeys.hue]: [{
-				nodeKey: nodeKeys.periodic,
-				inletKey: Periodic.inletKeys.hue,
-			}],
 			[inletKeys.phaseOffset]: [{
 				nodeKey: nodeKeys.periodic,
 				inletKey: Periodic.inletKeys.phaseOffset,
@@ -116,7 +106,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 				[Periodic.parameterKeys.input]: 1,
 				[Periodic.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
 				[Periodic.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
-				[Periodic.parameterKeys.hue]: params[paramKeys.hue],
 				[Periodic.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
 				[Periodic.parameterKeys.shape]: params[paramKeys.shape],
 			},

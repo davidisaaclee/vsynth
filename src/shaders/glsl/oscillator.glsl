@@ -10,9 +10,6 @@ uniform vec2 inputTextureDimensions;
 uniform sampler2D inputTexture;
 uniform float inputAmount;
 
-uniform sampler2D hue;
-uniform float hueAmount;
-
 // Size of the waves created by the oscillator
 // (Corresponds to the integral harmonic of the frequency.)
 uniform sampler2D waveSize;
@@ -31,12 +28,6 @@ uniform float phaseOffsetTextureAmount;
 // wave shape: 0 = sine, 0.5 = triangle, 1 = sawtooth
 uniform sampler2D shape;
 uniform float shapeAmount;
-
-vec3 hsv2rgb(vec3 c) {
-	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
 
 float calculateFrequency(vec2 textureSamplePoint) {
 	float waveSizeSample = sampleTex(
@@ -104,11 +95,7 @@ void main() {
 
 	float z = mix(sine, triangle, clamp(sampledShape, 0., 0.5) * 2.);
 
-
-	float sampledHue =
-		sampleTex(hue, textureSamplePoint, hueAmount);
-
 	gl_FragColor = vec4(
-			hsv2rgb(vec3(sampledHue, 1., 1.)) * vec3(z),
+			vec3(z),
 			1);
 }

@@ -3,7 +3,6 @@ import shaderSource from '../../shaders/oscillator.generated';
 
 export const parameterKeys = {
 	input: 'input',
-	hue: 'hue',
 	shape: 'shape',
 	waveSizeAmount: 'harmonics amount',
 	speedAmount: 'inharmonics amount',
@@ -12,7 +11,6 @@ export const parameterKeys = {
 
 export const inletKeys = {
 	input: 'input',
-	hue: 'hue',
 	waveSize: 'harmonics',
 	speed: 'inharmonics',
 	shape: 'shape',
@@ -31,7 +29,6 @@ export const periodic: VideoModule<ShaderModule> = {
 			[parameterKeys.input]: 1,
 			[parameterKeys.waveSizeAmount]: 1,
 			[parameterKeys.speedAmount]: 1,
-			[parameterKeys.hue]: 1,
 			[parameterKeys.shape]: 0,
 			[parameterKeys.phaseOffsetAmount]: 0,
 		}
@@ -40,7 +37,6 @@ export const periodic: VideoModule<ShaderModule> = {
 	inlets: {
 		keys: [
 			inletKeys.input,
-			inletKeys.hue,
 			inletKeys.waveSize,
 			inletKeys.speed,
 			inletKeys.shape,
@@ -49,7 +45,6 @@ export const periodic: VideoModule<ShaderModule> = {
 
 		associatedParameters: {
 			[inletKeys.input]: parameterKeys.input,
-			[inletKeys.hue]: parameterKeys.hue,
 			[inletKeys.waveSize]: parameterKeys.waveSizeAmount,
 			[inletKeys.speed]: parameterKeys.speedAmount,
 			[inletKeys.shape]: parameterKeys.shape,
@@ -90,15 +85,10 @@ export const periodic: VideoModule<ShaderModule> = {
 				type: 'f',
 				data: values[parameterKeys.phaseOffsetAmount]
 			},
-			hueAmount: {
-				type: 'f',
-				data: values[parameterKeys.hue]
-			},
 		}),
 
 		inletsToUniforms: {
 			[inletKeys.input]: 'inputTexture',
-			[inletKeys.hue]: 'hue',
 			[inletKeys.waveSize]: 'waveSize',
 			[inletKeys.speed]: 'speed',
 			[inletKeys.shape]: 'shape',
