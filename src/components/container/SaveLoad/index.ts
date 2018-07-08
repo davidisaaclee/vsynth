@@ -28,15 +28,31 @@ class SaveLoad extends React.Component<Props, State> {
 		fileText: this.props.initialText,
 	}
 
+	private textareaElement: HTMLTextAreaElement | null;
+
 	public render() {
 		const { load } = this.props;
 		const { fileText } = this.state;
 
 		return e(C.Container,
 			{},
-			e(C.Toolbar, { onClickLoad: () => load(fileText) }),
+			e(C.Toolbar,
+				{
+					onClickLoad: () => {
+						load(fileText);
+					},
+					onClickCopy: () => {
+						if (this.textareaElement == null) {
+							return;
+						}
+
+						this.textareaElement.select();
+						document.execCommand('copy');
+					},
+				}),
 			e(C.FileText,
 				{
+					innerRef: this.textareaRef,
 					text: fileText,
 					onChange: (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
 						const fileText = evt.currentTarget.value;
@@ -46,6 +62,12 @@ class SaveLoad extends React.Component<Props, State> {
 						}));
 					}
 				}));
+	}
+
+	private textareaRef = (textarea: HTMLTextAreaElement | null) => {
+		if (this.textareaElement !== textarea) {
+			this.textareaElement = textarea;
+		}
 	}
 }
 

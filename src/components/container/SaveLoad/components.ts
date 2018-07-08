@@ -10,12 +10,16 @@ export const Container = styled.div`
 `;
 
 interface ToolbarProps {
+	onClickCopy: () => any;
 	onClickLoad: () => any;
 }
 
-export const Toolbar: React.StatelessComponent<ToolbarProps> = ({ onClickLoad }) => (
+export const Toolbar: React.StatelessComponent<ToolbarProps> = ({ onClickLoad, onClickCopy }) => (
 	e('div',
 		{},
+		e('button',
+			{ onClick: onClickCopy },
+			'Copy'),
 		e('button',
 			{ onClick: onClickLoad },
 			'Load')));
