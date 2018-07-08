@@ -5,7 +5,7 @@
 
 import {
 	entries, flatMap, isEqual, isEqualWith,
-	after, memoize,
+	after
 } from 'lodash';
 import * as Graph from '@davidisaaclee/graph';
 import {
@@ -244,7 +244,8 @@ function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): Si
 }
 
 const flattenSimpleVideoGraph =
-	memoize(_flattenSimpleVideoGraph, (_, editHash) => editHash);
+	// memoize(_flattenSimpleVideoGraph, (_, editHash) => editHash);
+	_flattenSimpleVideoGraph;
 
 function transformAllGraphKeys<N, E>(
 	graph: Graph.Graph<N, E>,
@@ -318,7 +319,8 @@ function _videoGraphFromFlattenedVideoGraph(
 }
 
 const videoGraphFromFlattenedVideoGraph =
-	memoize(_videoGraphFromFlattenedVideoGraph, (_, editHash) => editHash);
+	// memoize(_videoGraphFromFlattenedVideoGraph, (_, editHash) => editHash);
+	_videoGraphFromFlattenedVideoGraph;
 
 export function videoGraphFromSimpleVideoGraph(
 	graph: SimpleVideoGraph,
