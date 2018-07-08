@@ -4,3 +4,6 @@ export function downloadBlob(blob: Blob, filename: string, downloadLink: HTMLAnc
 	downloadLink.click();
 }
 
+export const isDownloadSupported: boolean =
+	(() => document.createElement('a').download != null)();
+

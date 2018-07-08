@@ -108,3 +108,11 @@ export const FileText = styled.textarea.attrs<FileTextProps>({
 	}
 `;
 
+export const SavingUnsupportedWarning = styled.div`
+	color: red;
+	background-color: black;
+	padding: 1em;
+
+	text-align: center;
+`;
+

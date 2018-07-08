@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { State as RootState } from '../../../modules';
 import * as Document from '../../../modules/document';
 import { documentDecoder } from '../../../model/Coding';
-import { downloadBlob } from '../../../utility/downloadBlob';
+import { downloadBlob, isDownloadSupported } from '../../../utility/downloadBlob';
 import * as C from './components';
 import * as selectors from './selectors';
 
@@ -37,6 +37,9 @@ class SaveLoad extends React.Component<Props, State> {
 
 		return e(C.Container,
 			{},
+			!isDownloadSupported && e(C.SavingUnsupportedWarning,
+				{},
+				'Saving as a file may not be supported on your device.'),
 			e(C.TextContainer,
 				{
 					style: {
