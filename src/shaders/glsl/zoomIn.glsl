@@ -19,7 +19,7 @@ void main() {
 		sampleTex(scaleTexture, uv, scaleAmount);
 
 	vec2 uvFromCenter = uv - vec2(0.5);
-	vec2 scaledUVFromCenter = uvFromCenter * 1. / (1. + scaleAmount);
+	vec2 scaledUVFromCenter = uvFromCenter * 1. / (1. + scaleSample);
 	vec2 scaledUV = scaledUVFromCenter + vec2(0.5);
 
 	gl_FragColor =
