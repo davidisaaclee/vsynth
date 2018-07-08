@@ -3,6 +3,7 @@ import { createSelector, Selector } from 'reselect';
 import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from './index';
 import { SimpleVideoGraph, VideoNode } from '../model/SimpleVideoGraph';
+import { ModuleConfigurationType } from '../model/VideoModule';
 import * as Kit from '../model/Kit';
 import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
@@ -58,13 +59,13 @@ const nodes = createSelector(
 		// Write uniforms to node from merged parameters.
 		// TODO: There's probably a better place for this.
 		const videoModule = Kit.moduleForNode(node);
-		if (retval.nodeType === 'shader') {
-			if (videoModule.details.type !== 'shader') {
+		if (retval.details.nodeType === ModuleConfigurationType.shader) {
+			if (videoModule.details.type !== ModuleConfigurationType.shader) {
 				throw new Error("Mismatched node and module types");
 			}
 
-			retval.uniforms = {
-				...retval.uniforms,
+			retval.details.uniforms = {
+				...retval.details.uniforms,
 				...videoModule.details.parametersToUniforms(retval.parameters)
 			};
 		}

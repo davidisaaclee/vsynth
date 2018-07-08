@@ -23,20 +23,20 @@ export interface InletSpecification {
 	inlet: string;
 }
 
-export type VideoNode = {
-	parameters: Record<string, number>,
-} & (
-	({ nodeType: ModuleConfigurationType.subgraph } & SubgraphNode)
-	| ({ nodeType: ModuleConfigurationType.shader } & ShaderNode)
-);
+export interface VideoNode {
+	parameters: Record<string, number>;
+	details: SubgraphNode | ShaderNode;
+}
 
 export interface SubgraphNode {
+	nodeType: ModuleConfigurationType.subgraph;
 	type: Kit.SubgraphModuleType;
 	subgraph: SimpleVideoGraph;
 	outputNodeKey: string;
 }
 
 export interface ShaderNode {
+	nodeType: ModuleConfigurationType.shader;
 	type: Kit.ShaderModuleType;
 	uniforms: Record<string, UniformValue>;
 }
@@ -63,10 +63,12 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 		const uniforms =
 			mod.details.parametersToUniforms(parameters);
 		return {
-			nodeType: ModuleConfigurationType.shader,
-			type: moduleType as Kit.ShaderModuleType,
 			parameters,
-			uniforms
+			details: {
+				nodeType: ModuleConfigurationType.shader,
+				type: moduleType as Kit.ShaderModuleType,
+				uniforms
+			}
 		};
 	} else {
 		const { graph: graphSpec, outputNodeKey } =
@@ -84,11 +86,13 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 			videoModuleSpecFromModuleType);
 
 		return {
-			nodeType: ModuleConfigurationType.subgraph,
-			type: moduleType as Kit.SubgraphModuleType,
-			subgraph: outputSubgraph,
-			outputNodeKey,
-			parameters
+			parameters,
+			details: {
+				nodeType: ModuleConfigurationType.subgraph,
+				type: moduleType as Kit.SubgraphModuleType,
+				subgraph: outputSubgraph,
+				outputNodeKey,
+			}
 		};
 	}
 
@@ -108,10 +112,10 @@ function flattenOutlet(
 		throw new Error('No such node');
 	} 
 
-	if (node.nodeType === ModuleConfigurationType.shader) {
+	if (node.details.nodeType === ModuleConfigurationType.shader) {
 		return outlet;
 	} else {
-		const r = flattenOutlet({ nodeKey: node.outputNodeKey }, node.subgraph);
+		const r = flattenOutlet({ nodeKey: node.details.outputNodeKey }, node.details.subgraph);
 		return {
 			...r,
 			nodeKey: namespaceNodeKey(outlet.nodeKey, r.nodeKey)
@@ -129,18 +133,22 @@ function flattenInlet(
 		throw new Error('No such node');
 	} 
 
-	if (node.nodeType === ModuleConfigurationType.shader) {
+	if (node.details.nodeType === ModuleConfigurationType.shader) {
 		return [inlet];
-	} else {
-		const videoModule = Kit.subgraphModules[node.type];
+	} else if (node.details.nodeType === ModuleConfigurationType.subgraph) {
+		const subgraphDetails: SubgraphNode = node.details;
+		const videoModule = Kit.subgraphModules[subgraphDetails.type];
 		const flattened = flatMap(
 			videoModule.details.inletsToSubInlets[inlet.inletKey],
-			subinlet => flattenInlet(subinlet, node.subgraph));
+			subinlet => flattenInlet(subinlet, subgraphDetails.subgraph));
 
 		return flattened.map(flattenedInlet => ({
 			...flattenedInlet,
 			nodeKey: namespaceNodeKey(inlet.nodeKey, flattenedInlet.nodeKey)
 		}));
+	} else {
+		// TODO: This is because of the way that the tagged union works :(
+		throw new Error("Invalid node type");
 	}
 }
 
@@ -150,10 +158,10 @@ function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): Si
 
 	// Flatten and insert all nodes.
 	result = entries(Graph.allNodes(graph)).reduce((acc, [nodeKey, node]) => {
-		if (node.nodeType === ModuleConfigurationType.shader) {
+		if (node.details.nodeType === ModuleConfigurationType.shader) {
 			return Graph.insertNode(acc, node, nodeKey);
 		} else {
-			const videoModule = Kit.subgraphModules[node.type];
+			const videoModule = Kit.subgraphModules[node.details.type];
 
 			// Build dictionary of parameters to pass to children.
 			const subparameters = videoModule.details.parametersToSubParameters(node.parameters);
@@ -163,23 +171,26 @@ function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): Si
 			// by their non-namespaced keys.
 			const subgraphWithUpdatedParameters = entries(subparameters).reduce(
 				(subgraph, [nodeKey, paramsFromParent]) => (
-					Graph.mutateNode(subgraph, nodeKey, node => {
+					Graph.mutateNode(subgraph, nodeKey, (node): VideoNode => {
 						const parameters = {
 							...node.parameters,
 							...paramsFromParent
 						};
 
-						if (node.nodeType === ModuleConfigurationType.shader) {
+						if (node.details.nodeType === ModuleConfigurationType.shader) {
 							// TODO: This should probably be unified with non-subgraphs
 							const uniforms = {
-								...node.uniforms,
-								...Kit.shaderModules[node.type].details.parametersToUniforms(parameters)
+								...node.details.uniforms,
+								...Kit.shaderModules[node.details.type].details.parametersToUniforms(parameters)
 							};
 
 							return {
 								...node,
 								parameters,
-								uniforms
+								details: {
+									...node.details,
+									uniforms,
+								}
 							};
 						} else {
 							return {
@@ -189,7 +200,7 @@ function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): Si
 						}
 					})
 				),
-				node.subgraph);
+				node.details.subgraph);
 
 			// Recursively flatten the subgraph.
 			const flattenedSubgraph =
@@ -254,21 +265,21 @@ function _videoGraphFromFlattenedVideoGraph(
 	gl: WebGLRenderingContext
 ): VideoGraph {
 	const result = entries(Graph.allNodes(flattenedGraph)).reduce((result, [nodeKey, node]) => {
-		const runtimeModule = runtime[node.type];
+		const runtimeModule = runtime[node.details.type];
 		const videoModule = Kit.moduleForNode(node);
 
 		if (runtimeModule == null) {
-			throw new Error(`No runtime found for module type: ${node.type}`);
+			throw new Error(`No runtime found for module type: ${node.details.type}`);
 		}
 		if (videoModule == null) {
-			throw new Error(`No module configuration found for module type: ${node.type}`);
+			throw new Error(`No module configuration found for module type: ${node.details.type}`);
 		}
 
 		if (videoModule.details.type !== ModuleConfigurationType.shader) {
 			throw new Error("Attempted to render a non-flattened graph.");
 		}
 
-		if (node.nodeType !== ModuleConfigurationType.shader) {
+		if (node.details.nodeType !== ModuleConfigurationType.shader) {
 			throw new Error("Mismatched node and module types");
 		}
 
@@ -276,7 +287,7 @@ function _videoGraphFromFlattenedVideoGraph(
 			...runtimeModule,
 			uniforms: {
 				...uniformValuesToSpec(videoModule.details.defaultUniforms(gl)),
-				...uniformValuesToSpec(node.uniforms),
+				...uniformValuesToSpec(node.details.uniforms),
 			},
 		}, nodeKey);
 	}, Graph.empty());
@@ -287,7 +298,7 @@ function _videoGraphFromFlattenedVideoGraph(
 		const videoModule = Kit.moduleForNode(inletNode);
 
 		if (videoModule == null) {
-			throw new Error(`No module configuration found for module type: ${Graph.nodeForKey(flattenedGraph, inletNodeKey)!.type}`);
+			throw new Error(`No module configuration found for module type: ${Graph.nodeForKey(flattenedGraph, inletNodeKey)!.details.type}`);
 		}
 
 		if (videoModule.details.type !== ModuleConfigurationType.shader) {

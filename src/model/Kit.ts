@@ -20,7 +20,7 @@ import { ramp } from './modules/ramp';
 import { crossBlur } from './modules/crossBlur';
 import { multipassBlur } from './modules/multipassBlur';
 
-import { VideoModule, ShaderModule, SubgraphModule } from './VideoModule';
+import { VideoModule, ShaderModule, SubgraphModule, ModuleConfigurationType } from './VideoModule';
 import { VideoNode } from './SimpleVideoGraph';
 
 export enum SubgraphModuleType {
@@ -104,10 +104,10 @@ export function moduleForType(moduleType: ModuleType): VideoModule<ShaderModule 
 
 
 export function moduleForNode(node: VideoNode): VideoModule<ShaderModule | SubgraphModule> {
-	if (node.nodeType === 'subgraph') {
-		return subgraphModules[node.type];
+	if (node.details.nodeType === ModuleConfigurationType.subgraph) {
+		return subgraphModules[node.details.type];
 	} else {
-		return shaderModules[node.type];
+		return shaderModules[node.details.type];
 	}
 }
 
