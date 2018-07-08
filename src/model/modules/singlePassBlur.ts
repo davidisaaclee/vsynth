@@ -1,4 +1,4 @@
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 import shaderSource from '../../shaders/gaussianBlur.generated';
 
 export const parameterKeys = {
@@ -45,7 +45,7 @@ export const singlePassBlur: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

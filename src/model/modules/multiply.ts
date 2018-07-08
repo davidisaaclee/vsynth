@@ -1,5 +1,5 @@
 import { glsl } from '@davidisaaclee/video-graph';
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 
 export const parameterKeys = {
 	'a': 'a',
@@ -58,7 +58,7 @@ export const multiply: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

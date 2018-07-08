@@ -1,6 +1,6 @@
 import { merge, defaultTo } from 'lodash';
 import { UniformValue } from '@davidisaaclee/video-graph';
-import { VideoModule, ShaderModule } from '../model/VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../model/VideoModule';
 
 interface InletConfig {
 	key: string;
@@ -46,7 +46,7 @@ export default function mkShaderModule(shaderConfig: ShaderConfig): VideoModule<
 		},
 
 		details: {
-			type: 'shader',
+			type: ModuleConfigurationType.shader,
 			shaderSource,
 			defaultUniforms,
 			parametersToUniforms: values => (inlets

@@ -17,6 +17,7 @@ import * as Kit from './Kit';
 import { Outlet } from './Outlet';
 import { Inlet } from './Inlet';
 import { RuntimeModule } from './RuntimeModule';
+import { ModuleConfigurationType } from './VideoModule';
 
 export interface InletSpecification {
 	inlet: string;
@@ -25,8 +26,8 @@ export interface InletSpecification {
 export type VideoNode = {
 	parameters: Record<string, number>,
 } & (
-	({ nodeType: 'subgraph' } & SubgraphNode)
-	| ({ nodeType: 'shader' } & ShaderNode)
+	({ nodeType: ModuleConfigurationType.subgraph } & SubgraphNode)
+	| ({ nodeType: ModuleConfigurationType.shader } & ShaderNode)
 );
 
 export interface SubgraphNode {
@@ -58,11 +59,11 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 
 	const parameters = mod.parameters.defaultValues;
 
-	if (mod.details.type === 'shader') {
+	if (mod.details.type === ModuleConfigurationType.shader) {
 		const uniforms =
 			mod.details.parametersToUniforms(parameters);
 		return {
-			nodeType: 'shader',
+			nodeType: ModuleConfigurationType.shader,
 			type: moduleType as Kit.ShaderModuleType,
 			parameters,
 			uniforms
@@ -83,7 +84,7 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 			videoModuleSpecFromModuleType);
 
 		return {
-			nodeType: 'subgraph',
+			nodeType: ModuleConfigurationType.subgraph,
 			type: moduleType as Kit.SubgraphModuleType,
 			subgraph: outputSubgraph,
 			outputNodeKey,
@@ -107,7 +108,7 @@ function flattenOutlet(
 		throw new Error('No such node');
 	} 
 
-	if (node.nodeType === 'shader') {
+	if (node.nodeType === ModuleConfigurationType.shader) {
 		return outlet;
 	} else {
 		const r = flattenOutlet({ nodeKey: node.outputNodeKey }, node.subgraph);
@@ -128,7 +129,7 @@ function flattenInlet(
 		throw new Error('No such node');
 	} 
 
-	if (node.nodeType === 'shader') {
+	if (node.nodeType === ModuleConfigurationType.shader) {
 		return [inlet];
 	} else {
 		const videoModule = Kit.subgraphModules[node.type];
@@ -149,7 +150,7 @@ function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): Si
 
 	// Flatten and insert all nodes.
 	result = entries(Graph.allNodes(graph)).reduce((acc, [nodeKey, node]) => {
-		if (node.nodeType === 'shader') {
+		if (node.nodeType === ModuleConfigurationType.shader) {
 			return Graph.insertNode(acc, node, nodeKey);
 		} else {
 			const videoModule = Kit.subgraphModules[node.type];
@@ -168,7 +169,7 @@ function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): Si
 							...paramsFromParent
 						};
 
-						if (node.nodeType === 'shader') {
+						if (node.nodeType === ModuleConfigurationType.shader) {
 							// TODO: This should probably be unified with non-subgraphs
 							const uniforms = {
 								...node.uniforms,
@@ -263,11 +264,11 @@ function _videoGraphFromFlattenedVideoGraph(
 			throw new Error(`No module configuration found for module type: ${node.type}`);
 		}
 
-		if (videoModule.details.type !== 'shader') {
+		if (videoModule.details.type !== ModuleConfigurationType.shader) {
 			throw new Error("Attempted to render a non-flattened graph.");
 		}
 
-		if (node.nodeType !== 'shader') {
+		if (node.nodeType !== ModuleConfigurationType.shader) {
 			throw new Error("Mismatched node and module types");
 		}
 
@@ -289,7 +290,7 @@ function _videoGraphFromFlattenedVideoGraph(
 			throw new Error(`No module configuration found for module type: ${Graph.nodeForKey(flattenedGraph, inletNodeKey)!.type}`);
 		}
 
-		if (videoModule.details.type !== 'shader') {
+		if (videoModule.details.type !== ModuleConfigurationType.shader) {
 			throw new Error("Attempted to render a non-flattened graph.");
 		}
 

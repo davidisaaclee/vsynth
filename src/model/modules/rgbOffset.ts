@@ -1,5 +1,5 @@
 import shaderSource from '../../shaders/rgb-offset.generated';
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 
 export const parameterKeys = {
 	input: 'input',
@@ -50,7 +50,7 @@ export const rgbOffset: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

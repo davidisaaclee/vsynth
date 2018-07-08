@@ -1,4 +1,4 @@
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 import shaderSource from '../../shaders/modulo.generated';
 
 export const inletKeys = {
@@ -31,7 +31,7 @@ export const modulo: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

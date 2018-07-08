@@ -1,5 +1,5 @@
 import * as Graph from '@davidisaaclee/graph';
-import { VideoModule, SubgraphModule } from '../VideoModule';
+import { VideoModule, SubgraphModule, ModuleConfigurationType } from '../VideoModule';
 import * as SinglePassBlur from './singlePassBlur';
 
 export const parameterKeys = {
@@ -40,7 +40,7 @@ export const crossBlur: VideoModule<SubgraphModule> = {
 	},
 
 	details: {
-		type: 'subgraph',
+		type: ModuleConfigurationType.subgraph,
 
 		inletsToSubInlets: {
 			[inletKeys.input]: [{

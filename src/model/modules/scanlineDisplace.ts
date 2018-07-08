@@ -1,4 +1,4 @@
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 import shaderSource from '../../shaders/scanlineDisplace.generated';
 
 export const inletKeys = {
@@ -31,7 +31,7 @@ export const scanlineDisplace: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

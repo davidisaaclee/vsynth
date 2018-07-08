@@ -1,6 +1,6 @@
 import * as Graph from '@davidisaaclee/graph';
 import { InletSpecification } from '../SimpleVideoGraph';
-import { VideoModule, SubgraphModule } from '../VideoModule';
+import { VideoModule, SubgraphModule, ModuleConfigurationType } from '../VideoModule';
 import { ModuleType, ShaderModuleType } from '../Kit';
 import * as PhaseDelta from './phaseDelta';
 import * as AddFract from './addFract';
@@ -40,7 +40,7 @@ export const ramp: VideoModule<SubgraphModule> = {
 	},
 
 	details: {
-		type: 'subgraph',
+		type: ModuleConfigurationType.subgraph,
 
 		inletsToSubInlets: {
 			[inletKeys.speed]: [{

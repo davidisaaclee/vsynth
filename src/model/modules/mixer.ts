@@ -1,5 +1,5 @@
 import { glsl } from '@davidisaaclee/video-graph';
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 
 const shaderSource = glsl`
 	precision mediump float;
@@ -75,7 +75,7 @@ export const mixer: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

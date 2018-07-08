@@ -1,5 +1,5 @@
 import { glsl } from '@davidisaaclee/video-graph';
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 
 export const parameterKeys = {
 	speedAmount: 'speedAmount'
@@ -86,7 +86,7 @@ export const phaseDelta: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

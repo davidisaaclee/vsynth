@@ -4,6 +4,11 @@ import { Inlet } from './Inlet';
 import { InletSpecification } from './SimpleVideoGraph';
 import { ModuleType } from './Kit';
 
+export enum ModuleConfigurationType {
+	subgraph = 'subgraph',
+	shader = 'shader',
+}
+
 export type VideoModuleDetails = SubgraphModule | ShaderModule;
 
 /*
@@ -33,7 +38,7 @@ export interface VideoModule<Details extends VideoModuleDetails> {
 
 
 export interface SubgraphModule {
-	type: 'subgraph';
+	type: ModuleConfigurationType.subgraph;
 
 	// Maps a set of parameters from an instance of this module to a mapping from subnode key to a parameter set for that subnode
 	// :: Record<ParamKey, ParamValue> -> Record<NodeKey, Record<ParamKey, ParamValue>>
@@ -48,7 +53,7 @@ export interface SubgraphModule {
 }
 
 export interface ShaderModule {
-	type: 'shader';
+	type: ModuleConfigurationType.shader;
 
 	shaderSource: string;
 

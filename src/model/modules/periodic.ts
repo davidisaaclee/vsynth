@@ -1,4 +1,4 @@
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 import shaderSource from '../../shaders/oscillator.generated';
 
 export const parameterKeys = {
@@ -58,7 +58,7 @@ export const periodic: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource,
 

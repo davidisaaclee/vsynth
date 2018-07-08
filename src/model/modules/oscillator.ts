@@ -1,5 +1,5 @@
 import * as Graph from '@davidisaaclee/graph';
-import { VideoModule, SubgraphModule } from '../VideoModule';
+import { VideoModule, SubgraphModule, ModuleConfigurationType } from '../VideoModule';
 import { InletSpecification} from '../SimpleVideoGraph';
 import { SubgraphModuleType, ShaderModuleType, ModuleType } from '../Kit';
 import * as Periodic from './periodic';
@@ -72,7 +72,7 @@ export const oscillator: VideoModule<SubgraphModule> = {
 	},
 
 	details: {
-		type: 'subgraph',
+		type: ModuleConfigurationType.subgraph,
 
 		inletsToSubInlets: {
 			[inletKeys.size]: [

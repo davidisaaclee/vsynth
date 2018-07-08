@@ -1,4 +1,4 @@
-import { VideoModule, ShaderModule } from '../VideoModule';
+import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 import identityShader from '../../shaders/identity';
 
 export const identity: VideoModule<ShaderModule> = {
@@ -15,7 +15,7 @@ export const identity: VideoModule<ShaderModule> = {
 	},
 
 	details: {
-		type: 'shader',
+		type: ModuleConfigurationType.shader,
 
 		shaderSource: identityShader,
 
