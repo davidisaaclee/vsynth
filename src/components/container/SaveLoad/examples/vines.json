@@ -1,0 +1,544 @@
+{
+  "version": 0,
+  "editHash": 79,
+  "nodeKeySeed": 7,
+  "nodes": {
+    "output": {
+      "parameters": {},
+      "details": {
+        "nodeType": "shader",
+        "type": "identity",
+        "uniforms": {}
+      }
+    },
+    "default-constant": {
+      "parameters": {
+        "value": 1
+      },
+      "details": {
+        "nodeType": "shader",
+        "type": "constant",
+        "uniforms": {
+          "value": {
+            "type": "3f",
+            "data": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "oscillator-0": {
+      "parameters": {
+        "sizeAmount": 0.8882457386363637,
+        "speedAmount": 0.5001036451831852,
+        "shape": 0,
+        "hue": 0.5467329545454547,
+        "rotationAmount": 0.24559659090909086,
+        "phaseOffsetAmount": 0.2705610795454547
+      },
+      "details": {
+        "nodeType": "subgraph",
+        "type": "oscillator",
+        "subgraph": {
+          "_nodes": {
+            "periodic": {
+              "parameters": {
+                "input": 1,
+                "harmonics amount": 0.11175426136363631,
+                "inharmonics amount": 0.5001036451831852,
+                "hue": 0.5467329545454547,
+                "shape": 0,
+                "phase offset amount": 0.2705610795454547
+              },
+              "details": {
+                "nodeType": "shader",
+                "type": "periodic",
+                "uniforms": {
+                  "inputAmount": {
+                    "type": "f",
+                    "data": 1
+                  },
+                  "waveSizeAmount": {
+                    "type": "f",
+                    "data": 0.11175426136363631
+                  },
+                  "speedAmount": {
+                    "type": "f",
+                    "data": 0.5001036451831852
+                  },
+                  "shapeAmount": {
+                    "type": "f",
+                    "data": 0
+                  },
+                  "phaseOffsetTextureAmount": {
+                    "type": "f",
+                    "data": 0.2705610795454547
+                  },
+                  "hueAmount": {
+                    "type": "f",
+                    "data": 0.5467329545454547
+                  }
+                }
+              }
+            },
+            "ramp": {
+              "parameters": {
+                "speed": 0.0001036451831851748
+              },
+              "details": {
+                "nodeType": "subgraph",
+                "type": "ramp",
+                "subgraph": {
+                  "_nodes": {
+                    "addFract": {
+                      "parameters": {
+                        "a": 1,
+                        "b": 1
+                      },
+                      "details": {
+                        "nodeType": "shader",
+                        "type": "addFract",
+                        "uniforms": {
+                          "leftAmount": {
+                            "type": "f",
+                            "data": 1
+                          },
+                          "rightAmount": {
+                            "type": "f",
+                            "data": 1
+                          }
+                        }
+                      }
+                    },
+                    "phaseDelta": {
+                      "parameters": {
+                        "speedAmount": 0.0000518225915925874
+                      },
+                      "details": {
+                        "nodeType": "shader",
+                        "type": "phaseDelta",
+                        "uniforms": {
+                          "speedAmount": {
+                            "type": "f",
+                            "data": 0.0000518225915925874
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "_edges": {
+                    "phaseDelta -> addFract.a": {
+                      "src": "addFract",
+                      "dst": "phaseDelta",
+                      "metadata": {
+                        "inlet": "a"
+                      }
+                    },
+                    "addFract -> addFract.b": {
+                      "src": "addFract",
+                      "dst": "addFract",
+                      "metadata": {
+                        "inlet": "b"
+                      }
+                    }
+                  }
+                },
+                "outputNodeKey": "addFract"
+              }
+            },
+            "scanlines": {
+              "parameters": {
+                "rotation amount": 0.24559659090909086,
+                "phase offset amount": 1,
+                "dither amount": 0
+              },
+              "details": {
+                "nodeType": "shader",
+                "type": "scanlines",
+                "uniforms": {
+                  "rotationAmount": {
+                    "type": "f",
+                    "data": 0.24559659090909086
+                  },
+                  "phaseOffsetTextureAmount": {
+                    "type": "f",
+                    "data": 1
+                  },
+                  "ditherAmount": {
+                    "type": "f",
+                    "data": 0
+                  }
+                }
+              }
+            }
+          },
+          "_edges": {
+            "ramp -> scanlines.phaseOffset": {
+              "dst": "ramp",
+              "src": "scanlines",
+              "metadata": {
+                "inlet": "phaseOffset"
+              }
+            },
+            "scanlines -> oscillator.input": {
+              "dst": "scanlines",
+              "src": "periodic",
+              "metadata": {
+                "inlet": "input"
+              }
+            }
+          }
+        },
+        "outputNodeKey": "periodic"
+      }
+    },
+    "oscillator-1": {
+      "parameters": {
+        "sizeAmount": 0.7817116477272728,
+        "speedAmount": 0.5342713553311538,
+        "shape": 0,
+        "hue": 1,
+        "rotationAmount": 0,
+        "phaseOffsetAmount": 0.4579988944772883
+      },
+      "details": {
+        "nodeType": "subgraph",
+        "type": "oscillator",
+        "subgraph": {
+          "_nodes": {
+            "periodic": {
+              "parameters": {
+                "input": 1,
+                "harmonics amount": 0.21828835227272725,
+                "inharmonics amount": 0.5342713553311538,
+                "hue": 1,
+                "shape": 0,
+                "phase offset amount": 0.4579988944772883
+              },
+              "details": {
+                "nodeType": "shader",
+                "type": "periodic",
+                "uniforms": {
+                  "inputAmount": {
+                    "type": "f",
+                    "data": 1
+                  },
+                  "waveSizeAmount": {
+                    "type": "f",
+                    "data": 0.21828835227272725
+                  },
+                  "speedAmount": {
+                    "type": "f",
+                    "data": 0.5342713553311538
+                  },
+                  "shapeAmount": {
+                    "type": "f",
+                    "data": 0
+                  },
+                  "phaseOffsetTextureAmount": {
+                    "type": "f",
+                    "data": 0.4579988944772883
+                  },
+                  "hueAmount": {
+                    "type": "f",
+                    "data": 1
+                  }
+                }
+              }
+            },
+            "ramp": {
+              "parameters": {
+                "speed": 0.034271355331153774
+              },
+              "details": {
+                "nodeType": "subgraph",
+                "type": "ramp",
+                "subgraph": {
+                  "_nodes": {
+                    "addFract": {
+                      "parameters": {
+                        "a": 1,
+                        "b": 1
+                      },
+                      "details": {
+                        "nodeType": "shader",
+                        "type": "addFract",
+                        "uniforms": {
+                          "leftAmount": {
+                            "type": "f",
+                            "data": 1
+                          },
+                          "rightAmount": {
+                            "type": "f",
+                            "data": 1
+                          }
+                        }
+                      }
+                    },
+                    "phaseDelta": {
+                      "parameters": {
+                        "speedAmount": 0.017135677665576887
+                      },
+                      "details": {
+                        "nodeType": "shader",
+                        "type": "phaseDelta",
+                        "uniforms": {
+                          "speedAmount": {
+                            "type": "f",
+                            "data": 0.017135677665576887
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "_edges": {
+                    "phaseDelta -> addFract.a": {
+                      "src": "addFract",
+                      "dst": "phaseDelta",
+                      "metadata": {
+                        "inlet": "a"
+                      }
+                    },
+                    "addFract -> addFract.b": {
+                      "src": "addFract",
+                      "dst": "addFract",
+                      "metadata": {
+                        "inlet": "b"
+                      }
+                    }
+                  }
+                },
+                "outputNodeKey": "addFract"
+              }
+            },
+            "scanlines": {
+              "parameters": {
+                "rotation amount": 0,
+                "phase offset amount": 1,
+                "dither amount": 0
+              },
+              "details": {
+                "nodeType": "shader",
+                "type": "scanlines",
+                "uniforms": {
+                  "rotationAmount": {
+                    "type": "f",
+                    "data": 0
+                  },
+                  "phaseOffsetTextureAmount": {
+                    "type": "f",
+                    "data": 1
+                  },
+                  "ditherAmount": {
+                    "type": "f",
+                    "data": 0
+                  }
+                }
+              }
+            }
+          },
+          "_edges": {
+            "ramp -> scanlines.phaseOffset": {
+              "dst": "ramp",
+              "src": "scanlines",
+              "metadata": {
+                "inlet": "phaseOffset"
+              }
+            },
+            "scanlines -> oscillator.input": {
+              "dst": "scanlines",
+              "src": "periodic",
+              "metadata": {
+                "inlet": "input"
+              }
+            }
+          }
+        },
+        "outputNodeKey": "periodic"
+      }
+    },
+    "periodic-3": {
+      "parameters": {
+        "input": 1,
+        "harmonics amount": 0.007705965909091006,
+        "inharmonics amount": 0.37149634107540974,
+        "hue": 1,
+        "shape": 0,
+        "phase offset amount": 0
+      },
+      "details": {
+        "nodeType": "shader",
+        "type": "periodic",
+        "uniforms": {
+          "inputAmount": {
+            "type": "f",
+            "data": 1
+          },
+          "waveSizeAmount": {
+            "type": "f",
+            "data": 0.007705965909091006
+          },
+          "speedAmount": {
+            "type": "f",
+            "data": 0.37149634107540974
+          },
+          "shapeAmount": {
+            "type": "f",
+            "data": 0
+          },
+          "phaseOffsetTextureAmount": {
+            "type": "f",
+            "data": 0
+          },
+          "hueAmount": {
+            "type": "f",
+            "data": 1
+          }
+        }
+      }
+    },
+    "ramp-4": {
+      "parameters": {
+        "speed": 0.006284369566358298
+      },
+      "details": {
+        "nodeType": "subgraph",
+        "type": "ramp",
+        "subgraph": {
+          "_nodes": {
+            "addFract": {
+              "parameters": {
+                "a": 1,
+                "b": 1
+              },
+              "details": {
+                "nodeType": "shader",
+                "type": "addFract",
+                "uniforms": {
+                  "leftAmount": {
+                    "type": "f",
+                    "data": 1
+                  },
+                  "rightAmount": {
+                    "type": "f",
+                    "data": 1
+                  }
+                }
+              }
+            },
+            "phaseDelta": {
+              "parameters": {
+                "speedAmount": 0.003142184783179149
+              },
+              "details": {
+                "nodeType": "shader",
+                "type": "phaseDelta",
+                "uniforms": {
+                  "speedAmount": {
+                    "type": "f",
+                    "data": 0.003142184783179149
+                  }
+                }
+              }
+            }
+          },
+          "_edges": {
+            "phaseDelta -> addFract.a": {
+              "src": "addFract",
+              "dst": "phaseDelta",
+              "metadata": {
+                "inlet": "a"
+              }
+            },
+            "addFract -> addFract.b": {
+              "src": "addFract",
+              "dst": "addFract",
+              "metadata": {
+                "inlet": "b"
+              }
+            }
+          }
+        },
+        "outputNodeKey": "addFract"
+      }
+    },
+    "+%-6": {
+      "parameters": {
+        "a": 0.3099431818181818,
+        "b": 0.3502130681818184
+      },
+      "details": {
+        "nodeType": "shader",
+        "type": "addFract",
+        "uniforms": {
+          "leftAmount": {
+            "type": "f",
+            "data": 0.3099431818181818
+          },
+          "rightAmount": {
+            "type": "f",
+            "data": 0.3502130681818184
+          }
+        }
+      }
+    }
+  },
+  "nodeOrder": [
+    "output",
+    "default-constant",
+    "oscillator-0",
+    "oscillator-1",
+    "periodic-3",
+    "ramp-4",
+    "+%-6"
+  ],
+  "inletConnections": {
+    "oscillator-0": {
+      "hue": 4,
+      "size": -1,
+      "speed": -1,
+      "shape": -1,
+      "rotation": -1,
+      "phaseOffset": 1
+    },
+    "output": {
+      "output": 0
+    },
+    "oscillator-1": {
+      "hue": -1,
+      "size": -1,
+      "speed": 3,
+      "shape": -1,
+      "rotation": -1,
+      "phaseOffset": 0
+    },
+    "periodic-3": {
+      "input": 2,
+      "hue": -1,
+      "harmonics": -1,
+      "inharmonics": -1,
+      "shape": -1,
+      "phase offset": -1
+    },
+    "ramp-4": {
+      "speed": -1
+    },
+    "+%-6": {
+      "a": 1,
+      "b": -1
+    }
+  },
+  "outletConnections": {
+    "default-constant": -1,
+    "output": -2,
+    "oscillator-0": 0,
+    "oscillator-1": 1,
+    "ramp-4": 2,
+    "periodic-3": 3,
+    "+%-6": 4
+  },
+  "busCount": 5
+}
