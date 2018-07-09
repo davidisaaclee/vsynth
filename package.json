@@ -34,6 +34,7 @@
     "deploy": "npm run build && npm run clean:gh-pages && npm run gh-pages-populate && sh ./scripts/deploy.sh",
     "deploy:patch": "npm run deploy patch",
     "deploy:minor": "npm run deploy minor",
+    "deploy:major": "npm run deploy major",
     "gh-pages-populate": "copyfiles 'build/**/*' gh-pages/ --up 1",
     "clean:gh-pages": "rimraf gh-pages/*",
     "clean:glslify": "rimraf ./src/shaders/*.generated.ts",
