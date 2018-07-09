@@ -105,7 +105,7 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			[nodeKeys.periodic]: {
 				[Periodic.parameterKeys.input]: 1,
 				[Periodic.parameterKeys.waveSizeAmount]: 1 - params[paramKeys.sizeAmount],
-				[Periodic.parameterKeys.speedAmount]: params[paramKeys.speedAmount],
+				[Periodic.parameterKeys.speedAmount]: 0,
 				[Periodic.parameterKeys.phaseOffsetAmount]: params[paramKeys.phaseOffsetAmount],
 				[Periodic.parameterKeys.shape]: params[paramKeys.shape],
 			},
