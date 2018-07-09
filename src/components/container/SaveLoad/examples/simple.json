@@ -1,6 +1,6 @@
 {
   "version": 0,
-  "editHash": 9,
+  "editHash": "581fce96-8993-4929-b5b3-495f74f9e7f2",
   "nodeKeySeed": 1,
   "nodes": {
     "output": {
@@ -32,12 +32,11 @@
     },
     "oscillator-0": {
       "parameters": {
-        "sizeAmount": 0.8399154243119267,
-        "speedAmount": 0.5023294151376146,
-        "shape": 0.8254305001367016,
-        "hue": 0.5902021215596331,
-        "rotationAmount": 0.12105791284403666,
-        "phaseOffsetAmount": 1
+        "sizeAmount": 0.8897727272727272,
+        "speedAmount": 0.5007740747841749,
+        "shape": 0.8694674457483033,
+        "rotationAmount": 0.07336647727272722,
+        "phaseOffsetAmount": 0
       },
       "details": {
         "nodeType": "subgraph",
@@ -47,11 +46,10 @@
             "periodic": {
               "parameters": {
                 "input": 1,
-                "harmonics amount": 0.16008457568807333,
-                "inharmonics amount": 0.5023294151376146,
-                "hue": 0.5902021215596331,
-                "shape": 0.8254305001367016,
-                "phase offset amount": 1
+                "harmonics amount": 0.11022727272727284,
+                "inharmonics amount": 0.5007740747841749,
+                "shape": 0.8694674457483033,
+                "phase offset amount": 0
               },
               "details": {
                 "nodeType": "shader",
@@ -63,30 +61,26 @@
                   },
                   "waveSizeAmount": {
                     "type": "f",
-                    "data": 0.16008457568807333
+                    "data": 0.11022727272727284
                   },
                   "speedAmount": {
                     "type": "f",
-                    "data": 0.5023294151376146
+                    "data": 0.5007740747841749
                   },
                   "shapeAmount": {
                     "type": "f",
-                    "data": 0.8254305001367016
+                    "data": 0.8694674457483033
                   },
                   "phaseOffsetTextureAmount": {
                     "type": "f",
-                    "data": 1
-                  },
-                  "hueAmount": {
-                    "type": "f",
-                    "data": 0.5902021215596331
+                    "data": 0
                   }
                 }
               }
             },
             "ramp": {
               "parameters": {
-                "speed": 0.0023294151376146432
+                "speed": 1.0015481495683498
               },
               "details": {
                 "nodeType": "subgraph",
@@ -115,7 +109,7 @@
                     },
                     "phaseDelta": {
                       "parameters": {
-                        "speedAmount": 0.0011647075688073216
+                        "speedAmount": 1.0015481495683498
                       },
                       "details": {
                         "nodeType": "shader",
@@ -123,7 +117,7 @@
                         "uniforms": {
                           "speedAmount": {
                             "type": "f",
-                            "data": 0.0011647075688073216
+                            "data": 1.0030962991366996
                           }
                         }
                       }
@@ -151,7 +145,7 @@
             },
             "scanlines": {
               "parameters": {
-                "rotation amount": 0.12105791284403666,
+                "rotation amount": 0.07336647727272722,
                 "phase offset amount": 1,
                 "dither amount": 0
               },
@@ -161,7 +155,7 @@
                 "uniforms": {
                   "rotationAmount": {
                     "type": "f",
-                    "data": 0.12105791284403666
+                    "data": 0.07336647727272722
                   },
                   "phaseOffsetTextureAmount": {
                     "type": "f",
@@ -203,11 +197,11 @@
   ],
   "inletConnections": {
     "oscillator-0": {
-      "hue": -1,
       "size": -1,
       "speed": -1,
       "shape": -1,
-      "rotation": -1
+      "rotation": -1,
+      "phaseOffset": -1
     },
     "output": {
       "output": 0
