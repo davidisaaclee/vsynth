@@ -1,6 +1,6 @@
 {
   "version": 0,
-  "editHash": "f7a8b366-945d-4727-8b16-31329eacce59",
+  "editHash": "f9bbbbd6-914f-49af-a0d4-06fb0a0da7ed",
   "nodeKeySeed": 8,
   "nodes": {
     "output": {
@@ -192,7 +192,7 @@
     "oscillator-1": {
       "parameters": {
         "sizeAmount": 0.7817116477272728,
-        "speedAmount": 0.5342713553311538,
+        "speedAmount": 0.5581426384049653,
         "shape": 0,
         "rotationAmount": 0,
         "phaseOffsetAmount": 0.4579988944772883
@@ -239,7 +239,7 @@
             },
             "ramp": {
               "parameters": {
-                "speed": 0.034271355331153774
+                "speed": 0.05814263840496525
               },
               "details": {
                 "nodeType": "subgraph",
@@ -268,7 +268,7 @@
                     },
                     "phaseDelta": {
                       "parameters": {
-                        "speedAmount": 0.017135677665576887
+                        "speedAmount": 0.029071319202482626
                       },
                       "details": {
                         "nodeType": "shader",
@@ -276,7 +276,7 @@
                         "uniforms": {
                           "speedAmount": {
                             "type": "f",
-                            "data": 0.017135677665576887
+                            "data": 0.029071319202482626
                           }
                         }
                       }
@@ -351,8 +351,8 @@
     "periodic-3": {
       "parameters": {
         "input": 1,
-        "harmonics amount": 0.007705965909091006,
-        "inharmonics amount": 0.37149634107540974,
+        "harmonics amount": 0.38312496032249876,
+        "inharmonics amount": 0,
         "shape": 0,
         "phase offset amount": 0
       },
@@ -366,11 +366,11 @@
           },
           "waveSizeAmount": {
             "type": "f",
-            "data": 0.007705965909091006
+            "data": 0.38312496032249876
           },
           "speedAmount": {
             "type": "f",
-            "data": 0.37149634107540974
+            "data": 0
           },
           "shapeAmount": {
             "type": "f",
@@ -385,7 +385,7 @@
     },
     "ramp-4": {
       "parameters": {
-        "speed": 0.006284369566358298
+        "speed": 0.002718945370322247
       },
       "details": {
         "nodeType": "subgraph",
@@ -414,7 +414,7 @@
             },
             "phaseDelta": {
               "parameters": {
-                "speedAmount": 0.003142184783179149
+                "speedAmount": 0.0013594726851611236
               },
               "details": {
                 "nodeType": "shader",
@@ -422,7 +422,7 @@
                 "uniforms": {
                   "speedAmount": {
                     "type": "f",
-                    "data": 0.003142184783179149
+                    "data": 0.0013594726851611236
                   }
                 }
               }
