@@ -80,8 +80,8 @@ void main() {
 	// should mod pixelIndex by 1, but guaranteed to be within 0-1
 	float p1 = duty;
 	float p2 = 1. - p1;
-	float m1 = 0.5 / p1;
-	float m2 = 0.5 / p2;
+	highp float m1 = 0.5 / p1;
+	highp float m2 = 0.5 / p2;
 	float x = mod((frequency * pixelIndex) + phaseOffsetFromTexture - 0.25, 1.);
 	float inFirstDuty = 1. - step(p1, x);
 
