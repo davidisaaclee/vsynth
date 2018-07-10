@@ -51,7 +51,8 @@ void main() {
 		texture2D(inputTexture, uv) * inputAmount;
 
 	vec3 hsv =
-		rgb2hsv(inputSample.rgb)
+		// HACK: Add small bias to hue so this can color the pure grayscale module outputs
+		rgb2hsv(inputSample.rgb + vec3(0.01, 0., 0.))
 		+ vec3(
 				hueSample,
 				saturationSample,
