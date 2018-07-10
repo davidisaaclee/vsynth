@@ -385,7 +385,7 @@
     },
     "ramp-4": {
       "parameters": {
-        "speed": 0.002718945370322247
+        "speed": 0.0005
       },
       "details": {
         "nodeType": "subgraph",
