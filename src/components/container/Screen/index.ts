@@ -8,6 +8,7 @@ import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, videoGraphFromSimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import { RuntimeModule, runtimeModuleFromShaderModule } from '../../../model/RuntimeModule';
 import * as Kit from '../../../model/Kit';
+import { TextureCache } from '../../../utility/textureCache';
 import * as selectors from './selectors';
 
 const e = React.createElement;
@@ -42,7 +43,7 @@ class Screen extends React.Component<Props, State> {
 
 	private gl: WebGLRenderingContext | null = null;
 	private modulesRuntime: Record<Kit.ShaderModuleType, RuntimeModule> | null = null;
-
+	private textureCache: TextureCache | null = null;
 
 	public componentDidMount() {
 		this.setState({
@@ -66,7 +67,6 @@ class Screen extends React.Component<Props, State> {
 			e(VideoGraphView,
 				{
 					realToCSSPixelRatio: 1,
-					cacheBufferSize: 2,
 					graph: ((this.gl == null || this.modulesRuntime == null)
 						? emptyGraph()
 						: videoGraphFromSimpleVideoGraph(
@@ -75,7 +75,12 @@ class Screen extends React.Component<Props, State> {
 							this.modulesRuntime,
 							this.gl)),
 					outputNodeKey,
-					runtimeUniforms: {},
+					getReadTextureForNode: (this.textureCache == null
+						? () => { throw new Error("Attempted to read texture before cache was initialized") }
+						: (key: string) => this.textureCache!.getReadTextureForNode(key, this.state.frameIndex)),
+					getWriteTextureForNode: (this.textureCache == null
+						? () => { throw new Error("Attempted to read texture before cache was initialized") }
+						: (key: string) => this.textureCache!.getWriteTextureForNode(key, this.state.frameIndex)),
 					glRef: this.onGLRef,
 					style: {
 						width: '100vw',
@@ -90,6 +95,9 @@ class Screen extends React.Component<Props, State> {
 		this.modulesRuntime = mapValues(
 			Kit.shaderModules,
 			shaderModule => runtimeModuleFromShaderModule(gl, shaderModule)) as Record<Kit.ShaderModuleType, RuntimeModule>;
+
+		this.textureCache = new TextureCache(gl);
+
 		this.forceUpdate();
 	}
 
