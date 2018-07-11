@@ -221,8 +221,6 @@ function mapStateToProps(state: RootState): StateProps {
 function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 	return {
 		makeAddModule: makeNodeKey => modType => {
-			console.log(modType);
-			console.log(makeNodeKey(modType));
 			dispatch(Document.actions.insertNode(
 				videoModuleSpecFromModuleType(modType),
 				makeNodeKey(modType)));

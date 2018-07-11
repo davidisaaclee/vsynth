@@ -76,10 +76,7 @@ const nodes = createSelector(
 export const nextNodeKey =
 	createSelector(
 		document,
-		d => (modType: Kit.ModuleType) => {
-			console.log(Kit.moduleForType(modType));
-			return `${Kit.moduleForType(modType)!.name}-${d.nodeKeySeed}`
-		});
+		d => (modType: Kit.ModuleType) => `${Kit.moduleForType(modType)!.name}-${d.nodeKeySeed}`);
 
 export const orderedNodes: Selector<RootState, Array<{ key: string, node: VideoNode }>> =
 	createSelector(
