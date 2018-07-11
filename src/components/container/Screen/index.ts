@@ -8,7 +8,7 @@ import { State as RootState } from '../../../modules';
 import { SimpleVideoGraph, videoGraphFromSimpleVideoGraph } from '../../../model/SimpleVideoGraph';
 import { RuntimeModule, runtimeModuleFromShaderModule } from '../../../model/RuntimeModule';
 import * as Kit from '../../../model/Kit';
-import { TextureCache } from '../../../utility/textureCache';
+import { resetSharedTextureCache, getSharedTextureCache } from '../../../utility/textureCache';
 import * as selectors from './selectors';
 
 const e = React.createElement;
@@ -43,7 +43,6 @@ class Screen extends React.Component<Props, State> {
 
 	private gl: WebGLRenderingContext | null = null;
 	private modulesRuntime: Record<Kit.ShaderModuleType, RuntimeModule> | null = null;
-	private textureCache: TextureCache | null = null;
 
 	public componentDidMount() {
 		this.setState({
@@ -62,6 +61,8 @@ class Screen extends React.Component<Props, State> {
 			...restProps
 		} = this.props;
 
+		const textureCache = getSharedTextureCache();
+
 		return e('div',
 			restProps,
 			e(VideoGraphView,
@@ -75,12 +76,12 @@ class Screen extends React.Component<Props, State> {
 							this.modulesRuntime,
 							this.gl)),
 					outputNodeKey,
-					getReadTextureForNode: (this.textureCache == null
+					getReadTextureForNode: (textureCache == null
 						? () => { throw new Error("Attempted to read texture before cache was initialized") }
-						: (key: string) => this.textureCache!.getReadTextureForNode(key, this.state.frameIndex)),
-					getWriteTextureForNode: (this.textureCache == null
+						: (key: string) => textureCache.getReadTextureForNode(key, this.state.frameIndex)),
+					getWriteTextureForNode: (textureCache == null
 						? () => { throw new Error("Attempted to read texture before cache was initialized") }
-						: (key: string) => this.textureCache!.getWriteTextureForNode(key, this.state.frameIndex)),
+						: (key: string) => textureCache.getWriteTextureForNode(key, this.state.frameIndex)),
 					glRef: this.onGLRef,
 					style: {
 						width: '100vw',
@@ -96,7 +97,7 @@ class Screen extends React.Component<Props, State> {
 			Kit.shaderModules,
 			shaderModule => runtimeModuleFromShaderModule(gl, shaderModule)) as Record<Kit.ShaderModuleType, RuntimeModule>;
 
-		this.textureCache = new TextureCache(gl);
+		resetSharedTextureCache(gl);
 
 		this.forceUpdate();
 	}

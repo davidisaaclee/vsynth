@@ -3,6 +3,7 @@ import { ActionType } from 'typesafe-actions';
 import * as uuid from 'uuid';
 import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVideoGraph';
 import * as Kit from '../../model/Kit';
+import { getSharedTextureCache } from '../../utility/textureCache';
 import * as Constants from './constants';
 import * as actions from './actions';
 import {
@@ -126,15 +127,30 @@ export const reducer = (state: State = initialState, action: RootAction) => {
 			}))(action.payload);
 
 		case Constants.RESET_ALL:
+			// TODO: Be more rigorous about side-effects.
+			// Missing a cache clear is bad; performing an unnecessary cache clear is not great.
+			clearCache();
+
 			return incrementEditHash({ ...initialState });
 
 		case Constants.LOAD_DOCUMENT:
+			// TODO: Be more rigorous about side-effects.
+			// Missing a cache clear is bad; performing an unnecessary cache clear is not great.
+			clearCache();
+
 			return action.payload;
 
 		default:
 			return state;
 	}
 };
+
+function clearCache() {
+	const cache = getSharedTextureCache();
+	if (cache != null) {
+		cache.clear();
+	}
+}
 
 function insertInletConnection(state: State, nodeKey: string, inletKey: string, busIndex: number): State {
 	return {
