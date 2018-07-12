@@ -53,7 +53,8 @@ const LaneRow = styled.tr<{ type: 'inlet' | 'outlet' }>`
 `;
 
 const LaneHeader = styled.th`
-	position: relative;
+	position: sticky;
+	left: 0;
 
 	text-align: right;
 	padding: 5px;
@@ -81,6 +82,9 @@ const StyledParameterControl = styled(ParameterControl)`
 
 export const BusHeader = styled.th`
 	min-width: 30px;
+
+	position: sticky;
+	top: 0;
 
 	${pinstripes}
 `;
