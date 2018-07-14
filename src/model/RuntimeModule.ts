@@ -8,6 +8,7 @@ import { VideoModule, ShaderModule } from './VideoModule';
 export interface RuntimeModule {
 	program: WebGLProgram;
 	uniformLocations: { [identifier: string]: WebGLUniformLocation };
+	attributeLocations: { [identifier: string]: number };
 }
 
 export function runtimeModuleFromShaderModule(
@@ -16,8 +17,11 @@ export function runtimeModuleFromShaderModule(
 ): RuntimeModule {
 	const program =
 		createProgramWithFragmentShader(gl, videoModule.details.shaderSource);
+
+	const { uniforms, attributes } = extract(gl, program);
+
 	const uniformIdentifiers =
-		extract(gl, program).uniforms.map(({ name }) => name);
+		uniforms.map(({ name }) => name);
 	const uniformLocations =
 		uniformIdentifiers.map(iden => {
 			const loc = gl.getUniformLocation(program, iden);
@@ -27,9 +31,22 @@ export function runtimeModuleFromShaderModule(
 			return { [iden]: loc };
 		}).reduce(merge, {});
 
+	const attributeIdentifiers =
+		attributes.map(({ name }) => name);
+	const attributeLocations =
+		attributeIdentifiers.map(iden => {
+			const loc = gl.getAttribLocation(program, iden);
+			if (loc == null) {
+				throw new Error(`Could not find attribute \`${iden}\`.`);
+			}
+			return { [iden]: loc };
+		}).reduce(merge, {});
+
+
 	return {
 		program,
-		uniformLocations
+		uniformLocations,
+		attributeLocations,
 	};
 }
 
