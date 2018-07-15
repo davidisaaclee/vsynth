@@ -129,6 +129,9 @@ const inletOutletLinks: Selector<RootState, Array<{ inlet: Inlet, outlet: Outlet
 					}
 				}
 
+				// TODO: It'd be nice to not have to call this twice.
+				initializeBusIndexIfNeeded(busIndex);
+
 				connectionsByBus[busIndex].inlets
 					.push({ nodeKey, inletKey });
 			}
