@@ -13,6 +13,7 @@ import { resizeCanvas } from '../../../utility/resizeCanvas';
 import * as selectors from './selectors';
 
 const e = React.createElement;
+const pixelRatio = 0.5;
 
 interface StateProps {
 	graph: SimpleVideoGraph;
@@ -73,7 +74,7 @@ class Screen extends React.Component<Props, State> {
 			restProps,
 			e(VideoGraphView,
 				{
-					realToCSSPixelRatio: 1,
+					realToCSSPixelRatio: pixelRatio,
 					graph: ((this.gl == null || this.modulesRuntime == null)
 						? emptyGraph()
 						: videoGraphFromSimpleVideoGraph(
@@ -130,7 +131,7 @@ class Screen extends React.Component<Props, State> {
 
 	private onResize = () => {
 		if (this.gl != null) {
-			resizeCanvas(this.gl.canvas, 1);
+			resizeCanvas(this.gl.canvas, pixelRatio);
 			this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 			const textureCache = getSharedTextureCache();
 			if (textureCache != null) {
