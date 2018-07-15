@@ -46,10 +46,10 @@
             "periodic": {
               "parameters": {
                 "input": 1,
-                "harmonics amount": 0.11175426136363631,
-                "inharmonics amount": 0,
+                "harmonics": 0.11175426136363631,
+                "inharmonics": 0,
                 "shape": 0,
-                "phase offset amount": 0.2705610795454547
+                "phaseOffset": 0.2705610795454547
               },
               "details": {
                 "nodeType": "shader",
@@ -160,10 +160,6 @@
                   "phaseOffsetTextureAmount": {
                     "type": "f",
                     "data": 1
-                  },
-                  "ditherAmount": {
-                    "type": "f",
-                    "data": 0
                   }
                 }
               }
@@ -205,10 +201,10 @@
             "periodic": {
               "parameters": {
                 "input": 1,
-                "harmonics amount": 0.21828835227272725,
-                "inharmonics amount": 0,
+                "harmonics": 0.21828835227272725,
+                "inharmonics": 0,
                 "shape": 0,
-                "phase offset amount": 0.4579988944772883
+                "phaseOffset": 0.4579988944772883
               },
               "details": {
                 "nodeType": "shader",
@@ -319,10 +315,6 @@
                   "phaseOffsetTextureAmount": {
                     "type": "f",
                     "data": 1
-                  },
-                  "ditherAmount": {
-                    "type": "f",
-                    "data": 0
                   }
                 }
               }
@@ -351,10 +343,10 @@
     "periodic-3": {
       "parameters": {
         "input": 1,
-        "harmonics amount": 0.38312496032249876,
-        "inharmonics amount": 0,
+        "harmonics": 0.38312496032249876,
+        "inharmonics": 0,
         "shape": 0,
-        "phase offset amount": 0
+        "phase offset": 0
       },
       "details": {
         "nodeType": "shader",

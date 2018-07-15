@@ -46,10 +46,10 @@
             "periodic": {
               "parameters": {
                 "input": 1,
-                "harmonics amount": 0.11022727272727284,
-                "inharmonics amount": 0.5007740747841749,
+                "harmonics": 0.11022727272727284,
+                "inharmonics": 0.5007740747841749,
                 "shape": 0.8694674457483033,
-                "phase offset amount": 0
+                "phaseOffset": 0
               },
               "details": {
                 "nodeType": "shader",
@@ -160,10 +160,6 @@
                   "phaseOffsetTextureAmount": {
                     "type": "f",
                     "data": 1
-                  },
-                  "ditherAmount": {
-                    "type": "f",
-                    "data": 0
                   }
                 }
               }

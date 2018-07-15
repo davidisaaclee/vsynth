@@ -47,10 +47,6 @@
           "phaseOffsetTextureAmount": {
             "type": "f",
             "data": 0.37506975446428603
-          },
-          "ditherAmount": {
-            "type": "f",
-            "data": 0
           }
         }
       }

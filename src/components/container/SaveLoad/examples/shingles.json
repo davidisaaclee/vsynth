@@ -46,10 +46,10 @@
             "periodic": {
               "parameters": {
                 "input": 1,
-                "harmonics amount": 0.14367897727272738,
-                "inharmonics amount": 0.50112546839771,
+                "harmonics": 0.14367897727272738,
+                "inharmonics": 0.50112546839771,
                 "shape": 1,
-                "phase offset amount": 0
+                "phaseOffset": 0
               },
               "details": {
                 "nodeType": "shader",
@@ -160,10 +160,6 @@
                   "phaseOffsetTextureAmount": {
                     "type": "f",
                     "data": 1
-                  },
-                  "ditherAmount": {
-                    "type": "f",
-                    "data": 0
                   }
                 }
               }
@@ -205,10 +201,10 @@
             "periodic": {
               "parameters": {
                 "input": 1,
-                "harmonics amount": 0.08803267045454544,
-                "inharmonics amount": 0.4980869400785943,
+                "harmonics": 0.08803267045454544,
+                "inharmonics": 0.4980869400785943,
                 "shape": 1,
-                "phase offset amount": 0
+                "phaseOffset": 0
               },
               "details": {
                 "nodeType": "shader",
@@ -319,10 +315,6 @@
                   "phaseOffsetTextureAmount": {
                     "type": "f",
                     "data": 1
-                  },
-                  "ditherAmount": {
-                    "type": "f",
-                    "data": 0
                   }
                 }
               }
