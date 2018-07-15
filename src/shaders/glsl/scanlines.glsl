@@ -20,8 +20,6 @@ vec2 rotate(vec2 v, float a, vec2 center) {
 }
 
 void main() {
-	float N_SCANLINES_RECIP = reciprocalInputTextureDimensions.y;
-
 	vec2 textureSamplePoint =
 		gl_FragCoord.xy * reciprocalInputTextureDimensions;
 
@@ -37,15 +35,10 @@ void main() {
 				theta,
 				inputTextureDimensions * 0.5);
 
-	highp vec2 uv =
-		position * reciprocalInputTextureDimensions;
+	highp float pixelIndex =
+		(position * reciprocalInputTextureDimensions).y;
 
 	gl_FragColor = vec4(
-			vec3(
-				fract(
-					uv.x * N_SCANLINES_RECIP
-					+ (uv.y - mod(uv.y, N_SCANLINES_RECIP))
-					+ phaseOffsetFromTexture)
-				),
+			vec3(fract(pixelIndex + phaseOffsetFromTexture)),
 			1.);
 }
