@@ -22,6 +22,12 @@ Modal.setAppElement('#root');
 
 const e = React.createElement;
 
+const StyledScreen = styled(Screen)`
+	display: block;
+	width: 100vw;
+	height: 100vh;
+`;
+
 const StyledBusRouter = styled(BusRouter)`
 	display: inline;
 `;
@@ -126,7 +132,7 @@ class Editor extends React.Component<Props, State> {
 				attach: window,
 			},
 			e('div', {},
-				e(Screen,
+				e(StyledScreen,
 					{
 						onClick: this.showMatrix
 					}),

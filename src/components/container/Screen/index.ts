@@ -74,6 +74,11 @@ class Screen extends React.Component<Props, State> {
 			restProps,
 			e(VideoGraphView,
 				{
+					style: {
+						width: '100%',
+						height: '100%',
+						display: 'block'
+					},
 					realToCSSPixelRatio: pixelRatio,
 					graph: ((this.gl == null || this.modulesRuntime == null)
 						? emptyGraph()
@@ -90,11 +95,6 @@ class Screen extends React.Component<Props, State> {
 						? () => { throw new Error("Attempted to read texture before cache was initialized") }
 						: (key: string) => textureCache.getWriteTextureForNode(key, this.state.frameIndex)),
 					glRef: this.onGLRef,
-					style: {
-						width: '100vw',
-						height: '100vh',
-						display: 'block'
-					}
 				}));
   }
 
