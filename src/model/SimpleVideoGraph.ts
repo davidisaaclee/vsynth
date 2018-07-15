@@ -152,6 +152,8 @@ function flattenInlet(
 	}
 }
 
+const shouldMemoizeGraphConversion = false;
+
 // Converts each subgraph node to a set of connected shader nodes.
 function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): SimpleVideoGraph {
 	let result = Graph.empty();
@@ -244,7 +246,9 @@ function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): Si
 }
 
 const flattenSimpleVideoGraph =
-	memoize(_flattenSimpleVideoGraph, (_, editHash) => editHash);
+	shouldMemoizeGraphConversion
+	? memoize(_flattenSimpleVideoGraph, (_, editHash) => editHash)
+	: _flattenSimpleVideoGraph;
 
 function transformAllGraphKeys<N, E>(
 	graph: Graph.Graph<N, E>,
@@ -318,7 +322,9 @@ function _videoGraphFromFlattenedVideoGraph(
 }
 
 const videoGraphFromFlattenedVideoGraph =
-	memoize(_videoGraphFromFlattenedVideoGraph, (_, editHash) => editHash);
+	shouldMemoizeGraphConversion
+	? memoize(_videoGraphFromFlattenedVideoGraph, (_, editHash) => editHash)
+	: _videoGraphFromFlattenedVideoGraph;
 
 export function videoGraphFromSimpleVideoGraph(
 	graph: SimpleVideoGraph,
