@@ -152,7 +152,7 @@ function flattenInlet(
 	}
 }
 
-const shouldMemoizeGraphConversion = false;
+const shouldMemoizeGraphConversion = true;
 
 // Converts each subgraph node to a set of connected shader nodes.
 function _flattenSimpleVideoGraph(graph: SimpleVideoGraph, editHash: string): SimpleVideoGraph {
@@ -338,6 +338,7 @@ export function videoGraphFromSimpleVideoGraph(
 		editHash,
 		runtime,
 		gl);
+
 	return retval;
 }
 

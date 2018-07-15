@@ -9,6 +9,7 @@ import { SimpleVideoGraph, videoGraphFromSimpleVideoGraph } from '../../../model
 import { RuntimeModule, runtimeModuleFromShaderModule } from '../../../model/RuntimeModule';
 import * as Kit from '../../../model/Kit';
 import { resetSharedTextureCache, getSharedTextureCache } from '../../../utility/textureCache';
+import { resizeCanvas } from '../../../utility/resizeCanvas';
 import * as selectors from './selectors';
 
 const e = React.createElement;
@@ -49,6 +50,11 @@ class Screen extends React.Component<Props, State> {
 			isAnimating: true,
 			animationStartTime: Date.now()
 		}, this.frame);
+		window.addEventListener('resize', this.onResize);
+	}
+
+	public componentWillUnmount() {
+		window.removeEventListener('resize', this.onResize);
 	}
 
 	public shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -119,6 +125,17 @@ class Screen extends React.Component<Props, State> {
 	private onGLRef = (gl: WebGLRenderingContext) => {
 		if (this.gl == null && gl != null) {
 			this.setup(gl);
+		}
+	}
+
+	private onResize = () => {
+		if (this.gl != null) {
+			resizeCanvas(this.gl.canvas, 1);
+			this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+			const textureCache = getSharedTextureCache();
+			if (textureCache != null) {
+				textureCache.clear();
+			}
 		}
 	}
 }
