@@ -2,7 +2,6 @@ import { isEmpty } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import * as Modal from 'react-modal';
 import { ActionCreators as UndoActions } from 'redux-undo';
 import { HotKeys } from 'react-hotkeys';
 import styled from '../../../styled-components';
@@ -13,12 +12,14 @@ import BusRouter from '../ConnectedBusRouter';
 import ModulePicker from '../ModulePicker';
 import SaveLoad from '../SaveLoad';
 import MainMenu from '../MainMenu';
+import Modal from '../../../utility/ReactModalAdapter';
+import { setAppElement as setModalAppElement } from 'react-modal';
 import * as AppModule from '../../../modules/app';
 import * as Document from '../../../modules/document';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import { State as RootState } from '../../../modules';
 
-Modal.setAppElement('#root');
+setModalAppElement('#root');
 
 const e = React.createElement;
 
