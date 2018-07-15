@@ -114,7 +114,6 @@ export const oscillator: VideoModule<SubgraphModule> = {
 			},
 			[nodeKeys.scanlines]: {
 				[Scanlines.parameterKeys.rotationAmount]: params[paramKeys.rotationAmount],
-				[Scanlines.parameterKeys.ditherAmount]: 0,
 				[Scanlines.parameterKeys.phaseOffsetAmount]: 1,
 			},
 		}),

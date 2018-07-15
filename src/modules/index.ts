@@ -23,13 +23,13 @@ const persistRootConfig = {
 };
 
 const documentMigrations = {
-	10: clearPastStateMigration,
+	11: clearPastStateMigration,
 };
 
 const persistDocumentConfig = {
 	key: 'document',
 	blacklist: [],
-	version: 10,
+	version: 11,
 	migrate: createMigrate(documentMigrations, { debug: process.env.NODE_ENV === 'development' }),
 	storage
 };

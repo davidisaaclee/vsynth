@@ -1,8 +1,7 @@
 import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
-import shaderSource from '../../shaders/scanlines';
+import shaderSource from '../../shaders/scanlines.generated';
 
 export const parameterKeys = {
-	ditherAmount: 'dither amount',
 	rotationAmount: 'rotation amount',
 	phaseOffsetAmount: 'phase offset amount',
 };
@@ -20,12 +19,10 @@ export const scanlines: VideoModule<ShaderModule> = {
 		keys: [
 			parameterKeys.rotationAmount,
 			parameterKeys.phaseOffsetAmount,
-			parameterKeys.ditherAmount,
 		],
 		defaultValues: {
 			[parameterKeys.rotationAmount]: 0,
 			[parameterKeys.phaseOffsetAmount]: 0,
-			[parameterKeys.ditherAmount]: 0,
 		}
 	},
 
@@ -47,6 +44,10 @@ export const scanlines: VideoModule<ShaderModule> = {
 				type: '2f',
 				data: [gl.canvas.width, gl.canvas.height]
 			},
+			'reciprocalInputTextureDimensions': {
+				type: '2f',
+				data: [1 / gl.canvas.width, 1 / gl.canvas.height]
+			},
 		}),
 
 		parametersToUniforms: values => ({
@@ -57,10 +58,6 @@ export const scanlines: VideoModule<ShaderModule> = {
 			phaseOffsetTextureAmount: {
 				type: 'f',
 				data: values[parameterKeys.phaseOffsetAmount]
-			},
-			'ditherAmount': {
-				type: 'f',
-				data: values[parameterKeys.ditherAmount]
 			},
 		}),
 
