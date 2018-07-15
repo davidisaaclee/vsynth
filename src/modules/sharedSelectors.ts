@@ -8,7 +8,7 @@ import * as Kit from '../model/Kit';
 import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
-import { defaultConstantBusIndex } from '../constants';
+import { defaultConstantBusIndex, emptyBusIndex } from '../constants';
 
 export const document =
 	(state: RootState) => state.document.present;
@@ -118,9 +118,15 @@ const inletOutletLinks: Selector<RootState, Array<{ inlet: Inlet, outlet: Outlet
 				let busIndex = inletConnections[nodeKey][inletKey];
 				initializeBusIndexIfNeeded(busIndex);
 
-				// If no outlet is connected to this bus, use the default constant bus.
-				if (connectionsByBus[busIndex].outlets.length === 0) {
-					busIndex = defaultConstantBusIndex;
+				if (nodeKey === 'output') {
+					if (busIndex === defaultConstantBusIndex || connectionsByBus[busIndex].outlets.length === 0) {
+						busIndex = emptyBusIndex;
+					}
+				} else {
+					// If no outlet is connected to this bus, use the default constant bus.
+					if (connectionsByBus[busIndex].outlets.length === 0) {
+						busIndex = defaultConstantBusIndex;
+					}
 				}
 
 				connectionsByBus[busIndex].inlets

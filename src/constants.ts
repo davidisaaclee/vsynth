@@ -8,3 +8,6 @@ export const defaultConstantBusIndex = -1;
 // modules are sent.
 export const nullSendBusIndex = -2;
 
+// A bus which outputs "empty" signal (black).
+export const emptyBusIndex = -3;
+

@@ -1,7 +1,7 @@
 import { VideoModule, ShaderModule, ModuleConfigurationType } from '../VideoModule';
 import shaderSource from '../../shaders/constant';
 
-const parameterKeys = {
+export const parameterKeys = {
 	value: 'value',
 };
 

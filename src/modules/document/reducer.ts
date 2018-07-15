@@ -5,9 +5,11 @@ import { VideoNode, videoModuleSpecFromModuleType } from '../../model/SimpleVide
 import * as Kit from '../../model/Kit';
 import { getSharedTextureCache } from '../../utility/textureCache';
 import * as Constants from './constants';
+import * as ConstantModule from '../../model/modules/constant';
 import * as actions from './actions';
 import {
-	defaultConstantBusIndex, nullSendBusIndex
+	defaultConstantBusIndex, nullSendBusIndex,
+	emptyBusIndex
 } from '../../constants';
 
 export interface State {
@@ -41,6 +43,10 @@ const initialState: State = {
 	nodes: {
 		'output': videoModuleSpecFromModuleType(Kit.ShaderModuleType.identity),
 		'default-constant': videoModuleSpecFromModuleType(Kit.ShaderModuleType.constant),
+		'empty-constant': (node => {
+			node.parameters[ConstantModule.parameterKeys.value] = 0;
+			return node;
+		})(videoModuleSpecFromModuleType(Kit.ShaderModuleType.constant)),
 	},
 	nodeOrder: ['output'],
 	inletConnections: {
@@ -51,6 +57,7 @@ const initialState: State = {
 	outletConnections: {
 		'default-constant': defaultConstantBusIndex,
 		'output': nullSendBusIndex,
+		'empty-constant': emptyBusIndex,
 	},
 	busCount: 5,
 };
