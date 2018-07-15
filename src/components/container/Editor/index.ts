@@ -54,6 +54,55 @@ const StyledMenu = styled(MainMenu)`
 	margin: 20px 0;
 `;
 
+const GeneralModal = styled(Modal).attrs({
+	overlayClassName: 'overlay',
+	modalClassName: 'content',
+})`
+	.overlay {
+		position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+
+		background-color: rgba(255, 255, 255, 0);
+		border: none;
+	}
+
+	.content {
+		position: absolute;
+		top: 40px;
+		bottom: 40px;
+		left: 40px;
+		right: 40px;
+		padding: 20px;
+
+		background-color: rgba(255, 255, 255, 0);
+		border-radius: 0;
+		border: 1px solid white;
+		outline: 1px solid black;
+	}
+`;
+
+interface RouterModalProps {
+	 isPreviewingParameterChange: boolean;
+}
+const RouterModal = styled(GeneralModal).attrs<RouterModalProps>({
+	style: {
+		opacity: (props: RouterModalProps) => props.isPreviewingParameterChange ? 0.2 : 1
+	}
+})`
+	.overlay {
+		padding: 0px;
+	}
+
+	.content {
+		overflow: visible;
+		border: none;
+		outline: none;
+	}
+`;
+
 export interface Props {
 	modal: AppModule.Modals.Modal | null;
 
@@ -137,24 +186,11 @@ class Editor extends React.Component<Props, State> {
 					{
 						onClick: this.showMatrix
 					}),
-				e(Modal,
+				e(RouterModal,
 					{
 						isOpen: isShowingRouter,
 						onRequestClose: this.hideMatrix,
-						style: {
-							content: {
-								opacity: isPreviewingParameterChange ? 0.2 : 1,
-								backgroundColor: 'rgba(255, 255, 255, 0)',
-								borderRadius: 0,
-								border: 'none',
-								outline: 'none',
-								overflow: 'visible',
-							},
-							overlay: {
-								backgroundColor: 'rgba(255, 255, 255, 0)',
-								border: 'none',
-							}
-						}
+						isPreviewingParameterChange
 					},
 					e('div',
 						{
@@ -185,23 +221,10 @@ class Editor extends React.Component<Props, State> {
 							},
 							'Add node')),
 					e(StyledMenu)),
-				e(Modal,
+				e(GeneralModal,
 					{
 						isOpen: modal != null,
 						onRequestClose: closeModal,
-						style: {
-							content: {
-								opacity: 1,
-								backgroundColor: 'rgba(255, 255, 255, 0)',
-								borderRadius: 0,
-								border: '1px solid white',
-								outline: '1px solid black',
-							},
-							overlay: {
-								backgroundColor: 'rgba(255, 255, 255, 0)',
-								border: 'none',
-							}
-						}
 					},
 					modal == null
 					? null
