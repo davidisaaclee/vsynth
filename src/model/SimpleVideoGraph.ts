@@ -323,7 +323,11 @@ function _videoGraphFromFlattenedVideoGraph(
 
 const videoGraphFromFlattenedVideoGraph =
 	shouldMemoizeGraphConversion
-	? memoize(_videoGraphFromFlattenedVideoGraph, (_, editHash) => editHash)
+	? memoize(
+		_videoGraphFromFlattenedVideoGraph,
+		// HACK: The canvas size is an implicit input to many nodes' defaultParameters.
+		// When the canvas dimensions change, those parameters need to change as well.
+		(graph, editHash, runtime, gl) => `${editHash}-${gl.canvas.width}-${gl.canvas.height}`)
 	: _videoGraphFromFlattenedVideoGraph;
 
 export function videoGraphFromSimpleVideoGraph(
