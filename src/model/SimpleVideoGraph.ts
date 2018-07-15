@@ -5,7 +5,7 @@
 
 import {
 	entries, flatMap, isEqual, isEqualWith,
-	after, memoize
+	after, memoize, clone
 } from 'lodash';
 import * as Graph from '@davidisaaclee/graph';
 import {
@@ -57,7 +57,7 @@ export function videoModuleSpecFromModuleType(moduleType: Kit.ModuleType): Video
 		throw new Error("Invalid video module");
 	}
 
-	const parameters = mod.parameters.defaultValues;
+	const parameters = clone(mod.parameters.defaultValues);
 
 	if (mod.details.type === ModuleConfigurationType.shader) {
 		const uniforms =
