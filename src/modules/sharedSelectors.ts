@@ -8,6 +8,7 @@ import * as Kit from '../model/Kit';
 import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
+import { defaultConstantBusIndex } from '../constants';
 
 export const document =
 	(state: RootState) => state.document.present;
@@ -105,20 +106,26 @@ const inletOutletLinks: Selector<RootState, Array<{ inlet: Inlet, outlet: Outlet
 			}
 		}
 
-		for (const nodeKey of Object.keys(inletConnections)) {
-			for (const inletKey of Object.keys(inletConnections[nodeKey])) {
-				const busIndex = inletConnections[nodeKey][inletKey];
-				initializeBusIndexIfNeeded(busIndex);
-				connectionsByBus[busIndex].inlets
-					.push({ nodeKey, inletKey });
-			}
-		}
-
 		for (const nodeKey of Object.keys(outletConnections)) {
 			const busIndex = outletConnections[nodeKey];
 			initializeBusIndexIfNeeded(busIndex);
 			connectionsByBus[busIndex].outlets
 				.push({ nodeKey });
+		}
+
+		for (const nodeKey of Object.keys(inletConnections)) {
+			for (const inletKey of Object.keys(inletConnections[nodeKey])) {
+				let busIndex = inletConnections[nodeKey][inletKey];
+				initializeBusIndexIfNeeded(busIndex);
+
+				// If no outlet is connected to this bus, use the default constant bus.
+				if (connectionsByBus[busIndex].outlets.length === 0) {
+					busIndex = defaultConstantBusIndex;
+				}
+
+				connectionsByBus[busIndex].inlets
+					.push({ nodeKey, inletKey });
+			}
 		}
 
 		return flatMap(
