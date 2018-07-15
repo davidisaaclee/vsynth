@@ -42,8 +42,12 @@ const initialState: State = {
 		'output': videoModuleSpecFromModuleType(Kit.ShaderModuleType.identity),
 		'default-constant': videoModuleSpecFromModuleType(Kit.ShaderModuleType.constant),
 	},
-	nodeOrder: ['output', 'default-constant'],
-	inletConnections: {},
+	nodeOrder: ['output'],
+	inletConnections: {
+		'output': {
+			'output': emptyBusIndex
+		},
+	},
 	outletConnections: {
 		'default-constant': defaultConstantBusIndex,
 		'output': nullSendBusIndex,

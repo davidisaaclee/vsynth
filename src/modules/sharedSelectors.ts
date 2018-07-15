@@ -1,4 +1,4 @@
-import { mapValues, values, flatMap } from 'lodash';
+import { mapValues, values, entries, flatMap } from 'lodash';
 import { createSelector, Selector } from 'reselect';
 import * as Graph from '@davidisaaclee/graph';
 import { State as RootState } from './index';
@@ -46,7 +46,7 @@ export const editHash =
 		document,
 		document => document.editHash);
 
-const nodes = createSelector(
+const nodes: Selector<RootState, Record<string, VideoNode>> = createSelector(
 	[document, previewedParameterChanges],
 	(d, previewedParameterChanges) => mapValues(d.nodes, (node, nodeKey) => {
 		const retval = {
@@ -137,16 +137,16 @@ const inletOutletLinks: Selector<RootState, Array<{ inlet: Inlet, outlet: Outlet
 
 export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 	[
-		orderedNodes,
+		nodes,
 		inletOutletLinks
 	],
 	(
-		nodes: Array<{ key: string, node: VideoNode}>,
+		nodes: Record<string, VideoNode>,
 		inletOutletLinks: Array<{ inlet: Inlet, outlet: Outlet }>
 	) => {
 		let result = Graph.empty();
-		result = nodes.reduce(
-			(document, { key, node }) => Graph.insertNode(document, node, key),
+		result = entries(nodes).reduce(
+			(document, [key, node]) => Graph.insertNode(document, node, key),
 			result);
 		result = inletOutletLinks.reduce(
 			(document, { inlet, outlet }) => Graph.insertEdge(
