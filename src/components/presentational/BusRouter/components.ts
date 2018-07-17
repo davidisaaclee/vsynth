@@ -1,21 +1,16 @@
-import { range, includes, isEqual, pick } from 'lodash';
+import { range, } from 'lodash';
 import * as React from 'react';
-import styled, { css } from '../../../styled-components';
-import ParameterControl from '../ParameterControl';
-import { Lane } from './types';
-import { isEnterKeyEvent, isSpaceKeyEvent } from '../../../utility/keys';
+import styled from '../../../styled-components';
+import { Lane, Connection } from './types';
 
 const e = React.createElement;
 
+/*
 const pinstripes = css`
 	background-color: rgba(255, 255, 255, 0.5);
 	&:nth-child(even) {
 		background-color: rgba(255, 255, 255, 0.75);
 	}
-`;
-
-export const RouterTable = styled.table`
-	user-select: none;
 `;
 
 const Cell = styled.td<{ type: 'inlet' | 'outlet' }>`
@@ -80,6 +75,7 @@ const StyledParameterControl = styled(ParameterControl)`
 	height: 20px;
 `;
 
+/*
 export const BusHeader = styled.th`
 	min-width: 30px;
 
@@ -176,4 +172,158 @@ export class LaneView extends React.Component<LaneProps, any> {
 
 	private onChangeValue = (value: number) => this.props.setParameter(this.props.laneIndex, value)
 }
+*/
+
+
+export const RouterTable = styled.span`
+	display: inline-flex;
+
+	user-select: none;
+
+	& * {
+		border: 1px solid white;
+		box-sizing: border-box;
+	}
+`;
+
+const BusHeader = styled.div`
+	width: 20px;
+	height: 20px;
+`;
+
+interface BusHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
+	busCount: number;
+	laneHeight: number;
+	busWidth: number;
+}
+
+const _BusHeaders: React.StatelessComponent<BusHeadersProps> = ({ busCount, busWidth, laneHeight, ...restProps }) =>
+	e('span',
+		restProps,
+		range(busCount).map(busIndex =>
+			e(BusHeader,
+				{
+					key: busIndex,
+					style: {
+						height: laneHeight,
+						width: busWidth,
+					}
+				},
+				busIndex)));
+
+const BusHeaders = styled(_BusHeaders)`
+	display: flex;
+	flex-flow: row nowrap;
+`;
+
+
+
+interface OutletHeaderProps extends React.HTMLAttributes<HTMLSpanElement> {
+	name: string;
+}
+const OutletHeader: React.StatelessComponent<OutletHeaderProps> = ({ name, ...restProps }) =>
+	e('span', restProps, name);
+
+
+interface InletHeaderProps extends React.HTMLAttributes<HTMLSpanElement> {
+	name: string;
+	scale: number | null;
+}
+const InletHeader: React.StatelessComponent<InletHeaderProps> = ({ name, scale, ...restProps }) =>
+	scale == null
+		? e('span', restProps, name)
+		: e(ScaledInletHeader, { name, scale, ...restProps });
+
+
+interface ScaledInletHeaderProps extends React.HTMLAttributes<HTMLSpanElement> {
+	name: string;
+	scale: number;
+}
+const ScaledInletHeader: React.StatelessComponent<ScaledInletHeaderProps> = ({ name, scale, ...restProps }) =>
+	e('span', restProps,
+		e('span', {}, name),
+		e('span', {}, scale));
+
+
+
+interface LaneHeaderProps extends React.HTMLAttributes<HTMLSpanElement> {
+	lane: Lane;
+}
+
+const _LaneHeader: React.StatelessComponent<LaneHeaderProps> = ({ lane, ...restProps }) => {
+	if (lane.type === 'inlet') {
+		return e(InletHeader, { name: lane.inletKey, scale: lane.scale, ...restProps });
+	} else {
+		return e(OutletHeader, { name: lane.name, ...restProps });
+	}
+}
+
+const LaneHeader = styled(_LaneHeader)`
+	display: block;
+`;
+
+
+const CrossAxisHeader = styled.div<{ height: number }>`
+	height: ${({ height }) => height}px;
+`;
+
+
+interface LaneHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
+	lanes: Lane[];
+	laneHeight: number;
+}
+
+const _LaneHeaders: React.StatelessComponent<LaneHeadersProps> = ({ lanes, laneHeight, ...restProps}) =>
+	e('div',
+		restProps,
+		e(CrossAxisHeader, { height: laneHeight }),
+		lanes.map(lane =>
+			e(LaneHeader,
+				{
+					key: `${lane.nodeKey}.${lane.name}`,
+					lane,
+					style: {
+						height: laneHeight,
+					}
+				})));
+
+export const LaneHeaders = styled(_LaneHeaders)`
+	display: inline-block;
+`;
+
+
+const Row = styled.tr<{ height: number }>`
+	height: ${({ height }) => height}px;
+`;
+
+const BusHeaderRow = Row;
+
+interface MatrixProps {
+	connections: Connection[];
+	lanes: Lane[];
+	busCount: number;
+	laneHeight: number;
+	busWidth: number;
+}
+export const Matrix: React.StatelessComponent<MatrixProps> = ({
+	connections, lanes, busCount, laneHeight, busWidth
+}) =>
+	e('table',
+		{
+			style: {
+				borderSpacing: 0,
+			}
+		},
+		e('thead',
+			{},
+			e(BusHeaderRow,
+				{ height: laneHeight },
+				e(BusHeaders, { busCount, laneHeight, busWidth }))),
+		e('tbody',
+			{},
+			lanes.map(lane =>
+				e(Row,
+					{ height: laneHeight },
+					range(busCount).map(busIndex =>
+						e('span', { style: { display: 'inline-block', width: busWidth } }, 'x'))))));
 
