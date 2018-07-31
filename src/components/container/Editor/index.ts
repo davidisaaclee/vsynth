@@ -81,6 +81,8 @@ const GeneralModal = styled(Modal).attrs({
 		border-radius: 0;
 		border: 1px solid white;
 		outline: 1px solid black;
+
+		overflow: auto;
 	}
 `;
 
