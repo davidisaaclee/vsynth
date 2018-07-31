@@ -79,7 +79,12 @@ export const mixer: VideoModule<ShaderModule> = {
 
 		shaderSource,
 
-		defaultUniforms: () => ({}),
+		defaultUniforms: (gl: WebGLRenderingContext) => ({
+			'inputTextureDimensions': {
+				type: '2f',
+				data: [gl.canvas.width, gl.canvas.height]
+			},
+		}),
 
 		parametersToUniforms: values => ({
 			'mixAmount': {
