@@ -14,6 +14,7 @@ import { zoomIn } from './modules/zoomIn';
 import { scanlineDisplace } from './modules/scanlineDisplace';
 import { modulo } from './modules/modulo';
 import { hsv } from './modules/hsv';
+import { circleCrop } from './modules/circleCrop';
 
 import { oscillator } from './modules/oscillator';
 import { ramp } from './modules/ramp';
@@ -47,6 +48,7 @@ export enum ShaderModuleType {
 	scanlineDisplace = "scanlineDisplace",
 	modulo = "modulo",
 	hsv = "hsv",
+	circleCrop = "circleCrop",
 }
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
@@ -75,6 +77,7 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	[ShaderModuleType.scanlineDisplace]: scanlineDisplace,
 	[ShaderModuleType.modulo]: modulo,
 	[ShaderModuleType.hsv]: hsv,
+	[ShaderModuleType.circleCrop]: circleCrop,
 };
 
 export const moduleKeys: ModuleType[] = [
@@ -91,6 +94,7 @@ export const moduleKeys: ModuleType[] = [
 	ShaderModuleType.scanlines,
 	ShaderModuleType.zoomIn,
 	ShaderModuleType.rgbOffset,
+	ShaderModuleType.circleCrop,
 ];
 
 
