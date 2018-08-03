@@ -17,11 +17,26 @@ export const circleCrop = mkShaderModule({
 			textureUniform: 'inputTexture',
 		},
 	],
-	defaultUniforms: (gl: WebGLRenderingContext) => ({
-		'inputTextureDimensions': {
-			type: '2f',
-			data: [gl.canvas.width, gl.canvas.height]
-		},
-	}),
+	defaultUniforms: (gl: WebGLRenderingContext) => {
+		const radius = 0.3;
+		const aspectRatioRadius: [number, number] = [radius, gl.canvas.width / gl.canvas.height * radius];
+
+		return {
+			'inputTextureDimensions': {
+				type: '2f',
+				data: [gl.canvas.width, gl.canvas.height]
+			},
+
+			radius: {
+				type: '2f',
+				data: aspectRatioRadius
+			},
+
+			center: {
+				type: '2f',
+				data: [0.5, 0.5]
+			},
+		}
+	},
 });
 
