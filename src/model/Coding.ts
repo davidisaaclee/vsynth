@@ -57,6 +57,7 @@ const shaderModuleType: Decoder<ShaderModuleType> = oneOf(
 	constant(ShaderModuleType.scanlineDisplace),
 	constant(ShaderModuleType.modulo),
 	constant(ShaderModuleType.hsv),
+	constant(ShaderModuleType.circleCrop),
 );
 
 const shaderNodeDecoder: Decoder<ShaderNode> = object({
