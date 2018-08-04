@@ -20,7 +20,7 @@ void main() {
 		vec2(
 			sampleTex(translateXTexture, uv, translateXAmount),
 			sampleTex(translateYTexture, uv, translateYAmount)
-		);
+		) - vec2(0.5 * translateXAmount, 0.5 * translateYAmount);
 
 	vec2 samplePt = fract(uv + 1. + translateSample);
 
