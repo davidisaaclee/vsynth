@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ActionCreators as UndoActions } from 'redux-undo';
 import { HotKeys } from 'react-hotkeys';
-import styled from '../../../styled-components';
+import styled, { css } from '../../../styled-components';
 import * as Kit from '../../../model/Kit';
 import { videoModuleSpecFromModuleType } from '../../../model/SimpleVideoGraph';
 import Screen from '../Screen';
@@ -89,13 +89,12 @@ const GeneralModal = styled(Modal).attrs({
 interface RouterModalProps {
 	 isPreviewingParameterChange: boolean;
 }
-const RouterModal = styled(GeneralModal).attrs<RouterModalProps>({
-	style: {
-		opacity: (props: RouterModalProps) => props.isPreviewingParameterChange ? 0.2 : 1
-	}
-})`
+const RouterModal = styled(GeneralModal)`
 	.overlay {
 		padding: 0px;
+		${(props: RouterModalProps) => css`
+			opacity: ${props.isPreviewingParameterChange ? 0.2 : 1};
+		`}
 	}
 
 	.content {
