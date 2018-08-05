@@ -3,6 +3,7 @@ import mkShaderModule from '../../utility/mkShaderModule';
 
 export const inletKeys = {
 	input: 'input',
+	radius: 'radius',
 };
 
 export const circleCrop = mkShaderModule({
@@ -11,27 +12,21 @@ export const circleCrop = mkShaderModule({
 	shaderSource,
 	inlets: [
 		{
-			key: 'input',
+			key: inletKeys.input,
 			defaultScaleValue: 1,
-			scalingUniform: 'inputAmount',
-			textureUniform: 'inputTexture',
+		},
+
+		{
+			key: inletKeys.radius,
+			defaultScaleValue: 0.5,
 		},
 	],
 	defaultUniforms: (gl: WebGLRenderingContext) => {
-		const radius = 0.3;
-		const aspectRatioRadius: [number, number] = [radius, gl.canvas.width / gl.canvas.height * radius];
-
 		return {
 			'inputTextureDimensions': {
 				type: '2f',
 				data: [gl.canvas.width, gl.canvas.height]
 			},
-
-			radius: {
-				type: '2f',
-				data: aspectRatioRadius
-			},
-
 			center: {
 				type: '2f',
 				data: [0.5, 0.5]

@@ -1,10 +1,15 @@
 precision mediump float;
 
-uniform sampler2D inputTexture;
-uniform float inputAmount;
+#pragma glslify: sampleTex = require('./sampleTex');
+
 uniform vec2 inputTextureDimensions;
 
-uniform vec2 radius;
+uniform sampler2D inputTexture;
+uniform float inputAmount;
+
+uniform sampler2D radiusTexture;
+uniform float radiusAmount;
+
 uniform vec2 center;
 
 float sqrDistance(vec2 a, vec2 b) {
@@ -21,6 +26,9 @@ float pointInsideEllipse(vec2 pt, vec2 origin, vec2 radius) {
 
 void main() {
 	vec2 uv = gl_FragCoord.xy / inputTextureDimensions;
-  vec4 texColor = texture2D(inputTexture, uv) * inputAmount * pointInsideEllipse(uv, center, radius);
+	float radius = sampleTex(radiusTexture, uv, radiusAmount);
+	vec2 aspectRatioRadius =
+		vec2(radius, inputTextureDimensions.x / inputTextureDimensions.y * radius);
+  vec4 texColor = texture2D(inputTexture, uv) * inputAmount * pointInsideEllipse(uv, center, aspectRatioRadius);
   gl_FragColor = texColor;
 }
