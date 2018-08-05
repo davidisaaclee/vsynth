@@ -24,7 +24,7 @@ float sqrDistance(vec2 a, vec2 b) {
 
 float pointInsideEllipse(vec2 pt, vec2 origin, vec2 radius) {
 	vec2 numerators = (pt - origin) * (pt - origin);
-	vec2 sqrRadius = radius * radius;
+	vec2 sqrRadius = max(vec2(0.001), radius * radius);
 	return 1. - step(1., numerators.x / sqrRadius.x + numerators.y / sqrRadius.y);
 }
 
