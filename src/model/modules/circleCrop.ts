@@ -4,6 +4,8 @@ import mkShaderModule from '../../utility/mkShaderModule';
 export const inletKeys = {
 	input: 'input',
 	radius: 'radius',
+	centerX: 'centerX',
+	centerY: 'centerY',
 };
 
 export const circleCrop = mkShaderModule({
@@ -15,9 +17,16 @@ export const circleCrop = mkShaderModule({
 			key: inletKeys.input,
 			defaultScaleValue: 1,
 		},
-
 		{
 			key: inletKeys.radius,
+			defaultScaleValue: 0.5,
+		},
+		{
+			key: inletKeys.centerX,
+			defaultScaleValue: 0.5,
+		},
+		{
+			key: inletKeys.centerY,
 			defaultScaleValue: 0.5,
 		},
 	],
@@ -26,10 +35,6 @@ export const circleCrop = mkShaderModule({
 			'inputTextureDimensions': {
 				type: '2f',
 				data: [gl.canvas.width, gl.canvas.height]
-			},
-			center: {
-				type: '2f',
-				data: [0.5, 0.5]
 			},
 		}
 	},
