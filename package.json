@@ -13,6 +13,7 @@
     "classnames": "^2.2.6",
     "gl-shader-extract": "^1.1.2",
     "lodash": "^4.17.10",
+    "pepjs": "^0.4.3",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-hotkeys": "^1.1.4",
