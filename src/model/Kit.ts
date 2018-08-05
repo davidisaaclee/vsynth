@@ -17,6 +17,7 @@ import { hsv } from './modules/hsv';
 import { circleCrop } from './modules/circleCrop';
 import { noise } from './modules/noise';
 import { translate } from './modules/translate';
+import { alphaBlend } from './modules/alphaBlend';
 
 import { oscillator } from './modules/oscillator';
 import { ramp } from './modules/ramp';
@@ -53,6 +54,7 @@ export enum ShaderModuleType {
 	circleCrop = "circleCrop",
 	noise = "noise",
 	translate = "translate",
+	alphaBlend = "alphaBlend",
 }
 
 export type ModuleType = ShaderModuleType | SubgraphModuleType;
@@ -84,6 +86,7 @@ export const shaderModules: Record<ShaderModuleType, VideoModule<ShaderModule>> 
 	[ShaderModuleType.circleCrop]: circleCrop,
 	[ShaderModuleType.noise]: noise,
 	[ShaderModuleType.translate]: translate,
+	[ShaderModuleType.alphaBlend]: alphaBlend,
 };
 
 export const moduleKeys: ModuleType[] = [
@@ -103,6 +106,7 @@ export const moduleKeys: ModuleType[] = [
 	ShaderModuleType.circleCrop,
 	ShaderModuleType.noise,
 	ShaderModuleType.translate,
+	ShaderModuleType.alphaBlend,
 ];
 
 
