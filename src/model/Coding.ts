@@ -9,7 +9,9 @@ import { UniformValue } from '@davidisaaclee/video-graph';
 import { State as Document } from '../modules/document';
 import { SubgraphNode, ShaderNode, VideoNode, SimpleVideoGraph } from '../model/SimpleVideoGraph';
 import { ModuleConfigurationType } from '../model/VideoModule';
-import { SubgraphModuleType, ShaderModuleType } from '../model/Kit';
+import {
+	SubgraphModuleType, ShaderModuleType, shaderModules, subgraphModules
+} from '../model/Kit';
 
 // TODO
 const uniformValueDecoder: Decoder<UniformValue> =
@@ -28,10 +30,7 @@ const simpleVideoGraphDecoder: Decoder<SimpleVideoGraph> = object({
 
 
 const subgraphModuleType: Decoder<SubgraphModuleType> = oneOf(
-	constant(SubgraphModuleType.oscillator),
-	constant(SubgraphModuleType.ramp),
-	constant(SubgraphModuleType.crossBlur),
-	constant(SubgraphModuleType.multipassBlur),
+	...Object.keys(subgraphModules).map(t => constant(t as SubgraphModuleType))
 );
 const subgraphNodeDecoder: Decoder<SubgraphNode> = object({
 	nodeType: constant(ModuleConfigurationType.subgraph) as Decoder<ModuleConfigurationType.subgraph>,
@@ -41,25 +40,7 @@ const subgraphNodeDecoder: Decoder<SubgraphNode> = object({
 });
 
 const shaderModuleType: Decoder<ShaderModuleType> = oneOf(
-	constant(ShaderModuleType.periodic),
-	constant(ShaderModuleType.identity),
-	constant(ShaderModuleType.constant),
-	constant(ShaderModuleType.addFract),
-	constant(ShaderModuleType.phaseDelta),
-	constant(ShaderModuleType.mixer),
-	constant(ShaderModuleType.scanlines),
-	constant(ShaderModuleType.rgbOffset),
-	constant(ShaderModuleType.divide),
-	constant(ShaderModuleType.multiply),
-	constant(ShaderModuleType.addClip),
-	constant(ShaderModuleType.singlePassBlur),
-	constant(ShaderModuleType.zoomIn),
-	constant(ShaderModuleType.scanlineDisplace),
-	constant(ShaderModuleType.modulo),
-	constant(ShaderModuleType.hsv),
-	constant(ShaderModuleType.circleCrop),
-	constant(ShaderModuleType.noise),
-	constant(ShaderModuleType.translate),
+	...Object.keys(shaderModules).map(t => constant(t as ShaderModuleType))
 );
 
 const shaderNodeDecoder: Decoder<ShaderNode> = object({
