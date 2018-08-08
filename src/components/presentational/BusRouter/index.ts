@@ -13,12 +13,14 @@ export interface Props {
 	// idk how that optimization works
 	lanes: Lane[];
 	connections: Connection[];
+	isRouterCollapsed: boolean;
 
 	setConnection: (laneIndex: number, busIndex: number) => any;
 	removeConnection: (laneIndex: number, busIndex: number) => any;
 	setParameter: (laneIndex: number, value: number) => any;
 	previewParameter: (laneIndex: number, value: number) => any;
 	removeNodeForLane: (laneIndex: number) => any;
+	toggleCollapseRouter: () => any;
 }
 
 const BusRouter: React.StatelessComponent<Props> = ({
@@ -26,7 +28,7 @@ const BusRouter: React.StatelessComponent<Props> = ({
 	lanes, connections,
 	setConnection, removeConnection,
 	setParameter, previewParameter,
-	removeNodeForLane,
+	removeNodeForLane, toggleCollapseRouter,
 }) => (
 	e(RouterTable,
 		{ className },
@@ -35,7 +37,7 @@ const BusRouter: React.StatelessComponent<Props> = ({
 			e('tr',
 				{},
 				// Cross-axis header
-				e('th', {}, null),
+				e('th', {}, e('button', { onClick: toggleCollapseRouter }, 'Collapse')),
 				range(busCount).map(busIndex =>
 					// Bus header
 					e(BusHeader,

@@ -11,3 +11,6 @@ export const previewParameter = (nodeKey: string, parameterKey: string, value: n
 export const clearPreviewedParameter = () =>
 	action(Constants.CLEAR_PREVIEWED_PARAMETER);
 
+export const setRouterCollapsed = (collapsed: boolean) =>
+	action(Constants.SET_ROUTER_COLLAPSED, collapsed);
+

@@ -6,6 +6,7 @@ import { SimpleVideoGraph, VideoNode } from '../../../model/SimpleVideoGraph';
 import * as sharedSelectors from '../../../modules/sharedSelectors';
 import * as Kit from '../../../model/Kit';
 import { Lane } from '../../presentational/BusRouter/types';
+import { masterOutputNodeKey } from '../../../constants';
 import { LaneIndexer } from './types';
 
 // TYPING SHIM: Using string constants inline doesn't pass typechecker...
@@ -19,8 +20,13 @@ export const graph =
 	sharedSelectors.graph;
 
 export const lanes: Selector<RootState, Lane[]> = createSelector(
-	[sharedSelectors.orderedNodes, graph],
-	(nodeOrder: Array<{ key: string, node: VideoNode }>, graph: SimpleVideoGraph) => flatMap(
+	[sharedSelectors.orderedNodes, graph, sharedSelectors.inletConnections, sharedSelectors.isRouterCollapsed],
+	(
+		nodeOrder: Array<{ key: string, node: VideoNode }>,
+		graph: SimpleVideoGraph,
+		inletConnections,
+		isRouterCollapsed,
+	) => flatMap(
 		nodeOrder,
 		({ key: nodeKey, node }) => {
 			const videoMod =
@@ -51,8 +57,14 @@ export const lanes: Selector<RootState, Lane[]> = createSelector(
 			}
 
 			// Hide the outlet lane for the master output.
-			if (lane.nodeKey === 'output' && lane.type === 'outlet') {
+			if (lane.nodeKey === masterOutputNodeKey && lane.type === 'outlet') {
 				return false;
+			}
+
+			if (isRouterCollapsed) {
+				if (lane.type === 'inlet' && get(inletConnections, [lane.nodeKey, lane.inletKey], -1) === -1) {
+					return false;
+				}
 			}
 
 			return true;

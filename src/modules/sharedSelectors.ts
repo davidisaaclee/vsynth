@@ -8,7 +8,7 @@ import * as Kit from '../model/Kit';
 import { Inlet } from '../model/Inlet';
 import { Outlet } from '../model/Outlet';
 import { combinations } from '../utility/combinations';
-import { defaultConstantBusIndex, emptyBusIndex } from '../constants';
+import { masterOutputNodeKey, defaultConstantBusIndex, emptyBusIndex } from '../constants';
 
 export const document =
 	(state: RootState) => state.document.present;
@@ -171,5 +171,8 @@ export const graph: Selector<RootState, SimpleVideoGraph> = createSelector(
 	});
 
 export const outputNodeKey =
-	(state: RootState) => 'output';
+	(state: RootState) => masterOutputNodeKey;
+
+export const isRouterCollapsed =
+	createSelector(app, app => app.routerIsCollapsed);
 

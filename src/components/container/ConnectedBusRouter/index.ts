@@ -10,7 +10,7 @@ import * as selectors from './selectors';
 import { LaneIndexer } from './types';
 
 type StatePickedPropKeys =
-	'busCount' | 'connections' | 'lanes';
+	'busCount' | 'connections' | 'lanes' | 'isRouterCollapsed';
 type StateProps =
 	Pick<BusRouterProps, StatePickedPropKeys> & {
 		laneIndexer: LaneIndexer,
@@ -22,6 +22,7 @@ interface DispatchProps {
 	makeSetParameter: (laneIndexer: LaneIndexer) => (laneIndex: number, value: number) => any;
 	makePreviewParameter: (laneIndexer: LaneIndexer) => (laneIndex: number, value: number) => any;
 	makeRemoveNodeForLane: (laneIndexer: LaneIndexer) => (laneIndex: number) => any;
+	makeToggleCollapseRouter: (isRouterCollapsed: boolean) => () => any;
 };
 
 interface OwnProps {
@@ -34,6 +35,7 @@ function mapStateToProps(state: RootState): StateProps {
 		connections: selectors.connections(state),
 		lanes: selectors.lanes(state),
 		laneIndexer: selectors.laneIndexer(state),
+		isRouterCollapsed: sharedSelectors.isRouterCollapsed(state),
 	};
 }
 
@@ -93,6 +95,10 @@ function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
 			const lane = laneIndexer(laneIndex);
 			dispatch(DocumentModule.actions.removeNode(lane.nodeKey));
 		},
+
+		makeToggleCollapseRouter: (isRouterCollapsed: boolean) => () => {
+			dispatch(AppModule.actions.setRouterCollapsed(!isRouterCollapsed));
+		},
 	};
 }
 
@@ -109,7 +115,7 @@ function mergeProps(
 	const {
 		makeSetConnection, makeRemoveConnection,
 		makePreviewParameter, makeSetParameter,
-		makeRemoveNodeForLane
+		makeRemoveNodeForLane, makeToggleCollapseRouter
 	} = dispatchProps;
 
 	return {
@@ -119,6 +125,7 @@ function mergeProps(
 		previewParameter: makePreviewParameter(laneIndexer),
 		setParameter: makeSetParameter(laneIndexer),
 		removeNodeForLane: makeRemoveNodeForLane(laneIndexer),
+		toggleCollapseRouter: makeToggleCollapseRouter(restStateProps.isRouterCollapsed),
 		...ownProps,
 	};
 }

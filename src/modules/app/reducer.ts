@@ -8,11 +8,15 @@ export interface State {
 
 	// Temporary changes to node parameters
 	previewedParameterChanges: { [nodeKey: string]: { [parameterKey: string]: number } };
+
+	// If `true`, router hides all inlet lanes without connections.
+	routerIsCollapsed: boolean,
 }
 
 const initialState: State = {
 	modal: null,
 	previewedParameterChanges: {},
+	routerIsCollapsed: false,
 };
 
 type Action = ActionType<typeof actions>;
@@ -43,6 +47,12 @@ export const reducer = (state: State = initialState, action: Action) => {
 			return {
 				...state,
 				modal: action.payload
+			};
+
+		case Constants.SET_ROUTER_COLLAPSED:
+			return {
+				...state,
+				routerIsCollapsed: action.payload
 			};
 
 		default:
