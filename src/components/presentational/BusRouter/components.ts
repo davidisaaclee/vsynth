@@ -61,6 +61,7 @@ const LaneHeader = styled.th`
 	width: 80px;
 
 	font-size: 12px;
+	z-index: 1;
 `;
 
 const LaneHeaderText = styled.span`
@@ -71,7 +72,7 @@ const RemoveNodeButton = styled.button`
 	box-sizing: border-box;
 	border: 1px solid white;
 
-	background: none;
+	background-color: black;
 	color: white;
 	white-space: nowrap;
 `;
@@ -124,7 +125,11 @@ export class LaneView extends React.Component<LaneProps, any> {
 				type: lane.type
 			},
 			// Lane header
-			e(LaneHeader, {},
+			e(LaneHeader, {
+				style: lane.type === 'outlet'
+				? { backgroundColor: 'black' }
+				: { backgroundColor: 'white' }
+			},
 				...(lane.type === 'outlet'
 					? [
 						e(LaneHeaderText, {}, lane.name),
