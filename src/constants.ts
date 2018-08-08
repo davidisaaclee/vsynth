@@ -11,3 +11,5 @@ export const nullSendBusIndex = -2;
 // A bus which outputs "empty" signal (black).
 export const emptyBusIndex = -3;
 
+// Node key for output to screen.
+export const masterOutputNodeKey = "output";

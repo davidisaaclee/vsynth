@@ -4,6 +4,7 @@ import styled, { css } from '../../../styled-components';
 import ParameterControl from '../ParameterControl';
 import { Lane } from './types';
 import { isEnterKeyEvent, isSpaceKeyEvent } from '../../../utility/keys';
+import { masterOutputNodeKey } from '../../../constants';
 
 const e = React.createElement;
 
@@ -50,6 +51,12 @@ const LaneRow = styled.tr<{ type: 'inlet' | 'outlet' }>`
 				: 'rgba(0, 0, 0, 0.75)'};
 		color: ${type === 'inlet' ? 'black' : 'white'};
 	`}
+
+	&#master-output-lane {
+		z-index: 10;
+		top: 0;
+		position: sticky;
+	}
 `;
 
 const LaneHeader = styled.th`
@@ -122,7 +129,10 @@ export class LaneView extends React.Component<LaneProps, any> {
 		return e(LaneRow,
 			{
 				key: `lane-${lane.nodeKey}.${lane.name}`,
-				type: lane.type
+				type: lane.type,
+				...(lane.nodeKey === masterOutputNodeKey
+					? { id: 'master-output-lane' }
+					: {})
 			},
 			// Lane header
 			e(LaneHeader, {

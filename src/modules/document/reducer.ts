@@ -9,7 +9,7 @@ import * as ConstantModule from '../../model/modules/constant';
 import * as actions from './actions';
 import {
 	defaultConstantBusIndex, nullSendBusIndex,
-	emptyBusIndex
+	emptyBusIndex, masterOutputNodeKey
 } from '../../constants';
 
 export interface State {
@@ -41,22 +41,22 @@ const initialState: State = {
 	editHash: uuid(),
 	nodeKeySeed: 0,
 	nodes: {
-		'output': videoModuleSpecFromModuleType(Kit.ShaderModuleType.identity),
+		[masterOutputNodeKey]: videoModuleSpecFromModuleType(Kit.ShaderModuleType.identity),
 		'default-constant': videoModuleSpecFromModuleType(Kit.ShaderModuleType.constant),
 		'empty-constant': (node => {
 			node.parameters[ConstantModule.parameterKeys.value] = 0;
 			return node;
 		})(videoModuleSpecFromModuleType(Kit.ShaderModuleType.constant)),
 	},
-	nodeOrder: ['output'],
+	nodeOrder: [masterOutputNodeKey],
 	inletConnections: {
-		'output': {
-			'output': emptyBusIndex
+		[masterOutputNodeKey]: {
+			[masterOutputNodeKey]: emptyBusIndex
 		},
 	},
 	outletConnections: {
 		'default-constant': defaultConstantBusIndex,
-		'output': nullSendBusIndex,
+		[masterOutputNodeKey]: nullSendBusIndex,
 		'empty-constant': emptyBusIndex,
 	},
 	busCount: 5,
