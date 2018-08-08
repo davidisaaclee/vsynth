@@ -72,7 +72,7 @@ const GeneralModal = styled(Modal).attrs({
 	.content {
 		position: absolute;
 		top: 40px;
-		bottom: 40px;
+		bottom: 60px;
 		left: 40px;
 		right: 40px;
 		padding: 20px;
