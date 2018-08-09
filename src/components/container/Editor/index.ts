@@ -46,6 +46,14 @@ const AddButton = styled.button`
 	}
 `;
 
+const AddNodeButton = styled(AddButton)`
+	position: sticky;
+	left: 0;
+	bottom: 0;
+
+	z-index: 10;
+`;
+
 const StyledMenu = styled(MainMenu)`
 	position: fixed;
 	right: 0;
@@ -216,7 +224,7 @@ class Editor extends React.Component<Props, State> {
 									onClick: addBus
 								},
 								'Add bus')),
-						e(AddButton,
+						e(AddNodeButton,
 							{
 								onClick: openNodePicker
 							},
