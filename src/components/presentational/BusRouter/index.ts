@@ -42,7 +42,9 @@ const BusRouter: React.StatelessComponent<Props> = ({
 					// Bus header
 					e(BusHeader,
 						{ key: `bus-header-${busIndex}` },
-						busIndex)))),
+						// TODO: Make this indexing more explicit.
+						// Currently showing 1-indexed busses in UI, and storing as 0-indexed.
+						busIndex + 1)))),
 		e('tbody',
 			{},
 			lanes.map((lane, laneIndex) =>
