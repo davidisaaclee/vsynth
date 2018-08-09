@@ -59,7 +59,7 @@ const initialState: State = {
 		[masterOutputNodeKey]: nullSendBusIndex,
 		'empty-constant': emptyBusIndex,
 	},
-	busCount: 5,
+	busCount: 16,
 };
 
 type RootAction = ActionType<typeof actions>;
