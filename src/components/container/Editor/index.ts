@@ -46,6 +46,11 @@ const AddButton = styled.button`
 	}
 `;
 
+const AddBusButton = styled(AddButton)`
+	position: sticky;
+	top: 0;
+`;
+
 const AddNodeButton = styled(AddButton)`
 	position: sticky;
 	left: 0;
@@ -219,7 +224,7 @@ class Editor extends React.Component<Props, State> {
 								}
 							},
 							e(StyledBusRouter),
-							e(AddButton,
+							e(AddBusButton,
 								{
 									onClick: addBus
 								},
